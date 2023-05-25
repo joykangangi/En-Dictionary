@@ -3,4 +3,6 @@
     <string name="home_text">Dictionary</string>
     <string name="home_body">Find synonyms, antonyms and related words</string>
     <string name="search_text">Search here…</string>
+    <string name="noun">noun</string>
+    <string name="verb">verb</string>
 </resources>

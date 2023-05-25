@@ -105,7 +105,7 @@ fun TabLayout(modifier: Modifier) {
             }
         }
         when (tabIndex) {
-            0 -> Definition(modifier = modifier)
+            0 -> Definition()
             1 -> Synonym(modifier = modifier)
             2 -> Antonym(modifier = modifier)
         }
