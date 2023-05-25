@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.ui.theme.En_DictionaryTheme
+import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

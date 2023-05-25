@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.ui.theme
+package com.jkangangi.en_dictionary.app.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
