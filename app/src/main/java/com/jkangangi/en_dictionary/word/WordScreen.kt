@@ -83,7 +83,7 @@ fun WordScreen(
 
 @Composable
 fun TabLayout(modifier: Modifier) {
-    var tabIndex by remember { mutableStateOf(0) } //Todo
+    var tabIndex by remember { mutableStateOf(1) } //Todo
     val tabs = listOf("Definition", "Synonyms", "Antonyms")
 
     Column(
@@ -93,7 +93,7 @@ fun TabLayout(modifier: Modifier) {
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
             )
-            .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp ))
+            .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
     ) {
         TabRow(selectedTabIndex = tabIndex) {
             tabs.forEachIndexed { index, title ->
@@ -106,8 +106,8 @@ fun TabLayout(modifier: Modifier) {
         }
         when (tabIndex) {
             0 -> Definition()
-            1 -> Synonym(modifier = modifier)
-            2 -> Antonym(modifier = modifier)
+            1 -> WordList(modifier = modifier, words = listOf("Car", "Bicycle"))
+            2 -> WordList(modifier = modifier, words = listOf("Model", "Illustration") )
         }
     }
 }

@@ -13,9 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
@@ -39,10 +37,9 @@ fun Definition(modifier: Modifier = Modifier) {
 }
 
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun WordType(modifier: Modifier = Modifier, wordType: String, definition: String, example: String) {
-    Column() {
+    Column {
         Row(
             modifier = modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
