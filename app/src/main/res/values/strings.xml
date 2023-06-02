@@ -5,4 +5,6 @@
     <string name="search_text">Search here…</string>
     <string name="noun">noun</string>
     <string name="verb">verb</string>
+    <string name="delete">delete</string>
+    <string name="clear_history">Clear History</string>
 </resources>
