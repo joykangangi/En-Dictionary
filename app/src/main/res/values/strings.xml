@@ -7,4 +7,6 @@
     <string name="verb">verb</string>
     <string name="delete">delete</string>
     <string name="clear_history">Clear History</string>
+    <string name="empty_history">Empty History</string>
+    <string name="empty_saves">No Saved Words</string>
 </resources>

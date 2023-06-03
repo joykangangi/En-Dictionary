@@ -1,8 +1,8 @@
 package com.jkangangi.en_dictionary.history
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +21,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -42,8 +43,12 @@ fun HistoryScreen(
     deleteWord: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val isEmpty = remember { mutableStateOf(historyItems.isEmpty()) }
+
     Scaffold(
-        modifier = modifier.shadow(elevation = 3.dp).padding(16.dp),
+        modifier = modifier
+            .shadow(elevation = 3.dp)
+            .padding(16.dp),
         topBar = {
             TopAppBar(
                 title = { },
@@ -54,13 +59,24 @@ fun HistoryScreen(
                 })
         },
         content = { contentPadding ->
-            // List of search history items
-            LazyColumn(
-                contentPadding = contentPadding,
-                modifier = modifier.padding(8.dp)
-            ) {
-                items(historyItems) { item ->
-                    HistoryItemCard(history = item, onDeleteWord = deleteWord)
+            if (isEmpty.value) {
+                EmptyContent(
+                    modifier = modifier.fillMaxSize(),
+                    text = stringResource(id = R.string.empty_history),
+                )
+            } else {
+                // List of search history items
+                LazyColumn(
+                    contentPadding = contentPadding,
+                    modifier = modifier.padding(8.dp)
+                ) {
+                    items(historyItems) { item ->
+                        HistoryItemCard(
+                            history = item,
+                            onDeleteWord = deleteWord,
+                            isEnabled = isEmpty.value,
+                        )
+                    }
                 }
             }
         },
@@ -68,7 +84,7 @@ fun HistoryScreen(
 }
 
 @Composable
-fun HistoryItemCard(history: HistoryItem, onDeleteWord: () -> Unit) {
+fun HistoryItemCard(history: HistoryItem, onDeleteWord: () -> Unit, isEnabled: Boolean) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,12 +98,12 @@ fun HistoryItemCard(history: HistoryItem, onDeleteWord: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = history.word, style = MaterialTheme.typography.headlineSmall)
-            IconButton(onClick = onDeleteWord) {
+            IconButton(onClick = onDeleteWord, enabled = !isEnabled, content = {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(id = R.string.delete)
+                    contentDescription = stringResource(id = R.string.delete),
                 )
-            }
+            })
         }
     }
 }
@@ -96,7 +112,7 @@ fun HistoryItemCard(history: HistoryItem, onDeleteWord: () -> Unit) {
 @Composable
 fun PreviewHistory() {
     HistoryScreen(
-        historyItems = listOf(HistoryItem(word = "Example"), HistoryItem(word = "Joyous")),
+        historyItems = emptyList(),
         deleteWord = { },
         onClearHistory = { }
     )
