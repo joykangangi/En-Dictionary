@@ -14,7 +14,7 @@ fun EmptyContent(
     text: String,
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Text(

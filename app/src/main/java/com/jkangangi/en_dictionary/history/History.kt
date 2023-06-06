@@ -38,7 +38,7 @@ data class HistoryItem(val word: String)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
-    historyItems: List<HistoryItem>,
+    historyItems: List<HistoryItem>,//Todo ImmutableList
     onClearHistory: () -> Unit,
     deleteWord: () -> Unit,
     modifier: Modifier = Modifier,
@@ -53,7 +53,7 @@ fun HistoryScreen(
             TopAppBar(
                 title = { },
                 actions = {
-                    Button(onClick = onClearHistory) {
+                    Button(onClick = onClearHistory, enabled = !isEmpty.value,) {
                         Text(stringResource(id = R.string.clear_history))
                     }
                 })
@@ -68,23 +68,25 @@ fun HistoryScreen(
                 // List of search history items
                 LazyColumn(
                     contentPadding = contentPadding,
-                    modifier = modifier.padding(8.dp)
-                ) {
+                    modifier = modifier.padding(8.dp),
+                    content = {
                     items(historyItems) { item ->
                         HistoryItemCard(
                             history = item,
                             onDeleteWord = deleteWord,
-                            isEnabled = isEmpty.value,
                         )
                     }
-                }
+                })
             }
         },
     )
 }
 
 @Composable
-fun HistoryItemCard(history: HistoryItem, onDeleteWord: () -> Unit, isEnabled: Boolean) {
+fun HistoryItemCard(
+    history: HistoryItem,
+    onDeleteWord: () -> Unit,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -98,7 +100,7 @@ fun HistoryItemCard(history: HistoryItem, onDeleteWord: () -> Unit, isEnabled: B
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = history.word, style = MaterialTheme.typography.headlineSmall)
-            IconButton(onClick = onDeleteWord, enabled = !isEnabled, content = {
+            IconButton(onClick = onDeleteWord, content = {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(id = R.string.delete),

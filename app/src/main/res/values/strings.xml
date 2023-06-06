@@ -9,4 +9,5 @@
     <string name="clear_history">Clear History</string>
     <string name="empty_history">Empty History</string>
     <string name="empty_saves">No Saved Words</string>
+    <string name="sort_abc">A-Z</string>
 </resources>
