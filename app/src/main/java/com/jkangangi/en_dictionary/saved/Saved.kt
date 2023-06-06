@@ -24,8 +24,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -105,44 +107,41 @@ fun SavedWordCard(
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+            .padding(16.dp),
         ) {
-            Column(modifier = modifier.weight(.3f)) {
+        Column(modifier = modifier.padding(8.dp)) {
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
                     text = item.word,
                     style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 )
-                Spacer(modifier = modifier.height(8.dp))
-                Text(
-                    text = item.phonetics,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+
+                IconButton(
+                    onClick = { onDeleteClicked(item) }
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = stringResource(id = R.string.delete)
                     )
-                )
-                Spacer(modifier = modifier.height(16.dp))
-                Text(
-                    text = item.meaning,
-                    style = TextStyle(fontSize = 18.sp)
-                )
-                Spacer(modifier = modifier.height(16.dp))
+                }
             }
 
-            IconButton(
-                modifier = modifier.weight(.1f),
-                onClick = { onDeleteClicked(item) }
-            ) {
-                Icon(
-                    Icons.Default.Delete,
-                    contentDescription = stringResource(id = R.string.delete)
+            Text(
+                text = item.phonetics,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-            }
+            )
+            Spacer(modifier = modifier.height(16.dp))
+            Text(
+                text = item.meaning,
+                style = TextStyle(fontSize = 18.sp)
+            )
         }
     }
 }
