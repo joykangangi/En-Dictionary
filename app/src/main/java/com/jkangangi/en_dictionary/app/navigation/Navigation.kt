@@ -1,11 +1,13 @@
 package com.jkangangi.en_dictionary.app.navigation
 
+import android.os.Parcelable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.versionedparcelable.VersionedParcelize
 
 private data class BottomAppItem(
     val icon: ImageVector,
@@ -29,6 +31,9 @@ private val screens = listOf(
         "Saved",
         "" //Todo
     )
-
-
 )
+//navigation Destinations
+sealed class NavTarget : Parcelable {
+    @Parcelize
+
+}

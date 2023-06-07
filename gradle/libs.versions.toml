@@ -18,6 +18,8 @@ room = "2.5.1"
 worker = "2.8.1"
 
 [libraries] #Group;Name;Version.ref
+# Appyx Navigation
+appyx = "com.bumble.appyx:core:1.2.0"
 # Core
 core-ktx = "androidx.core:core-ktx:1.10.0"
 core-appcompat = "androidx.appcompat:appcompat:1.6.1"

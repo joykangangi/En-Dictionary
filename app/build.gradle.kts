@@ -97,6 +97,9 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.viewmodel.compose)
 
+    // Appyx Navigation - for navigation
+    implementation(libs.appyx)
+
     // preferences datastore
     implementation(libs.datastore)
 
