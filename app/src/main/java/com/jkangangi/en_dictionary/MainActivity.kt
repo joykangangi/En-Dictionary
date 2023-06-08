@@ -10,20 +10,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.bumble.appyx.core.integration.NodeHost
+import com.bumble.appyx.core.integrationpoint.NodeComponentActivity
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity : NodeComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             En_DictionaryTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                NodeHost(
+                    integrationPoint = appyxIntegrationPoint,
+                    factory = { context ->
+
+
+                    } )
             }
         }
     }

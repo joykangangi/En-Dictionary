@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.home
+package com.jkangangi.en_dictionary.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +30,7 @@ import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Search(
+fun SearchScreen(
     modifier: Modifier = Modifier,
     isDarkTheme: Boolean,
     toggleTheme: ()-> Unit
@@ -89,6 +89,6 @@ fun Search(
 @Composable
 fun HomePreview() {
     En_DictionaryTheme {
-        Search(isDarkTheme = false, toggleTheme = { })
+        SearchScreen(isDarkTheme = false, toggleTheme = { })
     }
 }
