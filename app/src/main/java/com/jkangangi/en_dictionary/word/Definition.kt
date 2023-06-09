@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 @Composable
-fun Definition(modifier: Modifier = Modifier) {
+fun DefinitionScreen(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
         //use a loop/lazy to show all parts of speech
         WordType(
@@ -94,7 +94,7 @@ fun WordType(modifier: Modifier = Modifier, wordType: String, definition: String
 fun DefinitionPreview() {
     En_DictionaryTheme {
         Scaffold {
-            Definition(modifier = Modifier)
+            DefinitionScreen(modifier = Modifier)
         }
     }
 }

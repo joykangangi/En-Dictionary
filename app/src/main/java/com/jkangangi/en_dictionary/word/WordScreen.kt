@@ -105,7 +105,7 @@ fun TabLayout(modifier: Modifier) {
             }
         }
         when (tabIndex) {
-            0 -> Definition()
+            0 -> DefinitionScreen()
             1 -> WordList(modifier = modifier, words = listOf("Car", "Bicycle"))
             2 -> WordList(modifier = modifier, words = listOf("Model", "Illustration") )
         }
