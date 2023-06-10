@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Search
@@ -18,17 +20,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
@@ -70,9 +77,19 @@ fun SearchScreen(
                     text = stringResource(id = R.string.home_body),
                     style = MaterialTheme.typography.bodyMedium,
                 )
+                val dummyText = remember { mutableStateOf("") }
+                val keyBoardController = LocalSoftwareKeyboardController.current
                 OutlinedTextField(
-                    value = "",//Todo VM
-                    onValueChange = { },
+                    value = dummyText.value,//Todo VM
+                    onValueChange = { dummyText.value = it},
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyBoardController?.hide()
+                        }
+                    )
+                    ,
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,

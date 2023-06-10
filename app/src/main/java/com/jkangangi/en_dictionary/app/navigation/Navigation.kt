@@ -1,11 +1,16 @@
 package com.jkangangi.en_dictionary.app.navigation
 
 import android.os.Parcelable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.bumble.appyx.core.composable.Children
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
@@ -21,14 +26,14 @@ import kotlinx.parcelize.Parcelize
 
 //navigation Destinations
 class Navigation(
-    buildContext: BuildContext,
-    startingRoute: Route = Route.Search ,
-    private val backStack: BackStack<Route> = BackStack(
+    rootBuildContext: BuildContext,
+    startingRoute: Route = Route.Search,
+    val backStack: BackStack<Route> = BackStack(
         initialElement = startingRoute,
-        savedStateMap = buildContext.savedStateMap,
+        savedStateMap = rootBuildContext.savedStateMap,
     ),
 ): ParentNode<Navigation.Route>(
-    buildContext = buildContext,
+    buildContext = rootBuildContext,
     navModel = backStack,
 ){
 
@@ -68,19 +73,28 @@ class Navigation(
         }
     }
 
-    sealed class Route : Parcelable {
+    sealed class Route(val icon: ImageVector? = null, val title: String? = null) : Parcelable {
 
         @Parcelize
-        object Search: Route()
+        object Search: Route(icon = Icons.Default.Search, title = "Search")
 
         @Parcelize
         data class Definition(val word: Word) : Route()
 
         @Parcelize
-        object Saved: Route()
+        object Saved: Route(icon = Icons.Default.Bookmark, title = "Saved")
 
         @Parcelize
-        object History: Route()
+        object History: Route(icon = Icons.Default.History, title = "History")
 
     }
+
+    fun bottomNavItems(): List<Route> {
+        return listOf(
+            Route.Search,
+            Route.Saved,
+            Route.History
+        )
+    }
+
 }

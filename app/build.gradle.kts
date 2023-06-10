@@ -72,6 +72,7 @@ android {
 
 dependencies {
 
+    coreLibraryDesugaring(libs.core.java8)
     implementation(libs.core.ktx)
     implementation(libs.core.appcompat)
 
