@@ -1,15 +1,12 @@
 package com.jkangangi.en_dictionary.app.navigation
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,39 +16,40 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.bumble.appyx.navmodel.backstack.BackStack
+import com.bumble.appyx.navmodel.backstack.active
+import com.bumble.appyx.navmodel.backstack.activeElement
 import com.bumble.appyx.navmodel.backstack.operation.push
+import com.bumble.appyx.navmodel.backstack.operation.singleTop
 
-private data class BottomAppItem(
-    val icon: ImageVector,
-    val title: String,
-    val route: Navigation.Route,
-)
-
-private val screens = listOf(
-    BottomAppItem(
-        icon = Icons.Default.Search,
-        title = "Search",
-        route = Navigation.Route.Search
-    ),
-    BottomAppItem(
-        icon = Icons.Default.History,
-        title = "History",
-        route = Navigation.Route.History
-    ),
-    BottomAppItem(
-        icon = Icons.Default.Bookmark,
-        title = "Saved",
-        route = Navigation.Route.Saved
-    )
+private val bottomNavScreens = listOf(
+    Navigation.Route.Search,
+    Navigation.Route.Saved,
+    Navigation.Route.History
 )
 
 @Composable
-fun BottomNavBar(navigation: Navigation, modifier: Modifier = Modifier) {
+fun BottomNavigation(
+    modifier: Modifier = Modifier,
+    backStackNavigator: BackStack<Navigation.Route>,
+navigation: Navigation,
+) {
+    val navItems = remember { bottomNavScreens }
 
-    val currentRoute by remember { mutableStateOf(navigation.currentRoute) }
+    val currentRoute by remember {
+        mutableStateOf(navigation.currentRoute)
+    }
+    val onItemClick = remember {
+        { screen: Navigation.Route ->
+            //backStackNavigator.singleTop(screen)
+            navigation.b
+        }
+    }
 
     val showBottomBar by remember(currentRoute) {
         derivedStateOf {
@@ -62,10 +60,7 @@ fun BottomNavBar(navigation: Navigation, modifier: Modifier = Modifier) {
         }
     }
 
-    // Handle item selection and update the current route
-    val onItemSelected: (Navigation.Route) -> Unit = { route ->
-        navigation.backStack.push(route)
-    }
+
 
     if (showBottomBar) {
         BottomAppBar(
@@ -77,12 +72,13 @@ fun BottomNavBar(navigation: Navigation, modifier: Modifier = Modifier) {
                         .padding(horizontal = 12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     content = {
-                        screens.forEach { screen ->
+                        navItems.forEach { screen ->
+                            Log.i("Bottom Nav", "current route $currentRoute, Active element${backStackNavigator.activeElement}")
                             BottomAppBarItem(
                                 title = screen.title,
                                 icon = screen.icon,
-                                selected = screen.route == currentRoute ,
-                                onClick = { onItemSelected(screen.route) })
+                                selected = screen == currentRoute,
+                                onClick = { onItemClick(screen) })
                         }
                     }
                 )
@@ -93,8 +89,8 @@ fun BottomNavBar(navigation: Navigation, modifier: Modifier = Modifier) {
 
 @Composable
 private fun BottomAppBarItem(
-    title: String,
-    icon: ImageVector,
+    title: String?,
+    icon: ImageVector?,
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -105,16 +101,21 @@ private fun BottomAppBarItem(
             .padding(5.dp)
             .clickable { onClick() },
         verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = title,
-                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-            )
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = title,
+                    tint = if (selected) MaterialTheme.colorScheme.primary else Color.Gray
+                )
+            }
+            if (title != null) {
+                Text(
+                    text = title,
+                    color = if (selected) MaterialTheme.colorScheme.primary else Color.Gray
+                )
+            }
         }
     )
 }

@@ -1,10 +1,12 @@
 package com.jkangangi.en_dictionary.app.navigation
 
 import android.os.Parcelable
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,10 +34,10 @@ class Navigation(
         initialElement = startingRoute,
         savedStateMap = rootBuildContext.savedStateMap,
     ),
-): ParentNode<Navigation.Route>(
+) : ParentNode<Navigation.Route>(
     buildContext = rootBuildContext,
     navModel = backStack,
-){
+) {
 
     var currentRoute by mutableStateOf(startingRoute)
         private set
@@ -43,12 +45,18 @@ class Navigation(
     @Composable
     override fun View(modifier: Modifier) {
         //This will add the child nodes to the composition
-        Children(
-            navModel = backStack,
-            transitionHandler = rememberBackstackSlider(),
-        )
+        Scaffold(
+            bottomBar = {
+                BottomNavigation(backStackNavigator = backStack)
+            }
+        ) {
+            Children(
+                navModel = backStack,
+                transitionHandler = rememberBackstackSlider(),
+                modifier = modifier.padding(it),
+            )
+        }
     }
-
     override fun resolve(navTarget: Route, buildContext: BuildContext): Node {
         currentRoute = navTarget
 
@@ -57,44 +65,36 @@ class Navigation(
                 buildContext = buildContext,
                 backStack = backStack,
             )
+
             is Route.Definition -> DefinitionRoute(
                 buildContext = buildContext,
                 backStack = backStack,
             )
 
-           is Route.Saved -> SavedRoute(
+            is Route.Saved -> SavedRoute(
                 buildContext = buildContext,
                 backStack = backStack,
             )
 
-           is Route.History -> HistoryRoute(
-               buildContext = buildContext,
-           )
+            is Route.History -> HistoryRoute(
+                buildContext = buildContext,
+            )
         }
     }
 
     sealed class Route(val icon: ImageVector? = null, val title: String? = null) : Parcelable {
 
         @Parcelize
-        object Search: Route(icon = Icons.Default.Search, title = "Search")
+        object Search : Route(icon = Icons.Default.Search, title = "Search")
 
         @Parcelize
         data class Definition(val word: Word) : Route()
 
         @Parcelize
-        object Saved: Route(icon = Icons.Default.Bookmark, title = "Saved")
+        object Saved : Route(icon = Icons.Default.Bookmark, title = "Saved")
 
         @Parcelize
-        object History: Route(icon = Icons.Default.History, title = "History")
+        object History : Route(icon = Icons.Default.History, title = "History")
 
     }
-
-    fun bottomNavItems(): List<Route> {
-        return listOf(
-            Route.Search,
-            Route.Saved,
-            Route.History
-        )
-    }
-
 }
