@@ -8,9 +8,6 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.bumble.appyx.core.composable.Children
@@ -30,17 +27,14 @@ import kotlinx.parcelize.Parcelize
 class Navigation(
     rootBuildContext: BuildContext,
     startingRoute: Route = Route.Search,
-    val backStack: BackStack<Route> = BackStack(
+    private val backStack: BackStack<Route> = BackStack(
         initialElement = startingRoute,
         savedStateMap = rootBuildContext.savedStateMap,
     ),
-) : ParentNode<Navigation.Route>(
+) : ParentNode<Route>(
     buildContext = rootBuildContext,
     navModel = backStack,
 ) {
-
-    var currentRoute by mutableStateOf(startingRoute)
-        private set
 
     @Composable
     override fun View(modifier: Modifier) {
@@ -57,10 +51,10 @@ class Navigation(
             )
         }
     }
-    override fun resolve(navTarget: Route, buildContext: BuildContext): Node {
-        currentRoute = navTarget
 
-        return when(navTarget) {
+    override fun resolve(navTarget: Route, buildContext: BuildContext): Node {
+
+        return when (navTarget) {
             Route.Search -> SearchRoute(
                 buildContext = buildContext,
                 backStack = backStack,
@@ -81,20 +75,20 @@ class Navigation(
             )
         }
     }
+}
 
-    sealed class Route(val icon: ImageVector? = null, val title: String? = null) : Parcelable {
+sealed class Route(val icon: ImageVector? = null, val title: String? = null) : Parcelable {
 
-        @Parcelize
-        object Search : Route(icon = Icons.Default.Search, title = "Search")
+    @Parcelize
+    object Search : Route(icon = Icons.Default.Search, title = "Search")
 
-        @Parcelize
-        data class Definition(val word: Word) : Route()
+    @Parcelize
+    data class Definition(val word: Word) : Route()
 
-        @Parcelize
-        object Saved : Route(icon = Icons.Default.Bookmark, title = "Saved")
+    @Parcelize
+    object Saved : Route(icon = Icons.Default.Bookmark, title = "Saved")
 
-        @Parcelize
-        object History : Route(icon = Icons.Default.History, title = "History")
+    @Parcelize
+    object History : Route(icon = Icons.Default.History, title = "History")
 
-    }
 }

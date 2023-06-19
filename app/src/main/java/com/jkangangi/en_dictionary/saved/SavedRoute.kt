@@ -6,10 +6,11 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.jkangangi.en_dictionary.app.navigation.Navigation
+import com.jkangangi.en_dictionary.app.navigation.Route
 
 class SavedRoute(
     buildContext: BuildContext,
-    private val backStack: BackStack<Navigation.Route>
+    private val backStack: BackStack<Route>
 ) : Node(buildContext = buildContext) {
 
     @Composable
