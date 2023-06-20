@@ -22,7 +22,7 @@ import com.jkangangi.en_dictionary.saved.SavedRoute
 import com.jkangangi.en_dictionary.search.SearchRoute
 import com.jkangangi.en_dictionary.word.DefinitionRoute
 import kotlinx.parcelize.Parcelize
-
+ 
 //navigation Destinations
 class Navigation(
     rootBuildContext: BuildContext,

@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.data.local
+package com.jkangangi.en_dictionary.app.data.local
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
