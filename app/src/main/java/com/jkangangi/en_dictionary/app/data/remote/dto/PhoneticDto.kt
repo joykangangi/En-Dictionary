@@ -1,8 +1,16 @@
 package com.jkangangi.en_dictionary.app.data.remote.dto
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class PhoneticDto(
-    val audio: String,
-    val license: LicenseDto,
-    val sourceUrl: String,
-    val text: String
+    @SerialName("audio")
+    val audio: String = "",
+    @SerialName("licence")
+    val license: LicenseDto = LicenseDto(),
+    @SerialName("sourceUrl")
+    val sourceUrl: String = "",
+    @SerialName("text")
+    val text: String = ""
 )

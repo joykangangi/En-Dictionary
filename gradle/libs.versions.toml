@@ -1,21 +1,15 @@
 #This is a Version Catalog File
 [versions]
-accompanist = "0.30.0"
 compose = "2023.04.00"
 compose-compiler = "1.4.6"
-compose-navigation = "1.8.39-beta"
 gradlePlugin = "8.0.0"
 hilt = "2.45"
 junit = "5.9.2"
-jwt = "0.11.5"
 kotlinVersion = "1.8.20"
 ktor = "2.2.4"
 lifecycle = "2.6.1"
-navigation = "2.5.3"
 okhttp = "5.0.0-alpha.11"
-permissions = "4.9.2"
 room = "2.5.1"
-worker = "2.8.1"
 
 [libraries] #Group;Name;Version.ref
 # Appyx Navigation
@@ -29,16 +23,12 @@ core-java8 = "com.android.tools:desugar_jdk_libs:2.0.3"
 core-material = "com.google.android.material:material:1.8.0"
 core-splashscreen = "androidx.core:core-splashscreen:1.0.0"
 core-swiperefresh = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-# Coil
-coil = "io.coil-kt:coil-compose:2.3.0"
 # Compose
 compose = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }
 compose-activity = "androidx.activity:activity-compose:1.7.0"
 compose-constraintlayout = "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 compose-custom-view = "androidx.customview:customview:1.2.0-alpha02"
 compose-custom-view-pooling = "androidx.customview:customview-poolingcontainer:1.0.0"
-compose-navigation = { module = "io.github.raamcosta.compose-destinations:animations-core", version.ref = "compose-navigation" }
-compose-navigation-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-navigation" }
 compose-material = "androidx.compose.material3:material3:1.1.0-beta02"
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -50,8 +40,6 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 # Datastore
 datastore = "androidx.datastore:datastore-preferences:1.1.0-alpha04"
-# Expresso
-expresso = "androidx.test.espresso:espresso-core:3.5.1"
 # Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
@@ -63,32 +51,24 @@ junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref 
 # Kotlinx
 kotlin-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 kotlin-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
-kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
-
+kotlin-serialization-ktor = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+kotlin-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
 # Ktor-client
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
-
+ktor-client-contentnegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 # Lifecycle
 lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-# MockK
-mockk = "io.mockk:mockk:1.13.4"
 # Napier
 napier = "io.github.aakira:napier:2.6.1"
 # Room
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-# Worker
-worker = { module = "androidx.work:work-runtime-ktx", version.ref = "worker" }
-worker-hilt = "androidx.hilt:hilt-work:1.0.0"
-worker-hilt-compiler = "androidx.hilt:hilt-compiler:1.0.0"
-worker-testing = { module = "androidx.work:work-testing", version.ref = "worker" }
+
 
 [plugins] #Id;Version.ref
 android-application = { id = "com.android.application", version.ref = "gradlePlugin" }

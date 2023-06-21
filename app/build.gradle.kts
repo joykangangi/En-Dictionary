@@ -72,6 +72,7 @@ android {
 
 dependencies {
 
+    //core
     coreLibraryDesugaring(libs.core.java8)
     implementation(libs.core.ktx)
     implementation(libs.core.appcompat)
@@ -84,8 +85,6 @@ dependencies {
     // Compose
     implementation(platform(libs.compose))
     implementation(libs.compose.activity)
-    implementation(libs.compose.navigation)
-    ksp(libs.compose.navigation.ksp)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.custom.view)
@@ -112,13 +111,14 @@ dependencies {
 
     //Ktor-Client
     implementation(libs.ktor.client.android)
-    implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.serialization)
     implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.contentnegotiation)
 
     // Kotlinx
     implementation(libs.kotlin.immutable)
-    implementation(libs.kotlin.serialization)
+    implementation(libs.kotlin.serialization.json)
+    implementation(libs.kotlin.serialization.ktor)
 
     // Napier
     implementation(libs.napier)
@@ -130,6 +130,5 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.junit.engine)
-    androidTestImplementation(libs.expresso)
     androidTestImplementation(libs.junit.android)
 }
