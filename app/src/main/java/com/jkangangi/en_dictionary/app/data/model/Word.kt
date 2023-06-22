@@ -9,10 +9,10 @@ import kotlinx.serialization.Serializable
 @Stable
 @Parcelize
 data class Word(
-    val license: License = License(),
-    val meanings: List<Meaning> = listOf(),
-    val phonetic: String = "",
-    val phonetics: List<Phonetic> = listOf(),
-    val sourceUrls: List<String> = listOf(),
-    val word: String = ""
+    val license: License,
+    val meanings: List<Meaning>,
+    val phonetic: String,
+    val phonetics: List<Phonetic>,
+    val sourceUrls: List<String>,
+    val word: String
 ): Parcelable

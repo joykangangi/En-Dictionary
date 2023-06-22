@@ -9,8 +9,8 @@ import kotlinx.serialization.Serializable
 @Stable
 @Parcelize
 data class Phonetic(
-    val audio: String = "",
-    val license: License = License(),
-    val sourceUrl: String = "",
-    val text: String = ""
+    val audio: String,
+    val license: License,
+    val sourceUrl: String,
+    val text: String
 ): Parcelable

@@ -9,6 +9,6 @@ import kotlinx.serialization.Serializable
 @Stable
 @Parcelize
 data class License(
-    val name: String = "",
-    val url: String = ""
+    val name: String,
+    val url: String
 ): Parcelable
