@@ -15,48 +15,53 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
 const val TIME_OUT = 10_000L
-private val ktorHttpClient = HttpClient(Android) {
 
-    //json serializer/deserializer
-    install(ContentNegotiation) {
-        json(Json {
-            encodeDefaults = true
-            prettyPrint = true
-            ignoreUnknownKeys = true
-            isLenient = true
-        })
-    }
+class KtorHttpClient @Inject constructor() {
 
-    //TIMEOUT
-    install(HttpTimeout) {
-        requestTimeoutMillis = TIME_OUT
-        connectTimeoutMillis = TIME_OUT
-        socketTimeoutMillis = TIME_OUT
-    }
+    fun getHttpClient() = HttpClient(Android) {
 
-
-    //default values for each HTTP request,json
-    install(DefaultRequest) {
-        contentType(ContentType.Application.Json)
-        accept(ContentType.Application.Json)
-    }
-
-    //logging requests + responses
-    install(Logging) {
-        logger = object : Logger {
-            override fun log(message: String) {
-                Napier.v(message)
-            }
+        //json serializer/deserializer
+        install(ContentNegotiation) {
+            json(Json {
+                encodeDefaults = true
+                prettyPrint = true
+                ignoreUnknownKeys = true
+                isLenient = true
+            })
         }
-        level = LogLevel.BODY
-    }
 
-    //response status
-    install(ResponseObserver) {
-        onResponse { response ->
-            Napier.i("HTTP STATUS: ${response.status.value}")
+        //TIMEOUT
+        install(HttpTimeout) {
+            requestTimeoutMillis = TIME_OUT
+            connectTimeoutMillis = TIME_OUT
+            socketTimeoutMillis = TIME_OUT
+        }
+
+
+        //default values for each HTTP request,json
+        install(DefaultRequest) {
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
+
+        //logging requests + responses
+        install(Logging) {
+            logger = object : Logger {
+                override fun log(message: String) {
+                    Napier.v(message)
+                }
+            }
+            level = LogLevel.BODY
+        }
+
+        //response status
+        install(ResponseObserver) {
+            onResponse { response ->
+                Napier.i("HTTP STATUS: ${response.status.value}")
+            }
         }
     }
 }
