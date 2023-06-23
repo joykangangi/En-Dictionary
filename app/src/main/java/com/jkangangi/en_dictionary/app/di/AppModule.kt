@@ -24,6 +24,7 @@ object AppModule {
 
     @Provides
     @Singleton
+    //viewmodelcomponent
     fun provideDictionaryRepository(impl: DictionaryRepositoryImpl): DictionaryRepository {
         return impl
     }
