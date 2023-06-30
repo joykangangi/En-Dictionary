@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.app.data.remote.dto
 
+import com.jkangangi.en_dictionary.app.data.model.Word
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -17,4 +18,6 @@ data class WordDto(
     val sourceUrls: List<String> = listOf(),
     @SerialName("word")
     val word: String = ""
-)
+) {
+    fun WordDto.toWordEntity
+}

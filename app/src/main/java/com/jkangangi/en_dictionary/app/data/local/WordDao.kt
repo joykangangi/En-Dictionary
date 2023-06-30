@@ -10,10 +10,10 @@ import androidx.room.Query
 interface WordDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWord(infos: List<WordEntity>)
+    suspend fun insertWord(wordEntities: List<WordEntity>)
 
     @Delete
-    suspend fun deleteWord(word: String)
+    suspend fun deleteWord(word: List<String>)
 
     @Query("SELECT * FROM wordentity WHERE word LIKE '%' || :word || '%'") //wildcard
     suspend fun getWord(word: String): List<WordEntity>

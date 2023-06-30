@@ -5,7 +5,7 @@ import androidx.compose.runtime.Stable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-
+@Serializable
 @Stable
 @Parcelize
 data class Meaning(

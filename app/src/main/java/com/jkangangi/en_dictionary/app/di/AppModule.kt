@@ -1,6 +1,9 @@
 package com.jkangangi.en_dictionary.app.di
 
-import com.jkangangi.en_dictionary.app.data.remote.network.DictionaryRepository
+import android.app.Application
+import androidx.room.Room
+import com.jkangangi.en_dictionary.app.data.local.WordDatabase
+import com.jkangangi.en_dictionary.app.data.remote.network.DictionaryAPI
 import com.jkangangi.en_dictionary.app.data.remote.network.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.data.remote.network.KtorHttpClient
 import dagger.Module
@@ -25,7 +28,18 @@ object AppModule {
     @Provides
     @Singleton
     //viewmodelcomponent
-    fun provideDictionaryRepository(impl: DictionaryRepositoryImpl): DictionaryRepository {
+    fun provideDictionaryRepository(impl: DictionaryRepositoryImpl): DictionaryAPI {
         return impl
+    }
+
+    //Word-Local DB
+    @Provides
+    @Singleton
+    fun providesDatabase(application: Application): WordDatabase {
+        return Room.databaseBuilder(
+            context = application,
+            klass = WordDatabase::class.java,
+            name = WordDatabase::class.simpleName
+        ).build()
     }
 }

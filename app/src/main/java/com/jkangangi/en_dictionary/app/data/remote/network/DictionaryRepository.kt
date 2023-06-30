@@ -1,8 +1,9 @@
 package com.jkangangi.en_dictionary.app.data.remote.network
 
-import com.jkangangi.en_dictionary.app.data.remote.dto.WordDto
+import com.jkangangi.en_dictionary.app.data.model.Word
 import com.jkangangi.en_dictionary.app.util.NetworkResult
+import kotlinx.coroutines.flow.Flow
 
 interface DictionaryRepository {
-    suspend fun getWord(): NetworkResult<List<WordDto>>
+    suspend fun getWord(word: String): Flow<NetworkResult<List<Word>>>
 }

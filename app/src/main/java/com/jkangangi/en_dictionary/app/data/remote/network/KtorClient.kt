@@ -19,6 +19,9 @@ import javax.inject.Inject
 
 const val TIME_OUT = 10_000L
 
+
+//functions that will help process api data
+// @client - asynchronous client to perform HTTP requests(network calls) that use the Ktor HttpClientEngine.
 class KtorHttpClient @Inject constructor() {
 
     fun getHttpClient() = HttpClient(Android) {
