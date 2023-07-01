@@ -3,55 +3,69 @@ package com.jkangangi.en_dictionary.app.data.remote.network
 import com.jkangangi.en_dictionary.app.data.local.WordDao
 import com.jkangangi.en_dictionary.app.data.local.toWord
 import com.jkangangi.en_dictionary.app.data.model.Word
-import com.jkangangi.en_dictionary.app.data.remote.dto.WordDto
-import com.jkangangi.en_dictionary.app.data.remote.mappers.toWord
-import com.jkangangi.en_dictionary.app.data.remote.network.ApiRoutes.WORD
+import com.jkangangi.en_dictionary.app.data.remote.dto.DictionaryServiceImpl
+import com.jkangangi.en_dictionary.app.data.remote.mappers.toWordEntity
 import com.jkangangi.en_dictionary.app.util.NetworkResult
-import io.github.aakira.napier.Napier
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
-import io.ktor.client.request.get
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * implement the actual network call using the Ktor client.
+ * Data Source to be used in the view models
+ * Get Data from Api -> Insert into the Database -> Show the UI
+ * All data will come from the database; ie Single Source of Truth
+ *
  *
  */
 
 class DictionaryRepositoryImpl @Inject constructor(
-    private val client: HttpClient,
-    private val dao: WordDao
+    private val dao: WordDao,
+    private val dictionaryService: DictionaryServiceImpl
 ) : DictionaryRepository {
 
-    override suspend fun getWord(word: String): Flow<NetworkResult<List<Word>>> = flow {
+    override fun getWord(word: String): Flow<NetworkResult<List<Word>>> = flow {
         emit(NetworkResult.Loading())
 
-        val wordData = dao.getWord(word = word).map { it.toWord() }
-        emit(NetworkResult.Loading(data = wordData))
+        /**
+         * API -> Database
+         */
+        val localWordData = dao.getWord(word = word).map { it.toWord() }
+        emit(NetworkResult.Loading(data = localWordData))
 
-         try {
-             val remoteWordData = client.get(WORD).body<List<WordDto>>()
-             dao.deleteWord(word = remoteWordData.map { it.word })
-             dao.insertWord(wordEntities = remoteWordData.map { it.toWord()})
-            NetworkResult.Success(client.get(WORD).body())
+        try {
+            val remoteWordData = dictionaryService.getWordDTO(word = word)
+            dao.deleteWord(remoteWordData.map { it.word })
+            dao.insertWord(remoteWordData.map { it.toWordEntity() })
+
         } catch (e: RedirectResponseException) {
             //3xx
-            Napier.e("Error: ${e.response.status.description}")
-            NetworkResult.Error(message = e.stackTraceToString())
+            emit(
+                NetworkResult.Error(
+                    message = "Error ${e.response.status.description}",
+                    data = localWordData
+                )
+            )
         } catch (e: ClientRequestException) {
             //4xx
-            Napier.e("Error: ${e.response.status.description}")
-            NetworkResult.Error(message = e.stackTraceToString())
+            emit(
+                NetworkResult.Error(
+                    message = "Check your internet connection",
+                    data = localWordData
+                )
+            )
+
         } catch (e: ServerResponseException) {
             //5xx
-            Napier.e("Error: ${e.response.status.description}")
-            NetworkResult.Error(message = e.stackTraceToString())
+            emit(NetworkResult.Error(message = e.response.status.description, data = localWordData))
         }
-    }
 
+        /**
+         * Database -> UI
+         */
+        val newWord = dao.getWord(word).map { it.toWord() }
+        emit(NetworkResult.Success(data = newWord))
+    }
 }

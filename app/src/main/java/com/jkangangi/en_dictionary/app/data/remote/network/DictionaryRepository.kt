@@ -5,5 +5,5 @@ import com.jkangangi.en_dictionary.app.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
 
 interface DictionaryRepository {
-    suspend fun getWord(word: String): Flow<NetworkResult<List<Word>>>
+    fun getWord(word: String): Flow<NetworkResult<List<Word>>>
 }

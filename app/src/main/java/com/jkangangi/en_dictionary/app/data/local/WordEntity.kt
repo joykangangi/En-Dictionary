@@ -1,14 +1,9 @@
 package com.jkangangi.en_dictionary.app.data.local
 
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import com.jkangangi.en_dictionary.app.data.model.Meaning
-import com.jkangangi.en_dictionary.app.data.model.Phonetic
 import com.jkangangi.en_dictionary.app.data.model.Word
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 
@@ -25,10 +20,7 @@ fun WordEntity.toWord(): Word {
     return Word(
         meanings = meanings,
         phonetic = phonetic,
-        word = word,
-        license = null,
-        sourceUrls = null,
-        phonetics = null
+        word = word
     )
 }
 

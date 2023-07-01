@@ -20,8 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,9 +36,11 @@ import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     isDarkTheme: Boolean,
-    toggleTheme: ()-> Unit
+    toggleTheme: () -> Unit,
+    searchState: SearchScreenState,
+    updateQuery: (String) -> Unit
 ) {
 
     Scaffold(
@@ -77,19 +77,18 @@ fun SearchScreen(
                     text = stringResource(id = R.string.home_body),
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                val dummyText = remember { mutableStateOf("") }
+
                 val keyBoardController = LocalSoftwareKeyboardController.current
                 OutlinedTextField(
-                    value = dummyText.value,//Todo VM
-                    onValueChange = { dummyText.value = it},
+                    value = searchState.searchQuery,
+                    onValueChange = { updateQuery(it) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(
                         onDone = {
                             keyBoardController?.hide()
                         }
-                    )
-                    ,
+                    ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
@@ -104,8 +103,15 @@ fun SearchScreen(
 
 @Preview
 @Composable
-fun HomePreview() {
+private fun HomePreview() {
+
     En_DictionaryTheme {
-        SearchScreen(isDarkTheme = false, toggleTheme = { })
+        SearchScreen(
+            isDarkTheme = false,
+            toggleTheme = { },
+            searchState = SearchScreenState(),
+            updateQuery = { },
+            modifier = Modifier
+        )
     }
 }
