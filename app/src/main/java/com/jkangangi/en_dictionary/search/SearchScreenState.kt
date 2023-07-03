@@ -7,6 +7,5 @@ import kotlinx.collections.immutable.persistentListOf
 
 data class SearchScreenState(
     val wordItems: ImmutableList<Word> = persistentListOf(),
-    val isLoading: Boolean = false,
-    val searchQuery: String = ""
+    val isLoading: Boolean = false
 )

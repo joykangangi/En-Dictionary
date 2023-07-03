@@ -83,7 +83,7 @@ sealed class Route(val icon: ImageVector? = null, val title: String? = null) : P
     object Search : Route(icon = Icons.Default.Search, title = "Search")
 
     @Parcelize
-    data class Definition(val word: Word) : Route()
+    data class Definition(val word: String) : Route()
 
     @Parcelize
     object Saved : Route(icon = Icons.Default.Bookmark, title = "Saved")

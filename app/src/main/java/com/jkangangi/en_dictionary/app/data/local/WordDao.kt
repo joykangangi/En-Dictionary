@@ -12,8 +12,8 @@ interface WordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWord(wordEntities: List<WordEntity>)
 
-    @Delete
-    suspend fun deleteWord(word: List<String>)
+    @Query("DELETE FROM wordentity WHERE word IN(:words)")
+    suspend fun deleteWord(words: List<String>)
 
     @Query("SELECT * FROM wordentity WHERE word LIKE '%' || :word || '%'") //wildcard
     suspend fun getWord(word: String): List<WordEntity>

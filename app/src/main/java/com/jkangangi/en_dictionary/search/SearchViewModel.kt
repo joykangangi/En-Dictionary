@@ -33,13 +33,12 @@ class SearchViewModel @Inject constructor(
     private val _searchState = MutableStateFlow(SearchScreenState())
     val searchState = _searchState.asStateFlow()
 
-    private val _searchQuery = MutableStateFlow(_searchState.value.searchQuery)
+    private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
     private var searchJob: Job? = null
     fun onSearch(query: String) {
         _searchQuery.update { query }
-
         searchJob = viewModelScope.launch {
             delay(DELAY_TIME)
             repository.getWord(word = query).onEach { result ->

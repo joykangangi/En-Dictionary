@@ -39,8 +39,9 @@ fun SearchScreen(
     modifier: Modifier,
     isDarkTheme: Boolean,
     toggleTheme: () -> Unit,
-    searchState: SearchScreenState,
-    updateQuery: (String) -> Unit
+    query: String,
+    updateQuery: (String) -> Unit,
+    onSearchClick: () -> Unit
 ) {
 
     Scaffold(
@@ -80,13 +81,14 @@ fun SearchScreen(
 
                 val keyBoardController = LocalSoftwareKeyboardController.current
                 OutlinedTextField(
-                    value = searchState.searchQuery,
+                    value = query,
                     onValueChange = { updateQuery(it) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(
                         onDone = {
                             keyBoardController?.hide()
+                            onSearchClick()
                         }
                     ),
                     leadingIcon = {
@@ -107,11 +109,12 @@ private fun HomePreview() {
 
     En_DictionaryTheme {
         SearchScreen(
+            modifier = Modifier,
             isDarkTheme = false,
             toggleTheme = { },
-            searchState = SearchScreenState(),
+            query = "",
             updateQuery = { },
-            modifier = Modifier
+            onSearchClick = { }
         )
     }
 }

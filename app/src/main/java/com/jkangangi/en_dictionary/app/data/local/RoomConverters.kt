@@ -9,12 +9,12 @@ import kotlinx.serialization.json.Json
 class RoomConverters {
 
     @TypeConverter
-    fun meaningsToJson(meaning: Meaning?): String {
-        return Json.encodeToString(meaning)
+    fun meaningsToJson(meanings: List<Meaning>): String {
+        return Json.encodeToString(meanings)
     }
 
     @TypeConverter
-    fun jsonToMeaning(json: String): Meaning {
+    fun jsonToMeaning(json: String): List<Meaning> {
        return Json.decodeFromString(json)
     }
 

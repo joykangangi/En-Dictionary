@@ -3,7 +3,6 @@ package com.jkangangi.en_dictionary.app.di
 import android.app.Application
 import androidx.room.Room
 import com.jkangangi.en_dictionary.app.data.local.WordDatabase
-import com.jkangangi.en_dictionary.app.data.remote.dto.DictionaryService
 import com.jkangangi.en_dictionary.app.data.remote.dto.DictionaryServiceImpl
 import com.jkangangi.en_dictionary.app.data.remote.network.DictionaryRepository
 import com.jkangangi.en_dictionary.app.data.remote.network.DictionaryRepositoryImpl
@@ -59,7 +58,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDictServiceImpl(client: HttpClient): DictionaryServiceImpl {
-      return  DictionaryServiceImpl(client)
+        return DictionaryServiceImpl(client)
     }
 
 
