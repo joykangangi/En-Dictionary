@@ -9,14 +9,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
-import com.bumble.appyx.navmodel.backstack.operation.newRoot
 import com.bumble.appyx.navmodel.backstack.operation.singleTop
 import com.jkangangi.en_dictionary.app.navigation.Route
 
 class SearchRoute(
     buildContext: BuildContext,
     private val backStack: BackStack<Route>, //navController
-    //you can add an onclick which can help in moving to next screen + push a screen to backstack
 ) : Node(buildContext = buildContext) {
 
     @Composable
@@ -32,13 +30,9 @@ class SearchRoute(
     ) {
         val search by viewModel.searchQuery.collectAsState()
         val searchClick: () -> Unit = remember {
-           // { backStack.newRoot(Route.Definition(search)) }
             {
-                backStack.run {
-                    elements.value.first().key.navTarget.let {
-                        singleTop(it)
-                    }
-                }
+                backStack.singleTop(Route.Definition(search))
+
             }
         }
 

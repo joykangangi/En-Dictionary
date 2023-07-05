@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.activeElement
-import com.bumble.appyx.navmodel.backstack.operation.push
+import com.bumble.appyx.navmodel.backstack.operation.singleTop
 
 private val bottomNavScreens = listOf(
     Route.Search,
@@ -31,7 +31,7 @@ private val bottomNavScreens = listOf(
 )
 
 @Composable
-fun BottomNavigation(
+fun BottomNavigator(
     modifier: Modifier = Modifier,
     backStackNavigator: BackStack<Route>,
 ) {
@@ -40,8 +40,7 @@ fun BottomNavigation(
     val currentRoute = backStackNavigator.activeElement
     val onItemClick = remember {
         { screen: Route ->
-            backStackNavigator.push(screen)
-            //backStackNavigator.singleTop(screen)
+            backStackNavigator.singleTop(screen)
         }
     }
 
@@ -54,10 +53,12 @@ fun BottomNavigation(
         }
     }
 
-    val selected: (screen: Route) -> Boolean = { screen ->
-        currentRoute?.let { route ->
-            route == screen
-        } ?: false
+    val selected: (screen: Route) -> Boolean =  remember {
+        { screen ->
+            currentRoute?.let { route ->
+                route == screen
+            } ?: false
+        }
     }
 
 

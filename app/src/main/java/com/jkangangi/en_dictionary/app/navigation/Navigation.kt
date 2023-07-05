@@ -16,13 +16,12 @@ import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.node.ParentNode
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
-import com.jkangangi.en_dictionary.app.data.model.Word
 import com.jkangangi.en_dictionary.history.HistoryRoute
 import com.jkangangi.en_dictionary.saved.SavedRoute
 import com.jkangangi.en_dictionary.search.SearchRoute
 import com.jkangangi.en_dictionary.word.DefinitionRoute
 import kotlinx.parcelize.Parcelize
- 
+
 //navigation Destinations
 class Navigation(
     rootBuildContext: BuildContext,
@@ -41,7 +40,7 @@ class Navigation(
         //This will add the child nodes to the composition
         Scaffold(
             bottomBar = {
-                BottomNavigation(backStackNavigator = backStack)
+                BottomNavigator(backStackNavigator = backStack)
             }
         ) {
             Children(

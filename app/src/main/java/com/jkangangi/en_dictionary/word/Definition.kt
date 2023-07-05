@@ -38,7 +38,7 @@ fun DefinitionScreen(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun WordType(modifier: Modifier = Modifier, wordType: String, definition: String, example: String) {
+private fun WordType(modifier: Modifier = Modifier, wordType: String, definition: String, example: String) {
     Column {
         Row(
             modifier = modifier.padding(8.dp),
@@ -91,7 +91,7 @@ fun WordType(modifier: Modifier = Modifier, wordType: String, definition: String
 
 @Preview
 @Composable
-fun DefinitionPreview() {
+private fun DefinitionPreview() {
     En_DictionaryTheme {
         Scaffold {
             DefinitionScreen(modifier = Modifier)

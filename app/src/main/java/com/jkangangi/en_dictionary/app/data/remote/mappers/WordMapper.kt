@@ -9,6 +9,8 @@ fun WordDto.toWordEntity(): WordEntity {
     return WordEntity(
         meanings = meanings.map { it.toMeaning() },
         phonetic = phonetic,
-        word = word
+        word = word,
+        phonetics = phonetics.map { it.toPhonetic() },
+        sourceUrls = sourceUrls
     )
 }

@@ -9,5 +9,7 @@ import kotlinx.parcelize.Parcelize
 data class Word(
     val meanings: List<Meaning>,
     val phonetic: String,
-    val word: String
+    val word: String,
+    val phonetics: List<Phonetic>,
+    val sourceUrls: List<String>
 ): Parcelable

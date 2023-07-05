@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Stable
 @Parcelize
+@Serializable
 data class License(
     val name: String,
     val url: String

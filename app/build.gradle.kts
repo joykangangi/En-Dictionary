@@ -44,8 +44,6 @@ android {
     }
 
     compileOptions.apply {
-        // Flag to enable support for the new language APIs
-        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -73,12 +71,10 @@ android {
 dependencies {
 
     //core
-    coreLibraryDesugaring(libs.core.java8)
     implementation(libs.core.ktx)
     implementation(libs.core.appcompat)
 
     // Material Design
-    implementation(libs.core.material)
     implementation(libs.compose.material)
     implementation(libs.compose.material.icons)
 
@@ -87,18 +83,15 @@ dependencies {
     implementation(libs.compose.activity)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
-    debugImplementation(libs.compose.custom.view)
-    debugImplementation(libs.compose.custom.view.pooling)
     debugImplementation(libs.compose.ui.tooling)
     androidTestImplementation(platform(libs.compose))
-    androidTestImplementation(libs.compose.ui.test.junit)
 
     // lifecycle
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.viewmodel.compose)
 
-    // Appyx Navigation - for navigation
+    // Appyx Navigation
     implementation(libs.appyx)
 
     // preferences datastore

@@ -7,6 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Stable
+@Serializable
 @Parcelize
 data class Phonetic(
     val audio: String,

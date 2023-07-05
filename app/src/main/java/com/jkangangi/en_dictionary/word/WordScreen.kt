@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,11 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jkangangi.en_dictionary.app.data.model.Word
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 @Composable
 fun WordScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: WordDetailState,
+    word: Word,
+    onSave: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -48,15 +53,16 @@ fun WordScreen(
                 .weight(.1f),
             contentAlignment = Alignment.Center
         ) {
+            if (state.isLoading) CircularProgressIndicator()
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceAround,
                 content = {
-                    Text(text = "example", style = MaterialTheme.typography.headlineLarge) //Todo VM
+                    Text(text = word.word, style = MaterialTheme.typography.headlineLarge)
                     Text(
-                        text = "/ig'zaempl'/",
+                        text = word.phonetic,
                         style = MaterialTheme.typography.bodyLarge
-                    ) //Todo VM
+                    )
 
                     Spacer(modifier = modifier.height(10.dp))
 
@@ -68,7 +74,7 @@ fun WordScreen(
                             Icon(imageVector = Icons.Default.VolumeUp, contentDescription = null)
                         }
 
-                        IconButton(onClick = { /*TODO VM*/ }) {
+                        IconButton(onClick = onSave) {
                             Icon(imageVector = Icons.Default.Bookmark, contentDescription = null)
                         }
                     }
@@ -107,7 +113,7 @@ fun TabLayout(modifier: Modifier) {
         when (tabIndex) {
             0 -> DefinitionScreen()
             1 -> WordList(modifier = modifier, words = listOf("Car", "Bicycle"))
-            2 -> WordList(modifier = modifier, words = listOf("Model", "Illustration") )
+            2 -> WordList(modifier = modifier, words = listOf("Model", "Illustration"))
         }
     }
 }
@@ -117,7 +123,7 @@ fun TabLayout(modifier: Modifier) {
 fun WordScreenPreview() {
     En_DictionaryTheme {
         Scaffold {
-            WordScreen()
+            WordScreen(state = WordDetailState(), word = Word(), onSave = { })
         }
 
     }
