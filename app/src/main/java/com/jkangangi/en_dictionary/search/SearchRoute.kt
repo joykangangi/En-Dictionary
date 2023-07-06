@@ -19,12 +19,12 @@ class SearchRoute(
 
     @Composable
     override fun View(modifier: Modifier) {
-        Search(modifier = modifier)
+        SearchView(modifier = modifier)
     }
 
 
     @Composable
-    fun Search(
+    private fun SearchView(
         modifier: Modifier,
         viewModel: SearchViewModel = hiltViewModel(),
     ) {

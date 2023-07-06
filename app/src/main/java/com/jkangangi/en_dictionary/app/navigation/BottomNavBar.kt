@@ -35,29 +35,30 @@ fun BottomNavigator(
     modifier: Modifier = Modifier,
     backStackNavigator: BackStack<Route>,
 ) {
-    val navItems by remember { mutableStateOf( bottomNavScreens) }
+    val navItems by remember { mutableStateOf(bottomNavScreens) }
 
-    val currentRoute = backStackNavigator.activeElement
-    val onItemClick = remember {
-        { screen: Route ->
-            backStackNavigator.singleTop(screen)
-        }
+    val currentRoute = remember {
+        mutableStateOf(backStackNavigator.activeElement)
     }
-
-    val showBottomBar by remember(currentRoute) {
+    val showBottomBar by remember(currentRoute.value) {
         derivedStateOf {
-            when (currentRoute) {
+            when (currentRoute.value) {
                 Route.History, Route.Saved, Route.Search -> true
                 else -> false
             }
         }
     }
 
-    val selected: (screen: Route) -> Boolean =  remember {
+    val selected: (screen: Route) -> Boolean = remember {
         { screen ->
-            currentRoute?.let { route ->
-                route == screen
-            } ?: false
+            screen == currentRoute.value
+        }
+    }
+
+    val onItemClick = remember {
+        { screen: Route ->
+            backStackNavigator.singleTop(screen)
+            currentRoute.value = screen
         }
     }
 
@@ -73,11 +74,12 @@ fun BottomNavigator(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     content = {
                         navItems.forEach { screen ->
-                              BottomAppBarItem(
+                            BottomAppBarItem(
                                 title = screen.title,
                                 icon = screen.icon,
                                 selected = selected(screen),
-                                onClick = { onItemClick(screen) })
+                                onClick = { onItemClick(screen) },
+                            )
                         }
                     }
                 )
@@ -87,7 +89,7 @@ fun BottomNavigator(
 }
 
 @Composable
-private fun BottomAppBarItem(
+fun BottomAppBarItem(
     title: String?,
     icon: ImageVector?,
     selected: Boolean,

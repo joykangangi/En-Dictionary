@@ -123,7 +123,14 @@ fun TabLayout(modifier: Modifier) {
 fun WordScreenPreview() {
     En_DictionaryTheme {
         Scaffold {
-            WordScreen(state = WordDetailState(), word = Word(), onSave = { })
+            val word = Word(
+                meanings = listOf(),
+                phonetic = "igzaempl",
+                word = "example",
+                phonetics = listOf(),
+                sourceUrls = listOf()
+            )
+            WordScreen(state = WordDetailState(), word = word, onSave = { })
         }
 
     }
