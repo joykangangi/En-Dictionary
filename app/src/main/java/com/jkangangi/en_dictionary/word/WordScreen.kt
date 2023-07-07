@@ -43,7 +43,7 @@ fun WordScreen(
 ) {
     Column(
         modifier = modifier
-            .background(color = MaterialTheme.colorScheme.primary)
+            .background(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
     ) {
 
         Box(

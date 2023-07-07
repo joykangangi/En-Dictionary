@@ -46,8 +46,8 @@ fun HistoryScreen(
 
     Scaffold(
         modifier = modifier
-            .shadow(elevation = 3.dp)
-            .padding(16.dp),
+            .shadow(elevation = 3.dp),
+            //.padding(16.dp),
         topBar = {
             TopAppBar(
                 title = { },

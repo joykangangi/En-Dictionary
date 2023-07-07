@@ -5,14 +5,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 internal val lightColorScheme = lightColorScheme(
-    primary = Color(0xFF480D8B),
+    primary = Color(0xFF38086F),
     onPrimary = Color(0xFFFFFFFF),
     primaryContainer = Color(0xFFE6DEFF),
     secondary = Color(0xFFAF2B40),
     onSecondary = Color(0xFFFFFFFF),
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
-    background = Color(0xFFFFFBFF),
+    background = Color(0xFFC4BEC4),
     onBackground = Color(0xFF1C1B1F),
     surface = Color(0xFFFFFBFF),
     onSurface = Color(0xFF1C1B1F),

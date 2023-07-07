@@ -54,7 +54,7 @@ android {
 
     buildFeatures.apply {
         compose = true
-        buildConfig = true
+       // buildConfig = true
     }
 
     composeOptions.apply {

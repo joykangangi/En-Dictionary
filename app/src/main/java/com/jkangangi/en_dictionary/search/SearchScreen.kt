@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,7 +39,7 @@ import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 fun SearchScreen(
     modifier: Modifier,
     isDarkTheme: Boolean,
-    toggleTheme: () -> Unit,
+    toggleTheme: (Boolean) -> Unit,
     query: String,
     updateQuery: (String) -> Unit,
     onSearchClick: () -> Unit
@@ -50,11 +51,11 @@ fun SearchScreen(
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.home_text)) },
                 actions = {
-                    IconButton(onClick = toggleTheme) {
+                    IconButton(onClick = { toggleTheme(isDarkTheme) }) {
                         Icon(
                             imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.WbSunny,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 },
@@ -80,17 +81,18 @@ fun SearchScreen(
                 )
 
                 val keyBoardController = LocalSoftwareKeyboardController.current
+                val onSearchClicked = remember {
+                    {
+                        keyBoardController?.hide()
+                        onSearchClick()
+                    }
+                }
                 OutlinedTextField(
                     value = query,
                     onValueChange = { updateQuery(it) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyBoardController?.hide()
-                            onSearchClick()
-                        }
-                    ),
+                    keyboardActions = KeyboardActions(onSearch = { onSearchClicked() }),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,

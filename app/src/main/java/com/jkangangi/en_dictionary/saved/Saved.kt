@@ -55,8 +55,7 @@ fun SavedWords(
 ) {
     Scaffold(
         modifier = modifier
-            .shadow(elevation = 3.dp)
-            .padding(16.dp),
+            .shadow(elevation = 3.dp),
         topBar = {
             TopAppBar(
                 title = { },
