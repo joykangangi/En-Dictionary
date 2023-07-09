@@ -1,13 +1,9 @@
 package com.jkangangi.en_dictionary.app.data.remote.dto
 
-import com.jkangangi.en_dictionary.app.data.remote.network.ApiRoutes.WORD_URL
-import com.jkangangi.en_dictionary.app.util.NetworkResult
+import com.jkangangi.en_dictionary.app.data.remote.network.ApiRoutes.BASE_URL
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.RedirectResponseException
-import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
 
 
@@ -17,27 +13,49 @@ interface DictionaryService {
 
 }
 
-class DictionaryServiceImpl(private val client: HttpClient) : DictionaryService {
-    override suspend fun getWordDTO(word: String): List<WordDto> {
-        return try {
-            client.get(WORD_URL).body()
-        } catch (e: RedirectResponseException) {
-            //3xx
-            Napier.e("Error: ${e.response.status.description}")
-            emptyList()
-        } catch (e: RedirectResponseException) {
-            //3xx
-            Napier.e("Error: ${e.response.status.description}")
-            emptyList()
-        } catch (e: ClientRequestException) {
-            //4xx
-            Napier.e("Error: ${e.response.status.description}")
-            emptyList()
+//impl of api
 
-        } catch (e: ServerResponseException) {
-            //5xx
-            Napier.e("Error: ${e.response.status.description}")
-            emptyList()
+
+class DictionaryServiceImpl(private val client: HttpClient) : DictionaryService {
+
+    private var closableClient: HttpClient? = null
+
+    private fun client(): HttpClient {
+        if (closableClient == null) {
+            Napier.d("Creating httpClient...")
+            closableClient = client
+        }
+        return closableClient as HttpClient
+    }
+
+    override suspend fun getWordDTO(word: String): List<WordDto> {
+        return client().get("$BASE_URL$word").body()
+    }
+
+    fun closeClient() {
+        Napier.d("Closing the client...")
+        closableClient?.close()
+        closableClient = null
+    }
+
+
+}
+
+/*class DictionaryServiceImpl1 @Inject constructor() : DictionaryService {
+
+    companion object {
+        private var client: HttpClient? = null
+
+        fun getClient(): HttpClient {
+            if (client == null) {
+                Napier.d("Creating httpClient...")
+                client =
+            }
         }
     }
-}
+
+    override suspend fun getWordDTO(word: String): List<WordDto> {
+        TODO("Not yet implemented")
+    }
+
+}*/

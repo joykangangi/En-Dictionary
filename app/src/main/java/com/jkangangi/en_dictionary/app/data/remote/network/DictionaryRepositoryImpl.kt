@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.app.data.remote.network
 
+import android.util.Log
 import com.jkangangi.en_dictionary.app.data.local.WordDao
 import com.jkangangi.en_dictionary.app.data.local.toWord
 import com.jkangangi.en_dictionary.app.data.model.Word
@@ -26,7 +27,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     private val dictionaryService: DictionaryServiceImpl
 ) : DictionaryRepository {
 
-    override fun getWord(word: String): Flow<NetworkResult<List<Word>>> = flow {
+    override suspend fun getWord(word: String): Flow<NetworkResult<List<Word>>> = flow {
         emit(NetworkResult.Loading())
 
         /**
@@ -35,6 +36,7 @@ class DictionaryRepositoryImpl @Inject constructor(
         val localWordData = dao.getWord(word = word).map { it.toWord() }
         emit(NetworkResult.Loading(data = localWordData))
 
+        Log.d("SearchRepository", "search repo...")
         try {
             val remoteWordData = dictionaryService.getWordDTO(word = word)
             dao.deleteWord(remoteWordData.map { it.word })
@@ -62,10 +64,18 @@ class DictionaryRepositoryImpl @Inject constructor(
             emit(NetworkResult.Error(message = e.response.status.description, data = localWordData))
         }
 
+        catch (e: Exception) {
+            emit(NetworkResult.Error(message = e.stackTraceToString(), data = localWordData))
+        }
+
         /**
          * Database -> UI
          */
         val newWord = dao.getWord(word).map { it.toWord() }
         emit(NetworkResult.Success(data = newWord))
+    }
+
+    fun closeClient() {
+        dictionaryService.closeClient()
     }
 }

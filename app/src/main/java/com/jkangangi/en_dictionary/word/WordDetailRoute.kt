@@ -1,20 +1,18 @@
 package com.jkangangi.en_dictionary.word
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
-import com.bumble.appyx.navmodel.backstack.activeElement
-import com.jkangangi.en_dictionary.app.data.model.Word
-import com.jkangangi.en_dictionary.app.navigation.Navigation
 import com.jkangangi.en_dictionary.app.navigation.Route
+import com.jkangangi.en_dictionary.search.SearchViewModel
 
-class DefinitionRoute(
+class WordDetailRoute(
     buildContext: BuildContext,
     private val backStack: BackStack<Route>
 ) : Node(buildContext = buildContext) {
@@ -25,30 +23,33 @@ class DefinitionRoute(
         modifier: Modifier,
     ) {
 
-        WordDetailView(modifier = modifier)
-        Log.d("Dfn Route", "${backStack.activeElement?.title}")
+        val onBack: () -> Unit = remember {
+            {
+                backStack.handleUpNavigation()
+            }
+        }
+        WordDetailView(modifier = modifier, onBack = onBack)
+
     }
 
     //change word to list of words in UI
     @Composable
     private fun WordDetailView(
         modifier: Modifier,
-        viewModel: WordViewModel = hiltViewModel()
+        viewModel: SearchViewModel = hiltViewModel(),
+        onBack: () -> Unit,
     ) {
-        val state by viewModel.wordDetailState.collectAsState()
-        val word = Word(
-            meanings = listOf(),
-            phonetic = "igzaempl",
-            word = "example",
-            phonetics = listOf(),
-            sourceUrls = listOf()
-        )
-        WordScreen(
-            state = state,
-            word = word,
-            onSave = { },
-            modifier = modifier
-        )
+        val state by viewModel.wordState.collectAsState()
+
+        state.word?.let {
+            WordScreen(
+                word = it,
+                onSave = { },
+                modifier = modifier,
+                onSpeakerClick = { },
+                onBack = onBack
+            )
+        }
     }
 }
 
