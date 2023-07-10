@@ -1,6 +1,7 @@
 package com.jkangangi.en_dictionary.app.di
 
 import android.app.Application
+import android.util.Log
 import androidx.room.Room
 import com.jkangangi.en_dictionary.app.data.local.WordDao
 import com.jkangangi.en_dictionary.app.data.local.WordDatabase
@@ -102,7 +103,7 @@ object AppModule {
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
-                    Napier.v(message)
+                    Log.v("App Module", message)
                 }
             }
             level = LogLevel.BODY
@@ -111,7 +112,7 @@ object AppModule {
         //response status
         install(ResponseObserver) {
             onResponse { response ->
-                Napier.i("HTTP STATUS: ${response.status.value}")
+                Log.i("App Module","HTTP STATUS: ${response.status.value}")
             }
         }
     }

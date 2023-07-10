@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.app.data.remote.dto
 
+import android.util.Log
 import com.jkangangi.en_dictionary.app.data.remote.network.ApiRoutes.BASE_URL
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
@@ -22,7 +23,7 @@ class DictionaryServiceImpl(private val client: HttpClient) : DictionaryService 
 
     private fun client(): HttpClient {
         if (closableClient == null) {
-            Napier.d("Creating httpClient...")
+            Log.d("Dictionary Service","Creating httpClient...")
             closableClient = client
         }
         return closableClient as HttpClient
@@ -33,7 +34,7 @@ class DictionaryServiceImpl(private val client: HttpClient) : DictionaryService 
     }
 
     fun closeClient() {
-        Napier.d("Closing the client...")
+        Log.d("Dictionary Service","Closing the client...")
         closableClient?.close()
         closableClient = null
     }

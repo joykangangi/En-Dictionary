@@ -113,8 +113,6 @@ dependencies {
     implementation(libs.kotlin.serialization.json)
     implementation(libs.kotlin.serialization.ktor)
 
-    // Napier
-    implementation(libs.napier)
 
     // Room
     ksp(libs.room.compiler)

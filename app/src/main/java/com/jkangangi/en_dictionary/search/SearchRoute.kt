@@ -37,7 +37,7 @@ class SearchRoute(
         val searchText by viewModel.searchQuery.collectAsState()
         val state by viewModel.searchState.collectAsState()
 
-        val searchClick  = remember {
+        val toDefitionClick  = remember {
             { word: Word ->
                 backStack.singleTop(Route.Definition(viewModel.setBook(word)))
             }
@@ -54,7 +54,9 @@ class SearchRoute(
             query = searchText,
             updateQuery = viewModel::onSearch,
             state = state,
-            onWordClick = searchClick,
+            onWordClick = toDefitionClick,
+            onClearInput = viewModel::clearInput,
+            searchWord = viewModel::doWordSearch
         )
     }
 

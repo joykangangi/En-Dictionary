@@ -36,7 +36,6 @@ class DictionaryRepositoryImpl @Inject constructor(
         val localWordData = dao.getWord(word = word).map { it.toWord() }
         emit(NetworkResult.Loading(data = localWordData))
 
-        Log.d("SearchRepository", "search repo...")
         try {
             val remoteWordData = dictionaryService.getWordDTO(word = word)
             dao.deleteWord(remoteWordData.map { it.word })
@@ -50,6 +49,7 @@ class DictionaryRepositoryImpl @Inject constructor(
                     data = localWordData
                 )
             )
+            Log.e("RepoImpl",e.response.status.description)
         } catch (e: ClientRequestException) {
             //4xx
             emit(
@@ -58,14 +58,17 @@ class DictionaryRepositoryImpl @Inject constructor(
                     data = localWordData
                 )
             )
+            Log.e("RepoImpl",e.response.status.description)
 
         } catch (e: ServerResponseException) {
             //5xx
             emit(NetworkResult.Error(message = e.response.status.description, data = localWordData))
+            Log.e("RepoImpl",e.response.status.description)
         }
 
-        catch (e: Exception) {
+        catch (e: Throwable) {
             emit(NetworkResult.Error(message = e.stackTraceToString(), data = localWordData))
+            Log.e("RepoImpl",e.stackTraceToString())
         }
 
         /**
