@@ -37,7 +37,7 @@ class DictionaryRepositoryImpl @Inject constructor(
         emit(NetworkResult.Loading(data = localWordData))
 
         try {
-            val remoteWordData = dictionaryService.getWordDTO(word = word)
+            val remoteWordData = dictionaryService.getSearchDTO(word = word)
             dao.deleteWord(remoteWordData.map { it.word })
             dao.insertWord(remoteWordData.map { it.toWordEntity() })
 
