@@ -1,8 +1,8 @@
-package com.jkangangi.en_dictionary.app.data.network
+package com.jkangangi.en_dictionary.app.data.service
 
 import android.util.Log
-import com.jkangangi.en_dictionary.app.data.remo.dto.SearchRequestDTO
-import com.jkangangi.en_dictionary.app.data.remo.dto.SearchResponseDTO
+import com.jkangangi.en_dictionary.app.data.remote.dto.DictionaryDTO
+import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
@@ -12,19 +12,22 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.observer.ResponseObserver
 import io.ktor.client.request.accept
 import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 
-const val TIME_OUT = 10_000L
+const val TIME_OUT = 15_000L
 
 //impl of api
 class DictionaryServiceImpl @Inject constructor() : DictionaryService {
@@ -32,7 +35,7 @@ class DictionaryServiceImpl @Inject constructor() : DictionaryService {
     companion object {
         private const val API_KEY = ""
         private const val BASE_URL = "https://xf-english-dictionary1.p.rapidapi.com/"
-        private const val WORD_URL = "${BASE_URL}v1/dictionary?"
+        private const val WORD_URL = "${BASE_URL}v1/dictionary"
         private var closableClient: HttpClient? = null
 
         fun client(): HttpClient {
@@ -58,8 +61,8 @@ class DictionaryServiceImpl @Inject constructor() : DictionaryService {
                         headers {
                             append(name = "X-RapidAPI-Key", value = API_KEY)
                             append(name = "X-RapidAPI-Host", value = BASE_URL)
-                        }
 
+                        }
                     }
 
                     //TIMEOUT
@@ -79,27 +82,33 @@ class DictionaryServiceImpl @Inject constructor() : DictionaryService {
                         }
                         level = LogLevel.BODY
                     }
+
+                    install(ResponseObserver) {
+                        onResponse { response ->
+                           Log.v("Dictionary Service","HTTP status: ${response.status.value}")
+                        }
+                    }
                 }
             }
             return closableClient as HttpClient
         }
     }
 
+    override suspend fun postSearchRequest(search: RequestDTO): DictionaryDTO? {
+        return client().post {
+            url(WORD_URL)
+            contentType(ContentType.Application.Json)
+            parameter(key = "selection", value = search.selection)
+            parameter(key = "textAfterSelection", value = search.textAfterSelection)
+            parameter(key = "textBeforeSelection", value = search.textBeforeSelection)
+            setBody(Json.encodeToString(search))
+        }.body()
+    }
 
     fun closeClient() {
         Log.d("Dictionary Service", "Closing the client...")
         closableClient?.close()
         closableClient = null
-    }
-
-
-    override suspend fun postSearchRequest(postRequestDTO: SearchRequestDTO): SearchResponseDTO? {
-        return client().post {
-            url(WORD_URL)
-            parameter(key = "selection", value = postRequestDTO.selection)
-            parameter(key = "textAfterSelection", value = postRequestDTO.textAfterSelection)
-            parameter(key = "textBeforeSelection", value = postRequestDTO.textBeforeSelection)
-        }.body()
     }
 
 

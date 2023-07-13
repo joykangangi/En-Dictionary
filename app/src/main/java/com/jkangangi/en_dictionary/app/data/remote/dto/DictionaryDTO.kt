@@ -1,11 +1,11 @@
-package com.jkangangi.en_dictionary.app.data.remo.dto
+package com.jkangangi.en_dictionary.app.data.remote.dto
 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchResponseDTO(
+data class DictionaryDTO(
     @SerialName("items")
     val items: List<Item> = listOf(),
     @SerialName("pronunciations")

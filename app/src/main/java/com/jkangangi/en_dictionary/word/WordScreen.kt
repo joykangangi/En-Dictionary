@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
@@ -22,11 +20,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,15 +36,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.data.model.Word
-import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
+import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.word.tabs.DefinitionScreen
+import com.jkangangi.en_dictionary.word.tabs.WordList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WordScreen(
     modifier: Modifier = Modifier,
-    word: Word,
+    word: Dictionary,
     onSave: () -> Unit,
     onSpeakerClick: () -> Unit,
     onBack: () -> Unit,
@@ -56,7 +52,7 @@ fun WordScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = word.word) },
+                title = { Text(text = word.target) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -86,14 +82,10 @@ fun WordScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.SpaceAround,
                                 content = {
-                                    Text(
-                                        text = word.word,
-                                        style = MaterialTheme.typography.headlineLarge
-                                    )
-                                    Text(
-                                        text = word.phonetic,
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
+                                            Text(
+                                                text = word.pronunciations[0].entries[0].textual[0].pronunciation,
+                                                style = MaterialTheme.typography.bodyLarge
+                                            )
 
                                     Spacer(modifier = modifier.height(10.dp))
 
@@ -129,7 +121,7 @@ fun WordScreen(
 
 
 @Composable
-private fun TabLayout(modifier: Modifier, word: Word) {
+private fun TabLayout(modifier: Modifier, word: Dictionary) {
     var tabIndex by remember { mutableStateOf(1) } //Todo
     val tabs = listOf("Definition", "Synonyms", "Antonyms")
 
@@ -152,7 +144,7 @@ private fun TabLayout(modifier: Modifier, word: Word) {
             }
         }
         when (tabIndex) {
-            0 -> DefinitionScreen(meaning = word.meanings.first())
+            0 -> DefinitionScreen(meaning = word.items[0].definitions[0])
             1 -> WordList(modifier = modifier, words = listOf("Car", "Bicycle"))
             2 -> WordList(modifier = modifier, words = listOf("Model", "Illustration"))
         }
@@ -162,7 +154,7 @@ private fun TabLayout(modifier: Modifier, word: Word) {
 @Preview
 @Composable
 fun WordScreenPreview() {
-    En_DictionaryTheme {
+    /*En_DictionaryTheme {
         Scaffold {
             val word = Word(
                 meanings = listOf(),
@@ -179,5 +171,5 @@ fun WordScreenPreview() {
             )
         }
 
-    }
+    }*/
 }

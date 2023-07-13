@@ -11,7 +11,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.singleTop
-import com.jkangangi.en_dictionary.app.data.model.Word
+import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.navigation.Route
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -34,12 +34,15 @@ class SearchRoute(
         viewModel: SearchViewModel = hiltViewModel(),
     ) {
         val switch = isDarkTheme.collectAsState().value
-        val searchText by viewModel.searchQuery.collectAsState()
+        val searchTextT by viewModel.targetQuery.collectAsState()
+        //val searchTextA by viewModel.queryAfterTarget.collectAsState()
+      //  val searchTextB by viewModel.queryBeforeTarget.collectAsState()
+
         val state by viewModel.searchState.collectAsState()
 
-        val toDefitionClick  = remember {
-            { word: Word ->
-                backStack.singleTop(Route.Definition(viewModel.setBook(word)))
+        val toWordClick  = remember {
+            { word: Dictionary ->
+                backStack.singleTop(Route.SearchDetail(viewModel.setBook(word)))
             }
         }
 
@@ -51,12 +54,19 @@ class SearchRoute(
             modifier = modifier,
             isDarkTheme = switch,
             toggleTheme = this::updateTheme,
-            query = searchText,
-            updateQuery = viewModel::onSearch,
+            queryT = searchTextT,
+            updateQueryT = viewModel::onSearchTarget,
+//            queryA = searchTextA,
+//            updateQueryA = viewModel::onSearchAfTarget,
+//            queryB = searchTextB,
+//            updateQueryB = viewModel::onSearchBfTarget,
             state = state,
-            onWordClick = toDefitionClick,
-            onClearInput = viewModel::clearInput,
+            onWordClick = toWordClick,
+            onClearInputT = viewModel::clearInputT,
+//            onClearInputA = viewModel::clearInputA,
+//            onClearInputB = viewModel::clearInputB,
             searchWord = viewModel::doWordSearch
+
         )
     }
 

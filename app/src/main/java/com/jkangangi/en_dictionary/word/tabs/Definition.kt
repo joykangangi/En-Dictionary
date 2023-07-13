@@ -3,17 +3,14 @@ package com.jkangangi.en_dictionary.word.tabs
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -21,18 +18,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jkangangi.en_dictionary.app.data.model.Definition
-import com.jkangangi.en_dictionary.app.data.model.Meaning
-import com.jkangangi.en_dictionary.app.data.model.Word
-import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
+import com.jkangangi.en_dictionary.app.data.remote.dto.Definition
 
 @Composable
-fun DefinitionScreen(modifier: Modifier = Modifier, meaning: Meaning) {
+fun DefinitionScreen(modifier: Modifier = Modifier, meaning: Definition) {
     Column(modifier = modifier.fillMaxWidth()) {
         //use a loop/lazy to show all parts of speech
         WordType(
-            wordType = meaning.partOfSpeech,
-            definition = meaning.definitions,
+            wordType = meaning.definition,
+            definition = meaning.examples,
         ) //TOdo VM
 
     }
@@ -43,7 +37,7 @@ fun DefinitionScreen(modifier: Modifier = Modifier, meaning: Meaning) {
 private fun WordType(
     modifier: Modifier = Modifier,
     wordType: String,
-    definition: List<Definition>
+    definition: List<String>
 ) {
     Column {
         Row(
@@ -75,7 +69,7 @@ private fun WordType(
                     style = SpanStyle(fontFamily = FontFamily.Default, fontSize = 24.sp)
                 ) {
                     definition.forEach {
-                        append(it.definition)
+                        append(it)
                     }
                 }
 
@@ -93,7 +87,7 @@ private fun WordType(
                     style = SpanStyle(fontFamily = FontFamily.Default, fontSize = 24.sp)
                 ) {
                     definition.forEach {
-                        append(it.example)
+                        append(it)
                     }
                 }
             },
@@ -116,15 +110,12 @@ private fun WordType(
 @Preview
 @Composable
 private fun DefinitionPreview() {
-    En_DictionaryTheme {
+    /*En_DictionaryTheme {
         Scaffold {
-            val meaning = Meaning(
-                antonyms = listOf(),
-                definitions = listOf(),
-                partOfSpeech = "noun",
-                synonyms = listOf()
+            val meaning = Definition(
+
             )
             DefinitionScreen(modifier = Modifier, meaning = meaning)
         }
-    }
+    }*/
 }

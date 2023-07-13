@@ -1,13 +1,13 @@
-package com.jkangangi.en_dictionary.app.data.remo.dto
+package com.jkangangi.en_dictionary.app.data.remote.dto
 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchRequestDTO(
+data class RequestDTO(
     @SerialName("selection")
-    val selection: String = "",
+    val selection: String = "hi",
     @SerialName("textAfterSelection")
     val textAfterSelection: String = "",
     @SerialName("textBeforeSelection")

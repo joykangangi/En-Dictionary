@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.app.data.remo.dto
+package com.jkangangi.en_dictionary.app.data.remote.dto
 
 
 import android.os.Parcelable
@@ -8,9 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-data class AudioFile(
-    @SerialName("label")
-    val label: String = "",
-    @SerialName("link")
-    val link: String = ""
+data class Pronunciation(
+    @SerialName("entries")
+    val entries: List<Entry> = listOf()
 ): Parcelable

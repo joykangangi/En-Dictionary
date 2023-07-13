@@ -1,6 +1,7 @@
 package com.jkangangi.en_dictionary.app.navigation
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
@@ -15,8 +16,9 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.node.ParentNode
 import com.bumble.appyx.navmodel.backstack.BackStack
+import com.bumble.appyx.navmodel.backstack.activeElement
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
-import com.jkangangi.en_dictionary.app.data.model.Word
+import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.history.HistoryRoute
 import com.jkangangi.en_dictionary.saved.SavedRoute
 import com.jkangangi.en_dictionary.search.SearchRoute
@@ -41,7 +43,8 @@ class Navigation(
         //This will add the child nodes to the composition
         Scaffold(
             bottomBar = {
-                    BottomNavigator(backStackNavigator = backStack)
+                BottomNavigator(backStackNavigator = backStack)
+                Log.d("NAVIGATION","Active Screen = ${backStack.activeElement}")
             }
         ) {
             Children(
@@ -55,12 +58,12 @@ class Navigation(
     override fun resolve(navTarget: Route, buildContext: BuildContext): Node {
 
         return when (navTarget) {
-          is Route.Search -> SearchRoute(
+            is Route.Search -> SearchRoute(
                 buildContext = buildContext,
                 backStack = backStack,
             )
 
-            is Route.Definition -> WordDetailRoute(
+            is Route.SearchDetail -> WordDetailRoute(
                 buildContext = buildContext,
                 backStack = backStack,
             )
@@ -84,7 +87,7 @@ sealed class Route(val icon: ImageVector? = null, val title: String? = null) :
     object Search : Route(icon = Icons.Default.Search, title = "Search")
 
     @Parcelize
-    data class Definition(val word: Word) : Route(title = "Definition")
+    data class SearchDetail(val dictionary: Dictionary) : Route(title = "SearchDetail")
 
     @Parcelize
     object Saved : Route(icon = Icons.Default.Bookmark, title = "Saved")

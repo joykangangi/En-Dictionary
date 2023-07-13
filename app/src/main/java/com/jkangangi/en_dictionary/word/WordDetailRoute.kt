@@ -39,7 +39,7 @@ class WordDetailRoute(
         viewModel: SearchViewModel = hiltViewModel(),
         onBack: () -> Unit,
     ) {
-        val state by viewModel.wordState.collectAsState()
+        val state by viewModel.detailState.collectAsState()
 
         state.word?.let {
             WordScreen(

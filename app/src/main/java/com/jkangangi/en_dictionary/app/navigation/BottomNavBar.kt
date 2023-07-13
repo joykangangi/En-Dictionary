@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,22 +44,22 @@ fun BottomNavigator(
         mutableStateOf(backStackNavigator.activeElement)
     }
 
-    val showBottomBar = remember {
+   /* val showBottomBar = remember {
         mutableStateOf(bottomNavScreens.contains(currentRoute.value))
+    }*/
+
+    val showBottomBar by remember(currentRoute.value) {
+        derivedStateOf {
+            when (currentRoute.value) {
+                Route.History, Route.Saved, Route.Search -> true
+                else -> false
+            }
+        }
     }
 
-//    val showBottomBar by remember(currentRoute.value) {
-//        derivedStateOf {
-//            when (currentRoute.value) {
-//                Route.History, Route.Saved, Route.Search -> true
-//                else -> false
-//            }
-//        }
-//    }
 
 
-
-    Log.d("Btm NAVIGATION", "${currentRoute.value?.title}}, showbar = ${showBottomBar.value}")
+    Log.d("Btm NAVIGATION", "${currentRoute.value?.title}}, showbar = $showBottomBar")
     Log.d("Btm NAVIGATION", "${backStackNavigator.activeElement?.title}")
 
     val selected: (screen: Route) -> Boolean = remember {
@@ -76,7 +77,7 @@ fun BottomNavigator(
     }
 
 
-    if (showBottomBar.value) {
+    if (showBottomBar) {
         BottomAppBar(
             modifier = modifier,
             content = {

@@ -1,5 +1,7 @@
 package com.jkangangi.en_dictionary.app.util
 
+
+//todo only success will have data
 sealed class NetworkResult<Data>(val data: Data? = null, val message: String? = null) {
     class Loading<Data>(data: Data? = null): NetworkResult<Data>(data = data)
     class Success<Data>(data: Data? ): NetworkResult<Data>(data = data)

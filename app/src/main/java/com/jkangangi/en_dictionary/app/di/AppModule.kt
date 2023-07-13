@@ -2,18 +2,16 @@ package com.jkangangi.en_dictionary.app.di
 
 import android.app.Application
 import androidx.room.Room
-import com.jkangangi.en_dictionary.app.data.local.WordDao
-import com.jkangangi.en_dictionary.app.data.local.WordDatabase
-import com.jkangangi.en_dictionary.app.data.remote.dto.DictionaryServiceImpl
-import com.jkangangi.en_dictionary.app.data.remote.network.DictionaryRepository
-import com.jkangangi.en_dictionary.app.data.remote.network.DictionaryRepositoryImpl
+import com.jkangangi.en_dictionary.app.data.local.DictionaryDao
+import com.jkangangi.en_dictionary.app.data.local.DictionaryDatabase
+import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
+import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
+import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.ktor.client.HttpClient
 import javax.inject.Singleton
-
 
 
 @InstallIn(SingletonComponent::class)
@@ -22,36 +20,31 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesDatabase(application: Application): WordDatabase {
+    fun providesDictionaryDatabase(application: Application): DictionaryDatabase {
         return Room.databaseBuilder(
             context = application,
-            klass = WordDatabase::class.java,
-            name = WordDatabase::class.simpleName
+            klass = DictionaryDatabase::class.java,
+            name = DictionaryDatabase::class.simpleName
         ).build()
     }
 
     @Provides
     @Singleton
+    fun providesDictionaryDao(database: DictionaryDatabase): DictionaryDao {
+        return database.dictionaryDao()
+    }
+
+
+    @Provides
+    @Singleton
     fun providesDictionaryRepository(
-        wordDatabase: WordDatabase,
-        dictionaryService: DictionaryServiceImpl
+        database: DictionaryDatabase,
+        service: DictionaryServiceImpl
     ): DictionaryRepository {
         return DictionaryRepositoryImpl(
-            dao = wordDatabase.wordDao(),
-            dictionaryService = dictionaryService
+            dao = database.dictionaryDao(),
+            dictionaryService = service
         )
-    }
-
-    @Provides
-    @Singleton
-    fun provideWordDao(database: WordDatabase): WordDao {
-        return database.wordDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideDictServiceImpl(): DictionaryServiceImpl {
-        return DictionaryServiceImpl(client)
     }
 
 }

@@ -3,8 +3,9 @@ package com.jkangangi.en_dictionary.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jkangangi.en_dictionary.app.data.model.Word
-import com.jkangangi.en_dictionary.app.data.remote.network.DictionaryRepositoryImpl
+import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
+import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import com.jkangangi.en_dictionary.word.WordDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,28 +23,68 @@ private const val DELAY_TIME = 500L
 class SearchViewModel @Inject constructor(private val repository: DictionaryRepositoryImpl) :
     ViewModel() {
 
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery = _searchQuery.asStateFlow()
+    private val _targetQuery = MutableStateFlow("")
+    val targetQuery = _targetQuery.asStateFlow()
+
+    private val _queryAfterTarget = MutableStateFlow("")
+    val queryAfterTarget = _queryAfterTarget.asStateFlow()
+
+    private val _queryBeforeTarget = MutableStateFlow("")
+    val queryBeforeTarget = _queryBeforeTarget.asStateFlow()
 
     private val _searchState = MutableStateFlow(SearchScreenState())
     val searchState = _searchState.asStateFlow()
 
-    private val _wordState = MutableStateFlow(WordDetailState())
-    val wordState = _wordState.asStateFlow()
+    private val _detailState = MutableStateFlow(WordDetailState())
+    val detailState = _detailState.asStateFlow()
 
     private var searchJob: Job? = null
 
-    fun onSearch(query: String) {
-        _searchQuery.update { query }
+    fun onSearchTarget(query: String) {
+        _targetQuery.update { query }
+    }
+
+    fun onSearchAfTarget(query: String) {
+        _queryAfterTarget.update { query }
+    }
+
+    fun onSearchBfTarget(query: String) {
+        _queryBeforeTarget.update { query }
     }
 
 
-     fun doWordSearch(param: String) {
+    fun doWordSearch(target: String //, textAfterTarget: String, textBeforeTarget: String
+    ) {
         searchJob?.cancel() //if a job already exits we cancel the job
         searchJob = viewModelScope.launch {
 
             delay(DELAY_TIME)
-            repository.getWord(word = param.lowercase()).collect { result ->
+            repository.postSearch(request = RequestDTO(selection = target)).collect { result -> //:NetworkResult<Dictionary> ->
+                when (result) {
+                    is NetworkResult.Error -> {
+                        _searchState.value = _searchState.value.copy(
+                            error = result.message ?: "Unexpected Error Occurred"
+                        )
+                    }
+
+                    is NetworkResult.Loading -> {
+                        _searchState.value = _searchState.value.copy(
+                            isLoading = true,
+                        )
+                    }
+
+                    is NetworkResult.Success -> {
+                        _searchState.value = _searchState.value.copy(
+                            wordItems = mutableListOf(result.data),
+                            isLoading = false
+                        )
+                    }
+                }
+            }
+
+        }
+        /*    repository.getWord(word = param.lowercase()).collect { result ->
+
 
                 when (result) {
                     is NetworkResult.Error -> {
@@ -67,16 +108,22 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
                         )
                     }
                 }
-            }
-        }
+            }*/
     }
 
-    fun clearInput() {
-        _searchQuery.value = ""
+
+    fun clearInputT() {
+        _targetQuery.value = ""
+    }
+    fun clearInputA() {
+        _queryAfterTarget.value = ""
+    }
+    fun clearInputB() {
+        _queryBeforeTarget.value = ""
     }
 
-    fun setBook(word: Word): Word {
-        _wordState.value = WordDetailState(word = word)
+    fun setBook(word: Dictionary): Dictionary {
+        _detailState.value = WordDetailState(word = word)
         return word
     }
 

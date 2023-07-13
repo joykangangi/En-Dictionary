@@ -1,7 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,9 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,7 +16,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -38,15 +34,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.data.model.Word
-import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
+import com.jkangangi.en_dictionary.app.data.model.Dictionary
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -54,19 +48,25 @@ fun SearchScreen(
     modifier: Modifier,
     isDarkTheme: Boolean,
     toggleTheme: (Boolean) -> Unit,
-    query: String,
-    updateQuery: (String) -> Unit,
+    queryT: String,
+    updateQueryT: (String) -> Unit,
+   // queryA: String,
+   // updateQueryA: (String) -> Unit,
+    //queryB: String,
+    //updateQueryB: (String) -> Unit,
     searchWord: (String) -> Unit,
     state: SearchScreenState,
-    onWordClick: (Word) -> Unit,
-    onClearInput: () -> Unit,
+    onWordClick: (Dictionary) -> Unit,
+    onClearInputT: () -> Unit,
+   // onClearInputA: () -> Unit,
+    //onClearInputB: () -> Unit,
 ) {
 
     val keyBoardController = LocalSoftwareKeyboardController.current
 
     val onSearchWord = remember {
         {
-            searchWord(query)
+            searchWord(queryT)
             keyBoardController?.hide()
         }
     }
@@ -97,7 +97,7 @@ fun SearchScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 content = {
-                    Image(
+                   /* Image(
                         painter = painterResource(id = R.drawable.dictionary),
                         contentDescription = null,
                         modifier = modifier.size(200.dp)
@@ -105,27 +105,18 @@ fun SearchScreen(
                     Text(
                         text = stringResource(id = R.string.home_body),
                         style = MaterialTheme.typography.bodyMedium,
-                    )
+                    )*/
 
                     OutlinedTextField(
-                        value = query,
-                        onValueChange = { updateQuery(it) },
+                        value = queryT,
+                        onValueChange = { updateQueryT(it) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(onSearch = { onSearchWord() }),
-                        trailingIcon = {
-                            if (query.isNotBlank())
-                                IconButton(onClick = { onSearchWord() }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Search,
-                                        contentDescription = null
-                                    )
-                                }
-                        },
                         placeholder = { Text(text = "Search...") },
                         leadingIcon = {
-                            if (query.isNotBlank())
-                                IconButton(onClick = onClearInput) {
+                            if (queryT.isNotBlank())
+                                IconButton(onClick = onClearInputT) {
                                     Icon(
                                         imageVector = Icons.Default.Close,
                                         contentDescription = null
@@ -133,32 +124,47 @@ fun SearchScreen(
                                 }
                         }
                     )
+/*
+                    OutlinedTextField(
+                        value = queryA,
+                        onValueChange = { updateQueryA(it) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        placeholder = { Text(text = "SearchA...") },
+                        leadingIcon = {
+                            if (queryA.isNotBlank())
+                                IconButton(onClick = onClearInputA) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = null
+                                    )
+                                }
+                        }
+                    )
+
+                    OutlinedTextField(
+                        value = queryB,
+                        onValueChange = { updateQueryB(it) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(onSearch = { onSearchWord() }),
+                        placeholder = { Text(text = "SearchB...") },
+                        leadingIcon = {
+                            if (queryB.isNotBlank())
+                                IconButton(onClick = onClearInputB) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = null
+                                    )
+                                }
+                        }
+                    )*/
                     Spacer(modifier = modifier)
 
                     Box(
                         modifier = modifier,
                         content = {
 
-                            LazyColumn(
-                                modifier = modifier
-                                    .fillMaxSize()
-                                    .animateContentSize(),
-                                contentPadding = PaddingValues(12.dp)
-                            ) {
-                                items(state.wordItems) { word: Word ->
-                                    ElevatedCard(
-                                        modifier = modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 8.dp),
-                                        onClick = { onWordClick(word) }) {
-                                        Text(
-                                            text = word.word,
-                                            textAlign = TextAlign.Center,
-                                            style = MaterialTheme.typography.titleMedium
-                                        )
-                                    }
-                                }
-                            }
                             if (state.isLoading) {
                                 CircularProgressIndicator(modifier = modifier.align(Alignment.Center))
                             }
@@ -174,6 +180,28 @@ fun SearchScreen(
                                         .padding(horizontal = 20.dp)
                                         .align(Alignment.Center)
                                 )
+                            } else {
+
+                                LazyColumn(
+                                    modifier = modifier
+                                        .fillMaxSize()
+                                        .animateContentSize(),
+                                    contentPadding = PaddingValues(12.dp)
+                                ) {
+                                    items(state.wordItems) { word: Dictionary? ->
+                                        ElevatedCard(
+                                            modifier = modifier
+                                                .fillMaxWidth()
+                                                .padding(vertical = 8.dp),
+                                            onClick = { word?.let { onWordClick(it) } }) {
+                                            Text(
+                                                text = word?.sentence ?: "",
+                                                textAlign = TextAlign.Center,
+                                                style = MaterialTheme.typography.titleMedium
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         },
                     )
@@ -187,17 +215,23 @@ fun SearchScreen(
 @Composable
 private fun HomePreview() {
 
-    En_DictionaryTheme {
+   /* En_DictionaryTheme {
         SearchScreen(
             modifier = Modifier,
             isDarkTheme = false,
             toggleTheme = { },
-            query = "",
-            updateQuery = { },
+            queryT = "",
+            updateQueryT = { },
+            queryA = "",
+            updateQueryA = { },
+            queryB = "",
+            updateQueryB = { },
             state = SearchScreenState(),
             onWordClick = { },
-            onClearInput = { },
+            onClearInputT = { },
+            onClearInputA = { },
+            onClearInputB = { },
             searchWord = { }
         )
-    }
+    }*/
 }

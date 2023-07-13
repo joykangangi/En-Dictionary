@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.app.data.remo.dto
+package com.jkangangi.en_dictionary.app.data.remote.dto
 
 
 import android.os.Parcelable
