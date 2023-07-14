@@ -54,7 +54,7 @@ fun SearchScreen(
    // updateQueryA: (String) -> Unit,
     //queryB: String,
     //updateQueryB: (String) -> Unit,
-    searchWord: (String) -> Unit,
+  // searchWord: (String) -> Unit,
     state: SearchScreenState,
     onWordClick: (Dictionary) -> Unit,
     onClearInputT: () -> Unit,
@@ -64,12 +64,12 @@ fun SearchScreen(
 
     val keyBoardController = LocalSoftwareKeyboardController.current
 
-    val onSearchWord = remember {
-        {
-            searchWord(queryT)
-            keyBoardController?.hide()
-        }
-    }
+//    val onSearchWord = remember {
+//        {
+//            searchWord(queryT)
+//
+//        }
+//    }
 
     Scaffold(
         modifier = modifier,
@@ -112,7 +112,7 @@ fun SearchScreen(
                         onValueChange = { updateQueryT(it) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(onSearch = { onSearchWord() }),
+                        keyboardActions = KeyboardActions(onSearch = { keyBoardController?.hide()}),
                         placeholder = { Text(text = "Search...") },
                         leadingIcon = {
                             if (queryT.isNotBlank())

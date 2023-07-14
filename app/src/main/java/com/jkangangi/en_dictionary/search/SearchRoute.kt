@@ -65,7 +65,7 @@ class SearchRoute(
             onClearInputT = viewModel::clearInputT,
 //            onClearInputA = viewModel::clearInputA,
 //            onClearInputB = viewModel::clearInputB,
-            searchWord = viewModel::doWordSearch
+           // searchWord = viewModel::doWordSearch
 
         )
     }

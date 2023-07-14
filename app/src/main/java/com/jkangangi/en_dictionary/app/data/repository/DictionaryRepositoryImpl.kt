@@ -83,11 +83,12 @@ class DictionaryRepositoryImpl @Inject constructor(
          */
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
+            Log.d("DICT REPOSITORY IMPL","sele = ${request.selection}, AFR = ${request.textAfterSelection}, bFERE = ${request.textBeforeSelection}")
+
             if (remoteData != null) {
                 dao.deleteDictionaryResponse(remoteData.target)
                 dao.insertDictionaryResponse(remoteData.toDictionaryEntity())
             }
-            Log.d("DICT REposit IMPL","sele = ${request.selection}, AFR = ${request.textAfterSelection}, bFERE = ${request.textBeforeSelection}")
 
         } catch (e: RedirectResponseException) {
             //3xx

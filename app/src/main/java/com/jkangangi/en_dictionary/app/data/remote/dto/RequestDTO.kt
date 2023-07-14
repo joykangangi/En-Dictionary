@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RequestDTO(
     @SerialName("selection")
-    val selection: String = "hi",
+    val selection: String = "",
     @SerialName("textAfterSelection")
     val textAfterSelection: String = "",
     @SerialName("textBeforeSelection")
