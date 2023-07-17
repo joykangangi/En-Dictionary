@@ -24,8 +24,6 @@ compose-activity = "androidx.activity:activity-compose:1.7.0"
 compose-material = "androidx.compose.material3:material3:1.1.0-beta02"
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
-compose-ui-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts" }
-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 # Datastore

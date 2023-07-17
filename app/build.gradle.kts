@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage", "DSL_SCOPE_VIOLATION")
 
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id(libs.plugins.android.application.get().pluginId)
     id(libs.plugins.dagger.hilt.get().pluginId)
@@ -32,36 +35,42 @@ android {
         }
     }
 
-    buildTypes.apply {
-        maybeCreate("release").apply {
-            isMinifyEnabled = true
+    buildTypes {
+        debug {
+            val properties = Properties()
+            val fileInputStream = FileInputStream(project.rootProject.file("local.properties"))
+            properties.load(fileInputStream)
+            val apiKey = properties.getProperty("API_KEY")
+            buildConfigField(type = "String", name = "API_KEY", value = "\"$apiKey\"")
+        }
+        release {
+            isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
 
-    compileOptions.apply {
+    compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions.apply {
+    kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
-    buildFeatures.apply {
+    buildFeatures {
         compose = true
-       // buildConfig = true
+        buildConfig = true
     }
 
-    composeOptions.apply {
+    composeOptions {
         kotlinCompilerExtensionVersion = rootProject.libs.versions.compose.compiler.get()
     }
 
-    packagingOptions.apply {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }

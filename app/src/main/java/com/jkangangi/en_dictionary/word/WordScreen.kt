@@ -83,7 +83,7 @@ fun WordScreen(
                                 verticalArrangement = Arrangement.SpaceAround,
                                 content = {
                                             Text(
-                                                text = word.pronunciations[0].entries[0].textual[0].pronunciation,
+                                                text = word.items[0].partOfSpeech,
                                                 style = MaterialTheme.typography.bodyLarge
                                             )
 

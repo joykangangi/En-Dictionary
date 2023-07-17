@@ -2,6 +2,7 @@ package com.jkangangi.en_dictionary.app.navigation
 
 import android.os.Parcelable
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
@@ -9,6 +10,8 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.bumble.appyx.core.composable.Children
@@ -37,8 +40,10 @@ class Navigation(
     buildContext = rootBuildContext,
     navModel = backStack,
 ) {
+
     @Composable
     override fun View(modifier: Modifier) {
+
 
         //This will add the child nodes to the composition
         Scaffold(
@@ -58,11 +63,11 @@ class Navigation(
     override fun resolve(navTarget: Route, buildContext: BuildContext): Node {
 
         return when (navTarget) {
-            is Route.Search -> SearchRoute(
-                buildContext = buildContext,
-                backStack = backStack,
-            )
-
+            is Route.Search ->
+                SearchRoute(
+                    buildContext = buildContext,
+                    backStack = backStack,
+                )
             is Route.SearchDetail -> WordDetailRoute(
                 buildContext = buildContext,
                 backStack = backStack,

@@ -11,4 +11,7 @@
     <string name="empty_saves">No Saved Words</string>
     <string name="sort_abc">A-Z</string>
     <string name="go_back">Go back</string>
+    <string name="string_b4">Text Before Target</string>
+    <string name="string_after">Text After Target</string>
+    <string name="target">Target</string>
 </resources>

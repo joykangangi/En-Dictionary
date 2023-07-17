@@ -13,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,14 +24,7 @@ private const val DELAY_TIME = 1000L
 class SearchViewModel @Inject constructor(private val repository: DictionaryRepositoryImpl) :
     ViewModel() {
 
-    private val _targetQuery = MutableStateFlow("")
-    val targetQuery = _targetQuery.asStateFlow()
-
-    private val _queryAfterTarget = MutableStateFlow("")
-    val queryAfterTarget = _queryAfterTarget.asStateFlow()
-
-    private val _queryBeforeTarget = MutableStateFlow("")
-    val queryBeforeTarget = _queryBeforeTarget.asStateFlow()
+    private val _queries = MutableStateFlow(RequestDTO())
 
     private val _searchState = MutableStateFlow(SearchScreenState())
     val searchState = _searchState.asStateFlow()
@@ -40,32 +34,24 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
 
     private var searchJob: Job? = null
 
-    fun onSearchTarget(query: String) {
-        _targetQuery.update { query }
-        doWordSearch(query)
-    }
-
-    fun onSearchAfTarget(query: String) {
-        _queryAfterTarget.update { query }
-    }
-
-    fun onSearchBfTarget(query: String) {
-        _queryBeforeTarget.update { query }
+    fun updateQuery(queries: RequestDTO) {
+        _queries.update { queries }
     }
 
 
-    private fun doWordSearch(target: String //, textAfterTarget: String, textBeforeTarget: String
-    ) {
+
+     fun doWordSearch() {
         searchJob?.cancel() //if a job already exits we cancel the job
         searchJob = viewModelScope.launch {
+            Log.d("SearchViewModel","Target = ${_queries.value}")
 
-            Log.d("SearchViewModel","Target = $target")
             delay(DELAY_TIME)
-            repository.postSearch(request = RequestDTO(selection = target)).collect { result -> //:NetworkResult<Dictionary> ->
+            repository.postSearch(request = _queries.value).collect { result ->
                 when (result) {
                     is NetworkResult.Error -> {
                         _searchState.value = _searchState.value.copy(
-                            error = result.message ?: "Unexpected Error Occurred"
+                            error = result.message ?: "Unexpected Error Occurred",
+                            isLoading = false
                         )
                     }
 
@@ -77,7 +63,7 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
 
                     is NetworkResult.Success -> {
                         _searchState.value = _searchState.value.copy(
-                            wordItems = mutableListOf(result.data),
+                            wordItem = result.data,
                             isLoading = false
                         )
                     }
@@ -85,43 +71,6 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
             }
 
         }
-        /*    repository.getWord(word = param.lowercase()).collect { result ->
-
-
-                when (result) {
-                    is NetworkResult.Error -> {
-                        _searchState.value = _searchState.value.copy(
-                            wordItems = result.data ?: emptyList(),
-                            error = result.message ?: "Unexpected Error Occurred"
-                        )
-                    }
-
-                    is NetworkResult.Loading -> {
-                        _searchState.value = _searchState.value.copy(
-                            wordItems = result.data ?: emptyList(),
-                            isLoading = true,
-                        )
-                    }
-
-                    is NetworkResult.Success -> {
-                        _searchState.value = _searchState.value.copy(
-                            wordItems = result.data ?: emptyList(),
-                            isLoading = false
-                        )
-                    }
-                }
-            }*/
-    }
-
-
-    fun clearInputT() {
-        _targetQuery.value = ""
-    }
-    fun clearInputA() {
-        _queryAfterTarget.value = ""
-    }
-    fun clearInputB() {
-        _queryBeforeTarget.value = ""
     }
 
     fun setBook(word: Dictionary): Dictionary {

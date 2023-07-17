@@ -16,6 +16,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,12 +36,10 @@ val bottomNavScreens = listOf(
 fun BottomNavigator(
     modifier: Modifier = Modifier,
     backStackNavigator: BackStack<Route>,
-    //route: Route?,
-    //onRouteClick: (Route) -> Unit,
 ) {
     val navItems by remember { mutableStateOf(bottomNavScreens) }
 
-    val currentRoute = remember {
+    val currentRoute = rememberSaveable {
         mutableStateOf(backStackNavigator.activeElement)
     }
 

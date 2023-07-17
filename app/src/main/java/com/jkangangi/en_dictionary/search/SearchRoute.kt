@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -34,9 +35,6 @@ class SearchRoute(
         viewModel: SearchViewModel = hiltViewModel(),
     ) {
         val switch = isDarkTheme.collectAsState().value
-        val searchTextT by viewModel.targetQuery.collectAsState()
-        //val searchTextA by viewModel.queryAfterTarget.collectAsState()
-      //  val searchTextB by viewModel.queryBeforeTarget.collectAsState()
 
         val state by viewModel.searchState.collectAsState()
 
@@ -50,23 +48,15 @@ class SearchRoute(
             onDispose { viewModel.closeClient() }
         } )
 
-        SearchScreen(
-            modifier = modifier,
-            isDarkTheme = switch,
-            toggleTheme = this::updateTheme,
-            queryT = searchTextT,
-            updateQueryT = viewModel::onSearchTarget,
-//            queryA = searchTextA,
-//            updateQueryA = viewModel::onSearchAfTarget,
-//            queryB = searchTextB,
-//            updateQueryB = viewModel::onSearchBfTarget,
-            state = state,
-            onWordClick = toWordClick,
-            onClearInputT = viewModel::clearInputT,
-//            onClearInputA = viewModel::clearInputA,
-//            onClearInputB = viewModel::clearInputB,
-           // searchWord = viewModel::doWordSearch
 
+        SearchScreen(
+            modifier = modifier.fillMaxWidth() ,
+            isDarkTheme = ,
+            toggleTheme = ,
+            state = ,
+            updateQuery = ,
+            onSearchClick = { /*TODO*/ },
+            onWordClick =
         )
     }
 
