@@ -9,11 +9,15 @@ import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import com.jkangangi.en_dictionary.word.WordDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,10 +31,18 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
     private val _queries = MutableStateFlow(RequestDTO())
 
     private val _searchState = MutableStateFlow(SearchScreenState())
-    val searchState = _searchState.asStateFlow()
+   // val searchState = _searchState.asStateFlow()
 
     private val _detailState = MutableStateFlow(WordDetailState())
     val detailState = _detailState.asStateFlow()
+
+    val searchState = _queries.map {
+        _searchState.value.copy(requests = it)
+    }.flowOn(Dispatchers.Default).stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        initialValue = SearchScreenState(),
+    )
 
     private var searchJob: Job? = null
 

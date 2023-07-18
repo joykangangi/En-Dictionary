@@ -39,8 +39,8 @@ fun TextInput(
     val requiredColor = MaterialTheme.colorScheme.error
     val asterisk = if (isRequired) "*" else ""
     val transformedLabel = buildAnnotatedString {
+        append(txtLabel)
         withStyle(style = SpanStyle(color = requiredColor)) {
-            append(txtLabel)
             append(asterisk)
         }
     }
@@ -51,7 +51,6 @@ fun TextInput(
         value = input,
         onValueChange = onInputChange,
         singleLine = true,
-        placeholder = { Text(text = "Search...") },
         label = { Text(text = transformedLabel) },
         keyboardOptions = KeyboardOptions(imeAction = imeAction),
         keyboardActions = KeyboardActions(onDone = { keyBoardController?.hide() }),

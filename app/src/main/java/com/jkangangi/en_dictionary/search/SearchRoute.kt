@@ -43,6 +43,11 @@ class SearchRoute(
                 backStack.singleTop(Route.SearchDetail(viewModel.setBook(word)))
             }
         }
+        val onSearchClicked = remember {
+            {
+                viewModel.doWordSearch()
+            }
+        }
 
         DisposableEffect(key1 = true, effect = {
             onDispose { viewModel.closeClient() }
@@ -51,12 +56,12 @@ class SearchRoute(
 
         SearchScreen(
             modifier = modifier.fillMaxWidth() ,
-            isDarkTheme = ,
-            toggleTheme = ,
-            state = ,
-            updateQuery = ,
-            onSearchClick = { /*TODO*/ },
-            onWordClick =
+            isDarkTheme = switch,
+            toggleTheme = this::updateTheme,
+            state = state,
+            updateQuery = viewModel::updateQuery ,
+            onSearchClick = onSearchClicked,
+            onWordClick = toWordClick
         )
     }
 
