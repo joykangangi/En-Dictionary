@@ -38,6 +38,7 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
 
     val searchState = _queries.map {
         _searchState.value.copy(requests = it)
+
     }.flowOn(Dispatchers.Default).stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000),
