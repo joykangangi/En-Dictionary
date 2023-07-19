@@ -1,41 +1,30 @@
 package com.jkangangi.en_dictionary.search
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -46,7 +35,6 @@ import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.widgets.TextInput
 
-//todo update modifiers
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
@@ -61,7 +49,6 @@ fun SearchScreen(
 
 
     Scaffold(
-        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.home_text)) },
@@ -79,54 +66,62 @@ fun SearchScreen(
         },
         content = { contentPadding ->
             Column(
-                modifier = modifier
-                    .padding(12.dp)
-                    .padding(contentPadding)
-                    .fillMaxWidth(),
+                modifier = modifier.padding(contentPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 content = {
 
+                    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "Search for a word or a phrase")
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "search")
+                    }
+
                     //B4
                     TextInput(
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = modifier,
                         input = state.requests.textBeforeSelection,
                         onInputChange = { updateQuery(state.requests.copy(textBeforeSelection = it)) },
                         txtLabel = stringResource(id = R.string.string_b4),
-                        isRequired = false
+                        isRequired = false,
+                        onClearInput = { updateQuery(state.requests.copy(textBeforeSelection = "")) }
                     )
 
                     //target
                     TextInput(
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = modifier,
                         input = state.requests.selection,
                         onInputChange = { updateQuery(state.requests.copy(selection = it)) },
                         txtLabel = stringResource(id = R.string.target),
-                        isRequired = true
+                        isRequired = true,
+                        onClearInput = { updateQuery(state.requests.copy(selection = "")) }
                     )
 
                     //after
                     TextInput(
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = modifier,
                         input = state.requests.textAfterSelection,
                         onInputChange = { updateQuery(state.requests.copy(textAfterSelection = it)) },
                         txtLabel = stringResource(id = R.string.string_after),
                         isRequired = false,
-                        imeAction = ImeAction.Done
+                        imeAction = ImeAction.Done,
+                        onClearInput = { updateQuery(state.requests.copy(textAfterSelection = "")) }
                     )
 
                     Spacer(modifier = modifier)
 
-                    OutlinedButton(onClick = onSearchClick) {
+                    Button(
+                        modifier = modifier,
+                        onClick = onSearchClick
+                    ) {
                         Text(text = "Search")
                     }
 
                     Box(
-                        modifier = modifier,
+                        contentAlignment = Alignment.Center,
                         content = {
 
                             if (state.isLoading) {
-                                CircularProgressIndicator(modifier = modifier.align(Alignment.Center))
+                                CircularProgressIndicator()
                             }
 
                             //if there is an error, message
@@ -135,26 +130,23 @@ fun SearchScreen(
                                     text = state.error,
                                     color = MaterialTheme.colorScheme.error,
                                     textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 20.dp)
-                                        .align(Alignment.Center)
+                                    modifier = modifier
                                 )
                             } else {
-                                ElevatedCard(
-                                    modifier = modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp),
-                                    onClick = { state.wordItem?.let { onWordClick(it) } },
-                                    content = {
-                                        Text(
-                                            text = state.wordItem?.target ?: "",
-                                            textAlign = TextAlign.Center,
-                                            style = MaterialTheme.typography.titleMedium
-                                        )
-                                        Spacer(modifier = modifier.height(8.dp))
-                                    }
-                                )
+                                state.wordItem?.let { word ->
+                                    ElevatedCard(
+                                        modifier = modifier,
+                                        onClick = { onWordClick(word) },
+                                        content = {
+                                            Text(
+                                                text = word.target,
+                                                textAlign = TextAlign.Center,
+                                                style = MaterialTheme.typography.titleMedium
+                                            )
+                                            Spacer(modifier = modifier.height(12.dp))
+                                        }
+                                    )
+                                }
                             }
                         },
                     )

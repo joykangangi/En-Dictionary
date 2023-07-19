@@ -5,7 +5,7 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 
 data class SearchScreenState(
    // val wordItems: ImmutableList<Word> = persistentListOf(),
-    val wordItem: Dictionary? = null,
+    val wordItem: Dictionary? = Dictionary(),
     val isLoading: Boolean = false,
     val error: String = "",
     val requests: RequestDTO = RequestDTO()

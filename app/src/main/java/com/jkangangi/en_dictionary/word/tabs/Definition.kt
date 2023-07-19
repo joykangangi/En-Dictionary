@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,16 +20,21 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.Definition
+import com.jkangangi.en_dictionary.app.data.remote.dto.Item
 
 @Composable
-fun DefinitionScreen(modifier: Modifier = Modifier, meaning: Definition) {
-    Column(modifier = modifier.fillMaxWidth()) {
+fun DefinitionScreen(modifier: Modifier = Modifier, word: Dictionary) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
         //use a loop/lazy to show all parts of speech
         WordType(
-            wordType = meaning.definition,
-            definition = meaning.examples,
-        ) //TOdo VM
+            wordType = word.items,
+        )
 
     }
 }
@@ -36,74 +43,62 @@ fun DefinitionScreen(modifier: Modifier = Modifier, meaning: Definition) {
 @Composable
 private fun WordType(
     modifier: Modifier = Modifier,
-    wordType: String,
-    definition: List<String>
+    wordType: List<Item>,
 ) {
     Column {
-        Row(
-            modifier = modifier.padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-        ) {
-            Text(
-                text = wordType,
-                style = MaterialTheme.typography.bodyLarge,
-                fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.secondary,
+        wordType.forEach { item ->
+            Row(
+                modifier = modifier.padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                content = {
+                    Text(
+                        text = item.partOfSpeech,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontFamily = FontFamily.Monospace,
+                        color = MaterialTheme.colorScheme.secondary,
+                    )
+                    Divider()
+                }
             )
-            Divider()
+
+            Text(
+                buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 24.sp
+                        )
+                    ) {
+                        append(".")//Todo number
+                    }
+
+                    withStyle(
+                        style = SpanStyle(fontFamily = FontFamily.Default, fontSize = 24.sp)
+                    ) {
+                        append(item.definitions[0].definition)
+
+                    }
+
+                    withStyle(
+                        style = SpanStyle(
+                            fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 24.sp
+                        )
+                    ) {
+                        append(".")//Todo number
+                    }
+
+                    withStyle(
+                        style = SpanStyle(fontFamily = FontFamily.Default, fontSize = 24.sp)
+                    ) {
+                        append(item.definitions[1].definition)
+                    }
+                }
+            )
         }
-        Text(
-            buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 24.sp
-                    )
-                ) {
-                    append(".")//Todo number
-                }
-
-                withStyle(
-                    style = SpanStyle(fontFamily = FontFamily.Default, fontSize = 24.sp)
-                ) {
-                    definition.forEach {
-                        append(it)
-                    }
-                }
-
-                withStyle(
-                    style = SpanStyle(
-                        fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 24.sp
-                    )
-                ) {
-                    append(".")//Todo number
-                }
-
-                withStyle(
-                    style = SpanStyle(fontFamily = FontFamily.Default, fontSize = 24.sp)
-                ) {
-                    definition.forEach {
-                        append(it)
-                    }
-                }
-            },
-            modifier.padding(start = 16.dp)
-        )
-
-        Text(
-            buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(fontSize = 26.sp, color = MaterialTheme.colorScheme.secondary)
-                ) {
-                    append(".")//Todo number
-                }
-            },
-            modifier.padding(start = 16.dp)
-        )
     }
 }
 

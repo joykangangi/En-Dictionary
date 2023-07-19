@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val DELAY_TIME = 1000L
+//private const val DELAY_TIME = 500L
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(private val repository: DictionaryRepositoryImpl) :
@@ -56,9 +56,7 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
      fun doWordSearch() {
         searchJob?.cancel() //if a job already exits we cancel the job
         searchJob = viewModelScope.launch {
-            Log.d("SearchViewModel","Target = ${_queries.value}")
-
-            delay(DELAY_TIME)
+            //delay(DELAY_TIME)
             repository.postSearch(request = _queries.value).collect { result ->
                 when (result) {
                     is NetworkResult.Error -> {

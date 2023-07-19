@@ -10,7 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -22,19 +21,14 @@ import androidx.compose.ui.text.withStyle
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TextInput(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     input: String,
     onInputChange: (String) -> Unit,
     imeAction: ImeAction = ImeAction.Next,
     txtLabel: String,
     isRequired: Boolean,
+    onClearInput: () -> Unit,
 ) {
-
-    val onClearInput = remember {
-        {
-            onInputChange("")
-        }
-    }
 
     val requiredColor = MaterialTheme.colorScheme.error
     val asterisk = if (isRequired) "*" else ""

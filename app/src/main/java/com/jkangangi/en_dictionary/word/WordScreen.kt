@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
@@ -52,7 +53,7 @@ fun WordScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = word.target) },
+                title = { Text(text = word.target, style = MaterialTheme.typography.labelMedium) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -80,14 +81,15 @@ fun WordScreen(
                         content = {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.SpaceAround,
+                                verticalArrangement = Arrangement.Bottom,
+                                modifier = modifier.padding(8.dp),
                                 content = {
                                             Text(
-                                                text = word.items[0].partOfSpeech,
+                                                text = word.pronunciations[0].entries[0].textual[0].pronunciation,
                                                 style = MaterialTheme.typography.bodyLarge
                                             )
 
-                                    Spacer(modifier = modifier.height(10.dp))
+                                   // Spacer(modifier = modifier.height(10.dp))
 
                                     Row(
                                         modifier = modifier.fillMaxWidth(),
@@ -122,7 +124,7 @@ fun WordScreen(
 
 @Composable
 private fun TabLayout(modifier: Modifier, word: Dictionary) {
-    var tabIndex by remember { mutableStateOf(1) } //Todo
+    var tabIndex by remember { mutableStateOf(0) }
     val tabs = listOf("Definition", "Synonyms", "Antonyms")
 
     Column(
@@ -144,7 +146,7 @@ private fun TabLayout(modifier: Modifier, word: Dictionary) {
             }
         }
         when (tabIndex) {
-            0 -> DefinitionScreen(meaning = word.items[0].definitions[0])
+            0 -> DefinitionScreen(word = word)
             1 -> WordList(modifier = modifier, words = listOf("Car", "Bicycle"))
             2 -> WordList(modifier = modifier, words = listOf("Model", "Illustration"))
         }
