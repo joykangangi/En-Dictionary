@@ -33,7 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
@@ -53,7 +57,7 @@ fun WordScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = word.target, style = MaterialTheme.typography.labelMedium) },
+                title = { Text(text = word.target, style = MaterialTheme.typography.bodyLarge, fontFamily = FontFamily.SansSerif) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -62,14 +66,18 @@ fun WordScreen(
                         )
                     }
                 },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                )
             )
         },
         content = {
             Column(
-                modifier = modifier
-                    .background(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)),
+                modifier = Modifier
+                    .background(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
+                    .padding(it),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
                 content = {
 
                     Box(
@@ -84,12 +92,19 @@ fun WordScreen(
                                 verticalArrangement = Arrangement.Bottom,
                                 modifier = modifier.padding(8.dp),
                                 content = {
-                                            Text(
-                                                text = word.pronunciations[0].entries[0].textual[0].pronunciation,
-                                                style = MaterialTheme.typography.bodyLarge
-                                            )
+                                    Text(
+                                        text = word.pronunciations[0].entries[0].textual[0].pronunciation,
+                                        fontFamily = FontFamily.SansSerif,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                  Text(buildAnnotatedString {
+                                      withStyle(style = SpanStyle(fontStyle = MaterialTheme.typography.titleMedium.fontStyle)){
+                                          append("Full Phrase: ")
+                                          append(word.sentence)
+                                      }
+                                  })
 
-                                   // Spacer(modifier = modifier.height(10.dp))
+                                    // Spacer(modifier = modifier.height(10.dp))
 
                                     Row(
                                         modifier = modifier.fillMaxWidth(),

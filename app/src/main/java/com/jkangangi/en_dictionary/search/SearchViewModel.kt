@@ -14,7 +14,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -29,58 +31,46 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
     ViewModel() {
 
     private val _queries = MutableStateFlow(RequestDTO())
-
     private val _searchState = MutableStateFlow(SearchScreenState())
-   // val searchState = _searchState.asStateFlow()
+    val searchState = _searchState.asStateFlow()
+
 
     private val _detailState = MutableStateFlow(WordDetailState())
     val detailState = _detailState.asStateFlow()
 
-    val searchState = _queries.map {
-        _searchState.value.copy(requests = it)
-
-    }.flowOn(Dispatchers.Default).stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5_000),
-        initialValue = SearchScreenState(),
-    )
-
-    private var searchJob: Job? = null
-
     fun updateQuery(queries: RequestDTO) {
         _queries.update { queries }
+        _searchState.update { it.copy(requests = queries) }
     }
 
-
-
-     fun doWordSearch() {
-        searchJob?.cancel() //if a job already exits we cancel the job
-        searchJob = viewModelScope.launch {
-            //delay(DELAY_TIME)
+    fun doWordSearch() {
+        viewModelScope.launch {
             repository.postSearch(request = _queries.value).collect { result ->
-                when (result) {
-                    is NetworkResult.Error -> {
-                        _searchState.value = _searchState.value.copy(
-                            error = result.message ?: "Unexpected Error Occurred",
-                            isLoading = false
-                        )
-                    }
+                //pipe Flow emissions into StateFlow
+                _searchState.update { state ->
+                    when (result) {
+                        is NetworkResult.Error -> {
+                            state.copy(
+                                error = result.message ?: "Unexpected Error Occurred",
+                                isLoading = false,
+                                wordItem = null
+                            )
+                        }
 
-                    is NetworkResult.Loading -> {
-                        _searchState.value = _searchState.value.copy(
-                            isLoading = true,
-                        )
-                    }
+                        is NetworkResult.Loading -> {
+                            state.copy(isLoading = true, wordItem = null)
+                        }
 
-                    is NetworkResult.Success -> {
-                        _searchState.value = _searchState.value.copy(
-                            wordItem = result.data,
-                            isLoading = false
-                        )
+                        is NetworkResult.Success -> {
+                            state.copy(
+                                wordItem = result.data,
+                                isLoading = false,
+                                error = ""
+                            )
+                        }
                     }
                 }
             }
-
         }
     }
 

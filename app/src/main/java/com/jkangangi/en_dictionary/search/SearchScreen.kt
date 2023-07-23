@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Search
@@ -23,19 +24,24 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.widgets.TextInput
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+
 @Composable
 fun SearchScreen(
     modifier: Modifier,
@@ -46,12 +52,14 @@ fun SearchScreen(
     onSearchClick: () -> Unit,
     onWordClick: (Dictionary) -> Unit,
 ) {
+   val keyBoardController = LocalSoftwareKeyboardController.current
 
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.home_text)) },
+                title = { Text(text = stringResource(id = R.string.home_text), style = MaterialTheme.typography.bodyLarge, fontFamily = FontFamily.SansSerif) },
                 actions = {
                     IconButton(onClick = { toggleTheme(isDarkTheme) }) {
                         Icon(
@@ -66,14 +74,16 @@ fun SearchScreen(
         },
         content = { contentPadding ->
             Column(
-                modifier = modifier.padding(contentPadding),
+                modifier = modifier
+                    .padding(contentPadding)
+                    .padding(start = 12.dp, end = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(5.dp),
+                verticalArrangement = Arrangement.spacedBy(3.dp),
                 content = {
 
-                    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "Search for a word or a phrase")
+                    Row(modifier = modifier.padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                         Icon(imageVector = Icons.Default.Search, contentDescription = "search")
+                        Text(text = "Search for a word or a phrase", fontFamily = FontFamily.SansSerif, style = MaterialTheme.typography.bodyMedium)
                     }
 
                     //B4
@@ -91,6 +101,7 @@ fun SearchScreen(
                         modifier = modifier,
                         input = state.requests.selection,
                         onInputChange = { updateQuery(state.requests.copy(selection = it)) },
+                        imeAction = ImeAction.Done,
                         txtLabel = stringResource(id = R.string.target),
                         isRequired = true,
                         onClearInput = { updateQuery(state.requests.copy(selection = "")) }
@@ -111,9 +122,12 @@ fun SearchScreen(
 
                     Button(
                         modifier = modifier,
-                        onClick = onSearchClick
+                        onClick = {
+                            keyBoardController?.hide()
+                            onSearchClick()
+                        }
                     ) {
-                        Text(text = "Search")
+                        Text(text = "Search", fontFamily = FontFamily.SansSerif, style = MaterialTheme.typography.bodyMedium)
                     }
 
                     Box(
@@ -130,7 +144,9 @@ fun SearchScreen(
                                     text = state.error,
                                     color = MaterialTheme.colorScheme.error,
                                     textAlign = TextAlign.Center,
-                                    modifier = modifier
+                                    modifier = modifier,
+                                    fontFamily = FontFamily.SansSerif,
+                                    style = MaterialTheme.typography.bodyMedium,
                                 )
                             } else {
                                 state.wordItem?.let { word ->
@@ -138,12 +154,15 @@ fun SearchScreen(
                                         modifier = modifier,
                                         onClick = { onWordClick(word) },
                                         content = {
-                                            Text(
-                                                text = word.target,
-                                                textAlign = TextAlign.Center,
-                                                style = MaterialTheme.typography.titleMedium
-                                            )
-                                            Spacer(modifier = modifier.height(12.dp))
+                                            Column(modifier.padding(12.dp)) {
+                                                Text(
+                                                    text = word.target,
+                                                    textAlign = TextAlign.Center,
+                                                    fontFamily = FontFamily.SansSerif,
+                                                    style = MaterialTheme.typography.bodyMedium
+                                                )
+                                                Spacer(modifier = modifier.height(12.dp))
+                                            }
                                         }
                                     )
                                 }

@@ -45,6 +45,7 @@ fun TextInput(
         value = input,
         onValueChange = onInputChange,
         singleLine = true,
+        textStyle = MaterialTheme.typography.bodyMedium,
         label = { Text(text = transformedLabel) },
         keyboardOptions = KeyboardOptions(imeAction = imeAction),
         keyboardActions = KeyboardActions(onDone = { keyBoardController?.hide() }),

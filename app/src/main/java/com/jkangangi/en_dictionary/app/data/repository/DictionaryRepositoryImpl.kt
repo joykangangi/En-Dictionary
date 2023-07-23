@@ -22,59 +22,57 @@ import javax.inject.Inject
  *
  *
  */
+/*override suspend fun getWord(word: String): Flow<NetworkResult<List<Word>>> = flow {
+       emit(NetworkResult.Loading())
+
+
+       val localWordData = dao.getWord(word = word).map { it.toWord() }
+       emit(NetworkResult.Loading(data = localWordData))
+
+       try {
+           val remoteWordData = dictionaryService.getSearchDTO(word = word)
+           dao.deleteWord(remoteWordData.map { it.word })
+           dao.insertWord(remoteWordData.map { it.toWordEntity() })
+
+       } catch (e: RedirectResponseException) {
+           //3xx
+           emit(
+               NetworkResult.Error(
+                   message = "Error ${e.response.status.description}",
+                   data = localWordData
+               )
+           )
+           Log.e("RepoImpl", e.response.status.description)
+       } catch (e: ClientRequestException) {
+           //4xx
+           emit(
+               NetworkResult.Error(
+                   message = "Check your internet connection",
+                   data = localWordData
+               )
+           )
+           Log.e("RepoImpl", e.response.status.description)
+
+       } catch (e: ServerResponseException) {
+           //5xx
+           emit(NetworkResult.Error(message = e.response.status.description, data = localWordData))
+           Log.e("RepoImpl", e.response.status.description)
+       } catch (e: Throwable) {
+           emit(NetworkResult.Error(message = e.stackTraceToString(), data = localWordData))
+           Log.e("RepoImpl", e.stackTraceToString())
+       }
+       val newWord = dao.getWord(word).map { it.toWord() }
+       emit(NetworkResult.Success(data = newWord))
+   }*/
 
 class DictionaryRepositoryImpl @Inject constructor(
     private val dao: DictionaryDao,
     private val dictionaryService: DictionaryServiceImpl
 ) : DictionaryRepository {
 
-    /*override suspend fun getWord(word: String): Flow<NetworkResult<List<Word>>> = flow {
+    override fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary>> = flow {
         emit(NetworkResult.Loading())
 
-
-        val localWordData = dao.getWord(word = word).map { it.toWord() }
-        emit(NetworkResult.Loading(data = localWordData))
-
-        try {
-            val remoteWordData = dictionaryService.getSearchDTO(word = word)
-            dao.deleteWord(remoteWordData.map { it.word })
-            dao.insertWord(remoteWordData.map { it.toWordEntity() })
-
-        } catch (e: RedirectResponseException) {
-            //3xx
-            emit(
-                NetworkResult.Error(
-                    message = "Error ${e.response.status.description}",
-                    data = localWordData
-                )
-            )
-            Log.e("RepoImpl", e.response.status.description)
-        } catch (e: ClientRequestException) {
-            //4xx
-            emit(
-                NetworkResult.Error(
-                    message = "Check your internet connection",
-                    data = localWordData
-                )
-            )
-            Log.e("RepoImpl", e.response.status.description)
-
-        } catch (e: ServerResponseException) {
-            //5xx
-            emit(NetworkResult.Error(message = e.response.status.description, data = localWordData))
-            Log.e("RepoImpl", e.response.status.description)
-        } catch (e: Throwable) {
-            emit(NetworkResult.Error(message = e.stackTraceToString(), data = localWordData))
-            Log.e("RepoImpl", e.stackTraceToString())
-        }
-        val newWord = dao.getWord(word).map { it.toWord() }
-        emit(NetworkResult.Success(data = newWord))
-    }*/
-
-    override suspend fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary>> = flow {
-        emit(NetworkResult.Loading())
-
-       // val sentence = "$textBeforeSelection$selection$textAfterSelection"
         val localData = dao.getDictionaryResponse(sentence = request.selection).toDictionary()
         emit(NetworkResult.Loading(data = localData))
 

@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,10 +31,12 @@ fun DefinitionScreen(modifier: Modifier = Modifier, word: Dictionary) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .padding(12.dp)
             .verticalScroll(rememberScrollState())
     ) {
         //use a loop/lazy to show all parts of speech
         WordType(
+            modifier = modifier,
             wordType = word.items,
         )
 
@@ -42,62 +46,75 @@ fun DefinitionScreen(modifier: Modifier = Modifier, word: Dictionary) {
 
 @Composable
 private fun WordType(
-    modifier: Modifier = Modifier,
-    wordType: List<Item>,
+    modifier: Modifier,
+    wordType: List<Item?>,
 ) {
     Column {
         wordType.forEach { item ->
-            Row(
-                modifier = modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                content = {
-                    Text(
-                        text = item.partOfSpeech,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontFamily = FontFamily.Monospace,
-                        color = MaterialTheme.colorScheme.secondary,
-                    )
-                    Divider()
-                }
-            )
-
-            Text(
-                buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 24.sp
+            item?.let {
+                Row(
+                    modifier = modifier.padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    content = {
+                        Text(
+                            text = item.partOfSpeech,
+                            style = MaterialTheme.typography.titleSmall,
+                            fontFamily = FontFamily.SansSerif,
+                            color = MaterialTheme.colorScheme.secondary,
                         )
-                    ) {
-                        append(".")//Todo number
                     }
+                )
 
-                    withStyle(
-                        style = SpanStyle(fontFamily = FontFamily.Default, fontSize = 24.sp)
-                    ) {
-                        append(item.definitions[0].definition)
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary,
+                                textDecoration = TextDecoration.Underline,
+                            )
+                        ) {
+                            append("Definition: \n")//Todo number using for loop
+                        }
 
+                        withStyle(
+                            style = SpanStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
+                            )
+                        ) {
+                            append(item.definitions?.getOrNull(0)?.definition ?:"")
+                        }
                     }
+                )
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        ) {
+                            append("Example: \n")//Todo number
+                        }
 
-                    withStyle(
-                        style = SpanStyle(
-                            fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 24.sp
-                        )
-                    ) {
-                        append(".")//Todo number
+                        withStyle(
+                            style = SpanStyle(
+                                fontFamily = FontFamily.SansSerif,
+                                fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
+                            )
+                        ) {
+                            append(item.definitions?.getOrNull(0)?.examples?.get(0) ?: "")
+                        }
                     }
-
-                    withStyle(
-                        style = SpanStyle(fontFamily = FontFamily.Default, fontSize = 24.sp)
-                    ) {
-                        append(item.definitions[1].definition)
-                    }
-                }
-            )
+                )
+            }
         }
     }
 }

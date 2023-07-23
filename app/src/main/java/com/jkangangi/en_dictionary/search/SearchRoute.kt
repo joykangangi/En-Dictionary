@@ -59,7 +59,7 @@ class SearchRoute(
 
 
         SearchScreen(
-            modifier = modifier.fillMaxWidth().padding(12.dp) ,
+            modifier = modifier.fillMaxWidth() ,
             isDarkTheme = switch,
             toggleTheme = this::updateTheme,
             state = state,
