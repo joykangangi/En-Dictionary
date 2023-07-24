@@ -14,7 +14,7 @@ data class Definition(
     @SerialName("definition")
     val definition: String = "",
     @SerialName("examples")
-    val examples: List<String> = listOf(),
+    val examples: List<String> = emptyList(),
     @SerialName("synonyms")
     val synonyms: List<String> = listOf()
 ): Parcelable

@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.word.tabs
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -58,8 +59,8 @@ private fun WordType(
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
                     content = {
                         Text(
-                            text = item.partOfSpeech,
-                            style = MaterialTheme.typography.titleSmall,
+                            text = it.partOfSpeech,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontFamily = FontFamily.SansSerif,
                             color = MaterialTheme.colorScheme.secondary,
                         )
@@ -86,7 +87,7 @@ private fun WordType(
                                 fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
                             )
                         ) {
-                            append(item.definitions?.getOrNull(0)?.definition ?:"")
+                            append(it.definitions.getOrNull(0)?.definition ?:"null")
                         }
                     }
                 )
@@ -110,7 +111,7 @@ private fun WordType(
                                 fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
                             )
                         ) {
-                            append(item.definitions?.getOrNull(0)?.examples?.get(0) ?: "")
+                            append(it.definitions[0].examples.getOrNull(0))
                         }
                     }
                 )

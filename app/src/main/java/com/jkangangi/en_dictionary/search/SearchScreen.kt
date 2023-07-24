@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,14 +53,20 @@ fun SearchScreen(
     onSearchClick: () -> Unit,
     onWordClick: (Dictionary) -> Unit,
 ) {
-   val keyBoardController = LocalSoftwareKeyboardController.current
+    val keyBoardController = LocalSoftwareKeyboardController.current
 
 
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.home_text), style = MaterialTheme.typography.bodyLarge, fontFamily = FontFamily.SansSerif) },
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.home_text),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontFamily = FontFamily.SansSerif
+                    )
+                },
                 actions = {
                     IconButton(onClick = { toggleTheme(isDarkTheme) }) {
                         Icon(
@@ -81,9 +88,16 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.spacedBy(3.dp),
                 content = {
 
-                    Row(modifier = modifier.padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = modifier.padding(top = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(imageVector = Icons.Default.Search, contentDescription = "search")
-                        Text(text = "Search for a word or a phrase", fontFamily = FontFamily.SansSerif, style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            text = "Search for a word or a phrase",
+                            fontFamily = FontFamily.SansSerif,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
 
                     //B4
@@ -101,7 +115,6 @@ fun SearchScreen(
                         modifier = modifier,
                         input = state.requests.selection,
                         onInputChange = { updateQuery(state.requests.copy(selection = it)) },
-                        imeAction = ImeAction.Done,
                         txtLabel = stringResource(id = R.string.target),
                         isRequired = true,
                         onClearInput = { updateQuery(state.requests.copy(selection = "")) }
@@ -127,12 +140,35 @@ fun SearchScreen(
                             onSearchClick()
                         }
                     ) {
-                        Text(text = "Search", fontFamily = FontFamily.SansSerif, style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            text = "Search",
+                            fontFamily = FontFamily.SansSerif,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
+                    Log.d("Search Screen",
+                        state.wordItem?.items?.get(0)?.definitions?.get(0)?.examples?.get(0) ?: "IT IS NULL"
+                    )
 
                     Box(
                         contentAlignment = Alignment.Center,
                         content = {
+                            state.wordItem?.let { word ->
+                                ElevatedCard(
+                                    modifier = modifier,
+                                    onClick = { onWordClick(word) },
+                                    content = {
+                                        Column(modifier.padding(12.dp)) {
+                                            Text(
+                                                text = word.target,
+                                                textAlign = TextAlign.Center,
+                                                fontFamily = FontFamily.SansSerif,
+                                                style = MaterialTheme.typography.bodyMedium
+                                            )
+                                        }
+                                    }
+                                )
+                            }
 
                             if (state.isLoading) {
                                 CircularProgressIndicator()
@@ -148,26 +184,8 @@ fun SearchScreen(
                                     fontFamily = FontFamily.SansSerif,
                                     style = MaterialTheme.typography.bodyMedium,
                                 )
-                            } else {
-                                state.wordItem?.let { word ->
-                                    ElevatedCard(
-                                        modifier = modifier,
-                                        onClick = { onWordClick(word) },
-                                        content = {
-                                            Column(modifier.padding(12.dp)) {
-                                                Text(
-                                                    text = word.target,
-                                                    textAlign = TextAlign.Center,
-                                                    fontFamily = FontFamily.SansSerif,
-                                                    style = MaterialTheme.typography.bodyMedium
-                                                )
-                                                Spacer(modifier = modifier.height(12.dp))
-                                            }
-                                        }
-                                    )
-                                }
                             }
-                        },
+                        }
                     )
                 },
             )

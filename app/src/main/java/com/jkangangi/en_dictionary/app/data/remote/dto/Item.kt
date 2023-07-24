@@ -12,7 +12,7 @@ data class Item(
     @SerialName("antonyms")
     val antonyms: List<String> = listOf(),
     @SerialName("definitions")
-    val definitions: List<Definition>? = listOf(),
+    val definitions: List<Definition> = listOf(),
     @SerialName("inflectionalForms")
     val inflectionalForms: List<InflectionalForm> = listOf(),
     @SerialName("partOfSpeech")
