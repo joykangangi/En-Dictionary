@@ -111,7 +111,7 @@ private fun WordType(
                                 fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
                             )
                         ) {
-                            append(it.definitions[0].examples.getOrNull(0))
+                            append(it.definitions.getOrNull(0)?.examples?.getOrNull(0))
                         }
                     }
                 )

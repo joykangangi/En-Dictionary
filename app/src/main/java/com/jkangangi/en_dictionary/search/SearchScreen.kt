@@ -146,9 +146,6 @@ fun SearchScreen(
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
-                    Log.d("Search Screen",
-                        state.wordItem?.items?.get(0)?.definitions?.get(0)?.examples?.get(0) ?: "IT IS NULL"
-                    )
 
                     Box(
                         contentAlignment = Alignment.Center,
