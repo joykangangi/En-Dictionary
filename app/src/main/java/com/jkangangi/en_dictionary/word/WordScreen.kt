@@ -4,16 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,21 +23,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
-import com.jkangangi.en_dictionary.word.tabs.DefinitionScreen
+import com.jkangangi.en_dictionary.word.tabs.DefinitionWord
 import com.jkangangi.en_dictionary.word.tabs.WordList
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,10 +46,20 @@ fun WordScreen(
     onSpeakerClick: () -> Unit,
     onBack: () -> Unit,
 ) {
+
+    val isWord by rememberSaveable {
+        mutableStateOf(word.sentence.contains(" "))
+    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = word.target, style = MaterialTheme.typography.bodyLarge, fontFamily = FontFamily.SansSerif) },
+                title = {
+                    Text(
+                        text = word.target,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontFamily = FontFamily.SansSerif
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -87,49 +89,25 @@ fun WordScreen(
                             .weight(.1f),
                         contentAlignment = Alignment.Center,
                         content = {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Bottom,
-                                modifier = modifier.padding(8.dp),
-                                content = {
-                                    Text(
-                                        text = word.pronunciations[0].entries[0].textual[0].pronunciation,
-                                        fontFamily = FontFamily.SansSerif,
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                  Text(buildAnnotatedString {
-                                      withStyle(style = SpanStyle(fontStyle = MaterialTheme.typography.titleMedium.fontStyle)){
-                                          append("Full Phrase: ")
-                                          append(word.sentence)
-                                      }
-                                  })
+                            if (isWord) {
+                                OneWord(
+                                    modifier = modifier,
+                                    word = word,
+                                    onSpeakerClick = onSpeakerClick,
+                                    onSave = onSave
+                                )
+                            } else {
+                                Phrase(
+                                    modifier = modifier,
+                                    word = word,
+                                    onSpeakerClick = onSpeakerClick,
+                                    onSave = onSave
+                                )
+                            }
+                        }
 
-                                    // Spacer(modifier = modifier.height(10.dp))
-
-                                    Row(
-                                        modifier = modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceAround,
-                                        content = {
-                                            IconButton(onClick = onSpeakerClick) {
-                                                Icon(
-                                                    imageVector = Icons.Default.VolumeUp,
-                                                    contentDescription = null
-                                                )
-                                            }
-
-                                            IconButton(onClick = onSave) {
-                                                Icon(
-                                                    imageVector = Icons.Default.Bookmark,
-                                                    contentDescription = null
-                                                )
-                                            }
-                                        },
-                                    )
-                                },
-                            )
-                        },
                     )
-                    TabLayout(modifier = modifier.weight(.2f), word = word)
+                    TabLayout(modifier = modifier.weight(.2f), word = word, isWord = isWord)
                 },
             )
         },
@@ -138,7 +116,7 @@ fun WordScreen(
 
 
 @Composable
-private fun TabLayout(modifier: Modifier, word: Dictionary) {
+private fun TabLayout(modifier: Modifier, word: Dictionary, isWord: Boolean) {
     var tabIndex by remember { mutableStateOf(0) }
     val tabs = listOf("Definition", "Synonyms", "Antonyms")
 
@@ -161,7 +139,7 @@ private fun TabLayout(modifier: Modifier, word: Dictionary) {
             }
         }
         when (tabIndex) {
-            0 -> DefinitionScreen(word = word)
+            0 -> DefinitionWord(word = word, isWord = isWord)
             1 -> WordList(modifier = modifier, words = listOf("Car", "Bicycle"))
             2 -> WordList(modifier = modifier, words = listOf("Model", "Illustration"))
         }

@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.app.data.remote.mappers
+package com.jkangangi.en_dictionary.app.data.remote
 
 import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.DictionaryDTO

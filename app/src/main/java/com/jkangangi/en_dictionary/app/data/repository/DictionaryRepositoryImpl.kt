@@ -6,7 +6,7 @@ import com.jkangangi.en_dictionary.app.data.local.toDictionary
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
-import com.jkangangi.en_dictionary.app.data.remote.mappers.toDictionaryEntity
+import com.jkangangi.en_dictionary.app.data.remote.toDictionaryEntity
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException

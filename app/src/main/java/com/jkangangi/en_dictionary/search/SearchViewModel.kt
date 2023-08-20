@@ -51,7 +51,7 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
                     when (result) {
                         is NetworkResult.Error -> {
                             state.copy(
-                                error = result.message ?: "Unexpected Error Occurred",
+                                error = result.message ?: "Unexpected error occurred, try again.",
                                 isLoading = false,
                                 wordItem = null
                             )
