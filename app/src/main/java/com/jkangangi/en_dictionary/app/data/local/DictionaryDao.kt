@@ -21,8 +21,8 @@ interface DictionaryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDictionaryResponse(searchEntity: DictionaryEntity)
 
-    @Query("DELETE FROM dictionaryentity WHERE target IN(:target)")
-    suspend fun deleteDictionaryResponse(target: String)
+    @Query("DELETE FROM dictionaryentity WHERE sentence IN(:sentence)")
+    suspend fun deleteDictionaryResponse(sentence: String)
 
     @Query("SELECT * FROM dictionaryentity WHERE sentence LIKE '%' || :sentence || '%'") //wildcard
     suspend fun getDictionaryResponse(sentence: String): DictionaryEntity

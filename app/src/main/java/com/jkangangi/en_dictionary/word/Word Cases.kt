@@ -15,10 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
 
@@ -46,7 +43,7 @@ fun OneWord(modifier: Modifier, word: Dictionary, onSpeakerClick: ()-> Unit, onS
                 content = {
                     IconButton(
                         onClick = onSpeakerClick,
-                        enabled = word.pronunciations.all { it -> it.entries.all { it.audioFiles.isEmpty() } }) {
+                        enabled = word.pronunciations.all { it -> it.entries.all { it.audioFiles.isNotEmpty() } }) {
                         Icon(
                             imageVector = Icons.Default.VolumeUp,
                             contentDescription = null

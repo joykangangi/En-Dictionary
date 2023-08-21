@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +33,7 @@ fun DefinitionWord(modifier: Modifier = Modifier, word: Dictionary, isWord: Bool
                 wordItems = word.items,
             )
         } else {
-            PhraseType(modifier = modifier, wordItems = word.items )
+            PhraseType(wordItems = word.items)
         }
     }
 }
@@ -40,20 +41,12 @@ fun DefinitionWord(modifier: Modifier = Modifier, word: Dictionary, isWord: Bool
 
 @Composable
 private fun PhraseType(
-    modifier: Modifier,
     wordItems: List<Item>,
 ) {
     Column {
         wordItems.forEach { item ->
-            item.let {
-                Row(
-                    modifier = modifier.padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    content = {
-                        it.phrases?.let { it1 -> PhraseDfnComponent(phraseDefinitions = it1) }
-                    }
-                )
+            item.phrases?.let { phrases ->
+                PhraseDfnComponent(phraseDefinitions = phrases)
             }
         }
     }
@@ -66,23 +59,21 @@ private fun WordType(
 ) {
     Column {
         wordItems.forEach { item ->
-            item.let {
-                Row(
-                    modifier = modifier.padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    content = {
-                        Text(
-                            text = it.partOfSpeech,
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontFamily = FontFamily.SansSerif,
-                            color = MaterialTheme.colorScheme.secondary,
-                        )
-
-                        WordDfnComponent(wordDefinitions = it.definitions )
-                    }
-                )
-            }
+            Row(
+                modifier = modifier.padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                content = {
+                    Text(
+                        text = item.partOfSpeech,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontFamily = FontFamily.SansSerif,
+                        color = MaterialTheme.colorScheme.secondary,
+                    )
+                    Divider()
+                }
+            )
+            WordDfnComponent(wordDefinitions = item.definitions)
         }
     }
 }

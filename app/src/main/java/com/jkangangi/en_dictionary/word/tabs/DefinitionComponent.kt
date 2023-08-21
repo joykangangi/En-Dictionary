@@ -17,8 +17,8 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.Phrase
 fun WordDfnComponent(
     wordDefinitions: List<Definition?>
 ) {
-    wordDefinitions.forEach { definition ->
-        Column {
+    Column {
+        wordDefinitions.forEach { definition ->
             Text(
                 buildAnnotatedString {
                     withStyle(
@@ -63,7 +63,9 @@ fun WordDfnComponent(
                             fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
                         )
                     ) {
-                        append(definition?.examples?.getOrNull(0) ?: "null") //just the 1st example if its not null
+                        append(
+                            definition?.examples?.getOrNull(0) ?: "null"
+                        ) //just the 1st example if its not null
                     }
                 }
             )
@@ -72,13 +74,12 @@ fun WordDfnComponent(
 }
 
 
-
 @Composable
 fun PhraseDfnComponent(
     phraseDefinitions: List<Phrase?>
 ) {
-    phraseDefinitions.forEach { definition ->
-        Column {
+    Column {
+        phraseDefinitions.forEach { definition ->
             Text(
                 buildAnnotatedString {
                     withStyle(
@@ -99,7 +100,7 @@ fun PhraseDfnComponent(
                             fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
                         )
                     ) {
-                        append(definition?.phrase?: "null")
+                        append(definition?.phrase ?: "null")
                     }
                 }
             )

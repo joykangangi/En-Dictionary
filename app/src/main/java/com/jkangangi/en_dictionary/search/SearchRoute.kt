@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.flowWithLifecycle
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
@@ -39,7 +41,8 @@ class SearchRoute(
     ) {
         val switch = isDarkTheme.collectAsState().value
 
-        val state by viewModel.searchState.collectAsState()
+        val state = viewModel.searchState.collectAsState()
+        Log.d("SearchRoute", "${state.value.wordItem}")
 
         val toWordClick  = remember {
             { word: Dictionary ->
@@ -62,7 +65,7 @@ class SearchRoute(
             modifier = modifier.fillMaxWidth() ,
             isDarkTheme = switch,
             toggleTheme = this::updateTheme,
-            state = state,
+            state = state.value,
             updateQuery = viewModel::updateQuery,
             onSearchClick = onSearchClicked,
             onWordClick = toWordClick

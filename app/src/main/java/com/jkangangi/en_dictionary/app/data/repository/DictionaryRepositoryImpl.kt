@@ -73,8 +73,10 @@ class DictionaryRepositoryImpl @Inject constructor(
     override fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary>> = flow {
         emit(NetworkResult.Loading())
 
-        val localData = dao.getDictionaryResponse(sentence = request.selection).toDictionary()
-        emit(NetworkResult.Loading(data = localData))
+        val sentence = request.textBeforeSelection+request.selection+request.textAfterSelection
+        val localData = dao.getDictionaryResponse(sentence = sentence).toDictionary()
+        Log.d("DICT REPOSITORY IMPL2",localData.sentence)
+       // emit(NetworkResult.Loading(data = localData))
 
         /**
          * API -> Database
@@ -82,9 +84,9 @@ class DictionaryRepositoryImpl @Inject constructor(
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
             Log.d("DICT REPOSITORY IMPL","sele = ${request.selection}, AFR = ${request.textAfterSelection}, bFERE = ${request.textBeforeSelection}")
-
+            Log.d("DICT REPOSITORY IMPL", "${remoteData?.sentence}")
             if (remoteData != null) {
-                dao.deleteDictionaryResponse(remoteData.target)
+                dao.deleteDictionaryResponse(remoteData.sentence)
                 dao.insertDictionaryResponse(remoteData.toDictionaryEntity())
             }
 
@@ -125,8 +127,9 @@ class DictionaryRepositoryImpl @Inject constructor(
         /**
          * Database -> UI
          */
-        val newWord = dao.getDictionaryResponse(sentence = request.selection).toDictionary()
+        val newWord = dao.getDictionaryResponse(sentence = sentence).toDictionary()
         emit(NetworkResult.Success(data = newWord))
+        Log.d("DICT REPO IMPL", newWord.sentence)
     }
 
     fun closeClient() {

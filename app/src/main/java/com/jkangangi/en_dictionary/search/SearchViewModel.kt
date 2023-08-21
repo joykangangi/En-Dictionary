@@ -9,17 +9,8 @@ import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import com.jkangangi.en_dictionary.word.WordDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,13 +18,11 @@ import javax.inject.Inject
 //private const val DELAY_TIME = 500L
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val repository: DictionaryRepositoryImpl) :
-    ViewModel() {
+class SearchViewModel @Inject constructor(private val repository: DictionaryRepositoryImpl) : ViewModel() {
 
     private val _queries = MutableStateFlow(RequestDTO())
     private val _searchState = MutableStateFlow(SearchScreenState())
     val searchState = _searchState.asStateFlow()
-
 
     private val _detailState = MutableStateFlow(WordDetailState())
     val detailState = _detailState.asStateFlow()
@@ -70,6 +59,7 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
                         }
                     }
                 }
+                Log.d("Search VM", "${result.data}")
             }
         }
     }

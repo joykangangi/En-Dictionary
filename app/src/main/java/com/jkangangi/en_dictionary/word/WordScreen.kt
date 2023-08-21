@@ -46,10 +46,13 @@ fun WordScreen(
     onSpeakerClick: () -> Unit,
     onBack: () -> Unit,
 ) {
-
-    val isWord by rememberSaveable {
-        mutableStateOf(word.sentence.contains(" "))
+    val hasWord: (str: String)-> Boolean = { it ->
+      !it.any { it == ' ' || it == '-' }
     }
+    val isWord by rememberSaveable {
+        mutableStateOf(hasWord(word.sentence))
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

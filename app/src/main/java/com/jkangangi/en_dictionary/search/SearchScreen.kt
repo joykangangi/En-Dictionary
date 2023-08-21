@@ -51,7 +51,6 @@ fun SearchScreen(
 ) {
     val keyBoardController = LocalSoftwareKeyboardController.current
 
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -134,6 +133,7 @@ fun SearchScreen(
                 onClick = {
                     keyBoardController?.hide()
                     onSearchClick()
+
                 }
             ) {
                 Text(
@@ -142,52 +142,59 @@ fun SearchScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-
-            Box(
-                contentAlignment = Alignment.Center,
-                content = {
-                    if (state.wordItem != null) {
-                        ElevatedCard(
-                            modifier = modifier,
-                            onClick = { onWordClick(state.wordItem) },
-                            content = {
-                                Column(modifier.padding(12.dp)) {
-                                    Text(
-                                        text = state.wordItem.target,
-                                        textAlign = TextAlign.Center,
-                                        fontFamily = FontFamily.SansSerif,
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                }
-                            }
-                        )
-                    }
-                    else if (state.isLoading)  CircularProgressIndicator()
-                    else if (state.error.isNotBlank()) {
-                        Text(
-                            text = state.error,
-                            color = MaterialTheme.colorScheme.error,
-                            textAlign = TextAlign.Center,
-                            modifier = modifier,
-                            fontFamily = FontFamily.SansSerif,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                    else{
-                        Text(
-                            text = "Word not found, check spelling",
-                            color = MaterialTheme.colorScheme.error,
-                            textAlign = TextAlign.Center,
-                            modifier = modifier,
-                            fontFamily = FontFamily.SansSerif,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                }
-            )
+            OnSearchRes(state = state, modifier = modifier, onWordClick = onWordClick)
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClick: (Dictionary) -> Unit) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.padding(top=8.dp),
+        content = {
+            if (state.wordItem != null) {
+                ElevatedCard(
+                    modifier = modifier,
+                    onClick = { onWordClick(state.wordItem) },
+                    content = {
+                        Column(modifier.padding(12.dp)) {
+                            Text(
+                                text = state.wordItem.sentence,
+                                textAlign = TextAlign.Center,
+                                fontFamily = FontFamily.SansSerif,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                )
+            }
+            else if (state.isLoading)  CircularProgressIndicator()
+            else if (state.error.isNotBlank()) {
+                Text(
+                    text = state.error,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center,
+                    modifier = modifier,
+                    fontFamily = FontFamily.SansSerif,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            else{
+                Text(
+                    text = "Word not found, check spelling",
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center,
+                    modifier = modifier,
+                    fontFamily = FontFamily.SansSerif,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
+    )
+}
+
 
 @Preview
 @Composable
