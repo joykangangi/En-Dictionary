@@ -73,18 +73,15 @@ class DictionaryRepositoryImpl @Inject constructor(
     override fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary>> = flow {
         emit(NetworkResult.Loading())
 
-        val sentence = request.textBeforeSelection+request.selection+request.textAfterSelection
+        val sentence = "${request.textBeforeSelection} ${request.selection} ${request.textAfterSelection}"
         val localData = dao.getDictionaryResponse(sentence = sentence).toDictionary()
-        Log.d("DICT REPOSITORY IMPL2",localData.sentence)
-       // emit(NetworkResult.Loading(data = localData))
+        emit(NetworkResult.Loading(data = localData))
 
         /**
          * API -> Database
          */
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
-            Log.d("DICT REPOSITORY IMPL","sele = ${request.selection}, AFR = ${request.textAfterSelection}, bFERE = ${request.textBeforeSelection}")
-            Log.d("DICT REPOSITORY IMPL", "${remoteData?.sentence}")
             if (remoteData != null) {
                 dao.deleteDictionaryResponse(remoteData.sentence)
                 dao.insertDictionaryResponse(remoteData.toDictionaryEntity())

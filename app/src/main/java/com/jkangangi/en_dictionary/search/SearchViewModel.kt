@@ -59,7 +59,6 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
                         }
                     }
                 }
-                Log.d("Search VM", "${result.data}")
             }
         }
     }

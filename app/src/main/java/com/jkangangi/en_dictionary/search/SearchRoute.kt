@@ -42,7 +42,6 @@ class SearchRoute(
         val switch = isDarkTheme.collectAsState().value
 
         val state = viewModel.searchState.collectAsState()
-        Log.d("SearchRoute", "${state.value.wordItem}")
 
         val toWordClick  = remember {
             { word: Dictionary ->

@@ -7,25 +7,13 @@ import androidx.room.Query
 
 @Dao
 interface DictionaryDao {
-
-   /* @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWord(wordEntities: List<WordEntity>)
-
-    @Query("DELETE FROM wordentity WHERE word IN(:words)")
-    suspend fun deleteWord(words: List<String>)
-
-    @Query("SELECT * FROM wordentity WHERE word LIKE '%' || :word || '%'") //wildcard
-    suspend fun getWord(word: String): List<WordEntity>
-
-*/
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDictionaryResponse(searchEntity: DictionaryEntity)
 
     @Query("DELETE FROM dictionaryentity WHERE sentence IN(:sentence)")
     suspend fun deleteDictionaryResponse(sentence: String)
 
-    @Query("SELECT * FROM dictionaryentity WHERE sentence LIKE '%' || :sentence || '%'") //wildcard
+    @Query("SELECT * FROM dictionaryentity WHERE sentence = TRIM(:sentence)")
     suspend fun getDictionaryResponse(sentence: String): DictionaryEntity
-
 
 }
