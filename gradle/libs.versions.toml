@@ -1,11 +1,22 @@
 #This is a Version Catalog File
 [versions]
-compose = "2023.04.00"
-compose-compiler = "1.4.6"
-gradlePlugin = "8.0.0"
+appyx = "1.2.0"
+core-ktx = "1.10.0"
+core-appcompat = "1.6.1"
+ksp = "1.9.0-1.0.13"
+datastore = "1.1.0-alpha04"
+json-serializer = "1.5.0"
+immutable = "0.3.5"
+coroutines-core = "1.6.4"
+junit-test = "1.1.5"
+compose-activity = "1.7.0"
+
+compose = "2023.06.01"
+compose-compiler = "1.5.0"
+gradle-plugin = "8.0.0"
 hilt = "2.45"
 junit = "5.9.2"
-kotlinVersion = "1.8.20"
+kotlin-version = "1.9.0"
 ktor = "2.3.2"
 lifecycle = "2.6.1"
 okhttp = "5.0.0-alpha.11"
@@ -13,34 +24,33 @@ room = "2.5.1"
 
 [libraries] #Group;Name;Version.ref
 # Appyx Navigation
-appyx = "com.bumble.appyx:core:1.2.0"
+appyx = { module = "com.bumble.appyx:core", version.ref = "appyx" }
 # Core
-core-ktx = "androidx.core:core-ktx:1.10.0"
-core-appcompat = "androidx.appcompat:appcompat:1.6.1"
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+core-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "core-appcompat" }
 
 # Compose
 compose = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }
-compose-activity = "androidx.activity:activity-compose:1.7.0"
-compose-material = "androidx.compose.material3:material3:1.1.0-beta02"
+compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
+compose-material = { group = "androidx.compose.material3", name = "material3" }
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 # Datastore
-datastore = "androidx.datastore:datastore-preferences:1.1.0-alpha04"
+datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 # Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-hilt-compose = "androidx.hilt:hilt-navigation-compose:1.0.0"
 # JUnit
 junit = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-junit-android = "androidx.test.ext:junit:1.1.5"
+junit-android = {module = "androidx.test.ext:junit", version.ref = "junit-test" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 # Kotlinx
-kotlin-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-kotlin-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines-core" }
+kotlin-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "immutable"}
 kotlin-serialization-ktor = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-kotlin-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
+kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "json-serializer" }
 # Ktor-client
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
@@ -58,11 +68,11 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 
 
 [plugins] #Id;Version.ref
-android-application = { id = "com.android.application", version.ref = "gradlePlugin" }
-android-library = { id = "com.android.library", version.ref = "gradlePlugin" }
+android-application = { id = "com.android.application", version.ref = "gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "gradle-plugin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlinVersion" }
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinVersion" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
-ksp = { id = "com.google.devtools.ksp", version = "1.8.20-1.0.10" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-version" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-version" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-version" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

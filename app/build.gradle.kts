@@ -44,7 +44,7 @@ android {
             buildConfigField(type = "String", name = "API_KEY", value = "\"$apiKey\"")
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
@@ -108,7 +108,6 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    implementation(libs.hilt.compose)
     kapt(libs.hilt.compiler)
 
     //Ktor-Client

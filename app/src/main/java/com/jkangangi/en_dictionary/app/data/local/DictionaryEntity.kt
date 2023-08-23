@@ -8,29 +8,6 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
 import com.jkangangi.en_dictionary.app.data.remote.dto.WordFrequency
 import kotlinx.serialization.Serializable
 
-
-/*@Serializable
-@Entity
-data class WordEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long? = null,
-    val meanings: List<Meaning>,
-    val phonetic: String,
-    val word: String,
-    val phonetics: List<Phonetic>,
-    val sourceUrls: List<String>
-)
-
-fun WordEntity.toWord(): Word {
-    return Word(
-        meanings = meanings,
-        phonetic = phonetic,
-        word = word,
-        phonetics = phonetics,
-        sourceUrls = sourceUrls
-    )
-}*/
-
 @Serializable
 @Entity
 data class DictionaryEntity(
