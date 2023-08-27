@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
@@ -130,6 +131,7 @@ fun SearchScreen(
 
             Button(
                 modifier = modifier,
+                enabled = state.requests.selection.isNotEmpty(),
                 onClick = {
                     keyBoardController?.hide()
                     onSearchClick()
@@ -142,6 +144,7 @@ fun SearchScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+            Spacer(modifier = modifier.height(10.dp))
             OnSearchRes(state = state, modifier = modifier, onWordClick = onWordClick)
         }
     }
@@ -170,8 +173,8 @@ private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClic
                     }
                 )
             }
-            else if (state.isLoading)  CircularProgressIndicator()
-            else if (state.error.isNotBlank()) {
+            if (state.isLoading)  CircularProgressIndicator()
+            if (state.error.isNotBlank()) {
                 Text(
                     text = state.error,
                     color = MaterialTheme.colorScheme.error,
@@ -181,7 +184,7 @@ private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClic
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
-            else{
+            if (state.wordItem?.items?.isEmpty() == true){
                 Text(
                     text = "Word not found, check spelling",
                     color = MaterialTheme.colorScheme.error,

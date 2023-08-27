@@ -9,6 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
+import com.bumble.appyx.navmodel.backstack.operation.singleTop
 import com.jkangangi.en_dictionary.app.navigation.Route
 import com.jkangangi.en_dictionary.search.SearchViewModel
 

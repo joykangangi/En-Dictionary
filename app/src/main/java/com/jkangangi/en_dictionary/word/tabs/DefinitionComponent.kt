@@ -18,7 +18,7 @@ fun WordDfnComponent(
     wordDefinitions: List<Definition?>
 ) {
     Column {
-        wordDefinitions.forEach { definition ->
+        wordDefinitions.forEachIndexed { index, definition ->
             Text(
                 buildAnnotatedString {
                     withStyle(
@@ -30,7 +30,7 @@ fun WordDfnComponent(
                             textDecoration = TextDecoration.Underline,
                         )
                     ) {
-                        append("Definition: \n")//Todo number using for loop
+                        append("${index+1}. Definition: \n")
                     }
 
                     withStyle(
@@ -54,7 +54,7 @@ fun WordDfnComponent(
                             textDecoration = TextDecoration.Underline
                         )
                     ) {
-                        append("Example: \n")//Todo number
+                        append("Example: \n")
                     }
 
                     withStyle(
@@ -79,7 +79,7 @@ fun PhraseDfnComponent(
     phraseDefinitions: List<Phrase?>
 ) {
     Column {
-        phraseDefinitions.forEach { definition ->
+        phraseDefinitions.forEachIndexed { index, phrase ->
             Text(
                 buildAnnotatedString {
                     withStyle(
@@ -91,7 +91,7 @@ fun PhraseDfnComponent(
                             textDecoration = TextDecoration.Underline,
                         )
                     ) {
-                        append("Phrase: \n")//Todo number using for loop
+                        append("${index +1}. Phrase: \n")
                     }
 
                     withStyle(
@@ -100,11 +100,11 @@ fun PhraseDfnComponent(
                             fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
                         )
                     ) {
-                        append(definition?.phrase ?: "null")
+                        append(phrase?.phrase ?: "null")
                     }
                 }
             )
-            WordDfnComponent(wordDefinitions = definition?.definitions ?: emptyList())
+            WordDfnComponent(wordDefinitions = phrase?.definitions ?: emptyList())
         }
     }
 }

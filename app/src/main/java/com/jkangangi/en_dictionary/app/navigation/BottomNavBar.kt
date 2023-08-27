@@ -12,6 +12,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,11 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.bumble.appyx.core.composable.visibleChildrenAsState
 import com.bumble.appyx.navmodel.backstack.BackStack
+import com.bumble.appyx.navmodel.backstack.active
 import com.bumble.appyx.navmodel.backstack.activeElement
+import com.bumble.appyx.navmodel.backstack.operation.push
 import com.bumble.appyx.navmodel.backstack.operation.singleTop
+import com.jkangangi.en_dictionary.app.data.model.Dictionary
 
-val bottomNavScreens = listOf(
+private val bottomNavScreens = listOf(
     Route.Search,
     Route.Saved,
     Route.History
@@ -43,23 +49,18 @@ fun BottomNavigator(
         mutableStateOf(backStackNavigator.activeElement)
     }
 
-   /* val showBottomBar = remember {
-        mutableStateOf(bottomNavScreens.contains(currentRoute.value))
-    }*/
+    /* val showBottomBar = remember {
+         mutableStateOf(bottomNavScreens.contains(currentRoute.value))
+     }*/
 
-    val showBottomBar by remember(currentRoute.value) {
+    val showBottomBar by rememberSaveable(backStackNavigator.activeElement) {
         derivedStateOf {
-            when (currentRoute.value) {
+            when (backStackNavigator.activeElement) {
                 Route.History, Route.Saved, Route.Search -> true
                 else -> false
             }
         }
     }
-
-
-
-    Log.d("Btm NAVIGATION", "${currentRoute.value?.title}}, showbar = $showBottomBar")
-    Log.d("Btm NAVIGATION", "${backStackNavigator.activeElement?.title}")
 
     val selected: (screen: Route) -> Boolean = remember {
         { screen ->
@@ -69,12 +70,10 @@ fun BottomNavigator(
 
     val onItemClick = remember {
         { screen: Route ->
-           backStackNavigator.singleTop(screen)
+            backStackNavigator.push(screen)
             currentRoute.value = screen
-            //else showBottomBar.value = false
         }
     }
-
 
     if (showBottomBar) {
         BottomAppBar(

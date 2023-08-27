@@ -145,6 +145,7 @@ fun SavedWordCard(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun PreviewSavedWords() {
@@ -165,6 +166,7 @@ fun PreviewSavedWords() {
             )
             SavedWords(
                 savedWords = saves,
+                modifier = Modifier.padding(it),
                 onDeleteClicked = { },
                 doSort = true,
                 sortWords = { }

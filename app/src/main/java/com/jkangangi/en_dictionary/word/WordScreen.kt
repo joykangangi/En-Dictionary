@@ -18,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
-import com.jkangangi.en_dictionary.word.tabs.DefinitionWord
+import com.jkangangi.en_dictionary.word.tabs.Definition
 import com.jkangangi.en_dictionary.word.tabs.WordList
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,9 +70,9 @@ fun WordScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                )
+                //colors = androidx.compose.material3.TopAppBarDefaults(
+                  //  containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                //)
             )
         },
         content = {
@@ -142,7 +141,7 @@ private fun TabLayout(modifier: Modifier, word: Dictionary, isWord: Boolean) {
             }
         }
         when (tabIndex) {
-            0 -> DefinitionWord(word = word, isWord = isWord)
+            0 -> Definition(word = word, isWord = isWord)
             1 -> WordList(modifier = modifier, words = listOf("Car", "Bicycle"))
             2 -> WordList(modifier = modifier, words = listOf("Model", "Illustration"))
         }

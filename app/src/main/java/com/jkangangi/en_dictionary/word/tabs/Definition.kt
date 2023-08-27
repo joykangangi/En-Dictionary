@@ -20,7 +20,7 @@ import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.Item
 
 @Composable
-fun DefinitionWord(modifier: Modifier = Modifier, word: Dictionary, isWord: Boolean) {
+fun Definition(modifier: Modifier = Modifier, word: Dictionary, isWord: Boolean) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -28,19 +28,19 @@ fun DefinitionWord(modifier: Modifier = Modifier, word: Dictionary, isWord: Bool
             .verticalScroll(rememberScrollState())
     ) {
         if (isWord) {
-            WordType(
+            WordDefinition(
                 modifier = modifier,
                 wordItems = word.items,
             )
         } else {
-            PhraseType(wordItems = word.items)
+            PhraseDefinition(wordItems = word.items)
         }
     }
 }
 
 
 @Composable
-private fun PhraseType(
+private fun PhraseDefinition(
     wordItems: List<Item>,
 ) {
     Column {
@@ -53,7 +53,7 @@ private fun PhraseType(
 }
 
 @Composable
-private fun WordType(
+private fun WordDefinition(
     modifier: Modifier,
     wordItems: List<Item>,
 ) {
@@ -64,13 +64,15 @@ private fun WordType(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 content = {
+                    Divider(modifier = modifier.weight(0.2f))
                     Text(
+                        modifier = modifier.weight(0.6f),
                         text = item.partOfSpeech,
                         style = MaterialTheme.typography.bodyLarge,
                         fontFamily = FontFamily.SansSerif,
                         color = MaterialTheme.colorScheme.secondary,
                     )
-                    Divider()
+                    Divider(modifier = modifier.weight(0.2f))
                 }
             )
             WordDfnComponent(wordDefinitions = item.definitions)
