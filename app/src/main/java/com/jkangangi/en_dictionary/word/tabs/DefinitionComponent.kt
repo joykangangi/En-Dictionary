@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import com.jkangangi.en_dictionary.app.data.remote.dto.Definition
 import com.jkangangi.en_dictionary.app.data.remote.dto.Phrase
+import com.jkangangi.en_dictionary.app.widgets.HtmlParser
 
 @Composable
 fun WordDfnComponent(
@@ -39,7 +40,8 @@ fun WordDfnComponent(
                             fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
                         )
                     ) {
-                        append(definition?.definition ?: "null")
+                        val parsedDefinition = HtmlParser.htmlToString(definition?.definition ?: "null")
+                        append(parsedDefinition)
                     }
                 }
             )
@@ -63,9 +65,8 @@ fun WordDfnComponent(
                             fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
                         )
                     ) {
-                        append(
-                            definition?.examples?.getOrNull(0) ?: "null"
-                        ) //just the 1st example if its not null
+                        val parsedExample = HtmlParser.htmlToString(definition?.examples?.getOrNull(0) ?: "null")
+                        append(parsedExample) //just the 1st example if its not null
                     }
                 }
             )

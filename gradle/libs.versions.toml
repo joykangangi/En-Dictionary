@@ -10,6 +10,8 @@ immutable = "0.3.5"
 coroutines-core = "1.6.4"
 junit-test = "1.1.5"
 compose-activity = "1.7.0"
+jsoup = "1.16.1"
+hilt-navigation = "1.0.0"
 
 compose = "2023.04.00"
 compose-compiler = "1.4.6"
@@ -32,7 +34,7 @@ core-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "core-
 # Compose
 compose = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
-compose-material = { group = "androidx.compose.material3", name = "material3" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -42,7 +44,9 @@ datastore = { group = "androidx.datastore", name = "datastore-preferences", vers
 # Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-hilt-compose = "androidx.hilt:hilt-navigation-compose:1.0.0"
+hilt-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation" }
+#Jsoup
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 # JUnit
 junit = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-android = {module = "androidx.test.ext:junit", version.ref = "junit-test" }

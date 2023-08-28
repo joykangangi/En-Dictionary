@@ -84,7 +84,7 @@ dependencies {
     implementation(libs.core.appcompat)
 
     // Material Design
-    implementation(libs.compose.material)
+    implementation(libs.compose.material3)
     implementation(libs.compose.material.icons)
 
     // Compose
@@ -110,6 +110,9 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.compose)
     kapt(libs.hilt.compiler)
+
+    //Jsoup
+    implementation(libs.jsoup)
 
     //Ktor-Client
     implementation(libs.ktor.client.android)

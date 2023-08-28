@@ -49,11 +49,12 @@ fun BottomNavigator(
         mutableStateOf(backStackNavigator.activeElement)
     }
 
-    /* val showBottomBar = remember {
+     val showBottomBar2 = remember {
          mutableStateOf(bottomNavScreens.contains(currentRoute.value))
-     }*/
+     }
+    Log.d("Bottom navigation", "Show nav ${showBottomBar2.value}")
 
-    val showBottomBar by rememberSaveable(backStackNavigator.activeElement) {
+    val showBottomBar by remember(backStackNavigator.activeElement) {
         derivedStateOf {
             when (backStackNavigator.activeElement) {
                 Route.History, Route.Saved, Route.Search -> true
@@ -62,11 +63,25 @@ fun BottomNavigator(
         }
     }
 
+    Log.d(
+        "Btm NAVIGATION",
+        "Route1 = ${backStackNavigator.activeElement?.title}, Route2 = ${currentRoute.value?.title} , showbar = $showBottomBar"
+    )
+    Log.d("Btm NAVIGATION", "Backstack = $backStackNavigator")
+    Log.d(
+        "Btm NAVIGATION",
+        "Is Search Detail = ${
+            currentRoute.value?.title == Route.SearchDetail(dictionary = Dictionary()).title
+        }"
+    )
+
     val selected: (screen: Route) -> Boolean = remember {
         { screen ->
+            Log.d("Btm NAVIGATION", "Screen = $screen")
             screen == currentRoute.value
         }
     }
+
 
     val onItemClick = remember {
         { screen: Route ->
@@ -74,6 +89,11 @@ fun BottomNavigator(
             currentRoute.value = screen
         }
     }
+
+    val b2 by backStackNavigator.elements.collectAsState()
+    Log.d("Bottom Nav","As State activeElement${b2.activeElement}")
+
+
 
     if (showBottomBar) {
         BottomAppBar(
