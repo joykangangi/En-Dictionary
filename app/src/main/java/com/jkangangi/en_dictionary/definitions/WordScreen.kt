@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.word
+package com.jkangangi.en_dictionary.definitions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,23 +33,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
-import com.jkangangi.en_dictionary.word.tabs.Definition
-import com.jkangangi.en_dictionary.word.tabs.WordList
+import com.jkangangi.en_dictionary.app.util.isWord
+import com.jkangangi.en_dictionary.definitions.tabs.Definition
+import com.jkangangi.en_dictionary.definitions.tabs.WordList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WordScreen(
     modifier: Modifier = Modifier,
     word: Dictionary,
-    onSave: () -> Unit,
     onSpeakerClick: () -> Unit,
     onBack: () -> Unit,
 ) {
-    val hasWord: (str: String)-> Boolean = { it ->
-      !it.any { it == ' ' || it == '-' }
-    }
     val isWord by rememberSaveable {
-        mutableStateOf(hasWord(word.sentence))
+        mutableStateOf(word.sentence.isWord())
     }
 
     Scaffold(
@@ -71,7 +68,7 @@ fun WordScreen(
                     }
                 },
                 //colors = androidx.compose.material3.TopAppBarDefaults(
-                  //  containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                //  containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                 //)
             )
         },
@@ -91,23 +88,12 @@ fun WordScreen(
                             .weight(.1f),
                         contentAlignment = Alignment.Center,
                         content = {
-                            if (isWord) {
-                                OneWord(
-                                    modifier = modifier,
-                                    word = word,
-                                    onSpeakerClick = onSpeakerClick,
-                                    onSave = onSave
-                                )
-                            } else {
-                                Phrase(
-                                    modifier = modifier,
-                                    word = word,
-                                    onSpeakerClick = onSpeakerClick,
-                                    onSave = onSave
-                                )
-                            }
+                            PhoneticsSection(
+                                modifier = modifier,
+                                word = word,
+                                onSpeakerClick = onSpeakerClick
+                            )
                         }
-
                     )
                     TabLayout(modifier = modifier.weight(.2f), word = word, isWord = isWord)
                 },

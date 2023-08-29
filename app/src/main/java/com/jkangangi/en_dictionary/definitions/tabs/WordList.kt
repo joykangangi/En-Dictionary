@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.word.tabs
+package com.jkangangi.en_dictionary.definitions.tabs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

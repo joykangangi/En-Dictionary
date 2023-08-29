@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.app.navigation
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -23,13 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.bumble.appyx.core.composable.visibleChildrenAsState
 import com.bumble.appyx.navmodel.backstack.BackStack
-import com.bumble.appyx.navmodel.backstack.active
 import com.bumble.appyx.navmodel.backstack.activeElement
 import com.bumble.appyx.navmodel.backstack.operation.push
-import com.bumble.appyx.navmodel.backstack.operation.singleTop
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
 
 private val bottomNavScreens = listOf(
     Route.Search,
@@ -44,15 +38,11 @@ fun BottomNavigator(
     backStackNavigator: BackStack<Route>,
 ) {
     val navItems by remember { mutableStateOf(bottomNavScreens) }
+    val backStack by backStackNavigator.elements.collectAsState()
 
     val currentRoute = rememberSaveable {
-        mutableStateOf(backStackNavigator.activeElement)
+        mutableStateOf(backStack.activeElement)
     }
-
-     val showBottomBar2 = remember {
-         mutableStateOf(bottomNavScreens.contains(currentRoute.value))
-     }
-    Log.d("Bottom navigation", "Show nav ${showBottomBar2.value}")
 
     val showBottomBar by remember(backStackNavigator.activeElement) {
         derivedStateOf {
@@ -63,25 +53,11 @@ fun BottomNavigator(
         }
     }
 
-    Log.d(
-        "Btm NAVIGATION",
-        "Route1 = ${backStackNavigator.activeElement?.title}, Route2 = ${currentRoute.value?.title} , showbar = $showBottomBar"
-    )
-    Log.d("Btm NAVIGATION", "Backstack = $backStackNavigator")
-    Log.d(
-        "Btm NAVIGATION",
-        "Is Search Detail = ${
-            currentRoute.value?.title == Route.SearchDetail(dictionary = Dictionary()).title
-        }"
-    )
-
     val selected: (screen: Route) -> Boolean = remember {
         { screen ->
-            Log.d("Btm NAVIGATION", "Screen = $screen")
             screen == currentRoute.value
         }
     }
-
 
     val onItemClick = remember {
         { screen: Route ->
@@ -89,11 +65,6 @@ fun BottomNavigator(
             currentRoute.value = screen
         }
     }
-
-    val b2 by backStackNavigator.elements.collectAsState()
-    Log.d("Bottom Nav","As State activeElement${b2.activeElement}")
-
-
 
     if (showBottomBar) {
         BottomAppBar(

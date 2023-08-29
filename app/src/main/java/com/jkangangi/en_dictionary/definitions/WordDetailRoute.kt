@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.word
+package com.jkangangi.en_dictionary.definitions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,7 +9,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
-import com.bumble.appyx.navmodel.backstack.operation.singleTop
 import com.jkangangi.en_dictionary.app.navigation.Route
 import com.jkangangi.en_dictionary.search.SearchViewModel
 
@@ -45,7 +44,6 @@ class WordDetailRoute(
         state.word?.let {
             WordScreen(
                 word = it,
-                onSave = { },
                 modifier = modifier,
                 onSpeakerClick = { },
                 onBack = onBack
