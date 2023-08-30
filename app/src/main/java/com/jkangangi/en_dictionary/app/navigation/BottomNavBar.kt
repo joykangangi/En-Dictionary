@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.app.navigation
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,7 @@ fun BottomNavigator(
         }
     }
 
+    Log.i("Navigation","A.E = ${backStack.activeElement} || ${backStack.activeElement?.title}, C.R = ${currentRoute.value?.title}")
     val selected: (screen: Route) -> Boolean = remember {
         { screen ->
             screen == currentRoute.value

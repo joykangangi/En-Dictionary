@@ -6,7 +6,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
-import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.isWord
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.IOException
@@ -16,7 +15,7 @@ import javax.inject.Inject
 private const val AUDIO_BASE_URL = "https://download.xfd.plus/xfed/audio/"
 
 @HiltViewModel
-class DefinitionsViewModel @Inject constructor(repository: DictionaryRepositoryImpl): ViewModel() {
+class DefinitionsViewModel @Inject constructor(): ViewModel() {
 
     /*
     private val sentence = MutableStateFlow("")

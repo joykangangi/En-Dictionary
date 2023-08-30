@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import com.jkangangi.en_dictionary.app.util.HtmlParser
 import com.jkangangi.en_dictionary.app.util.isWord
 import com.jkangangi.en_dictionary.app.util.phonetics
 import com.jkangangi.en_dictionary.app.widgets.SpeakerIcon
@@ -66,7 +67,7 @@ private fun PhoneticsRow(modifier: Modifier, word: Dictionary, onSpeakerClick: (
 
             if (!isPhrase) {
                 Text(
-                    text = entries[0].textual[0].pronunciation.phonetics(),
+                    text = HtmlParser.htmlToString(entries[0].textual[0].pronunciation.phonetics()),
                     fontFamily = FontFamily.SansSerif,
                     style = MaterialTheme.typography.bodyMedium
                 )

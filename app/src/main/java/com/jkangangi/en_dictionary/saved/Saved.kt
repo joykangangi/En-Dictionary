@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
-import com.jkangangi.en_dictionary.history.EmptyContent
+import com.jkangangi.en_dictionary.history.EmptyHistory
 
 //Todo Table 1 Room
 data class SavedItem(
@@ -81,9 +81,8 @@ fun SavedWords(
         },
         content = { contentPadding ->
             if (savedWords.isEmpty()) {
-                EmptyContent(
+                EmptyHistory(
                     modifier = modifier.fillMaxSize(),
-                    text = stringResource(id = R.string.empty_saves),
                 )
 
             } else {

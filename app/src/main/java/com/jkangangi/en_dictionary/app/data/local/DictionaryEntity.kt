@@ -19,15 +19,16 @@ data class DictionaryEntity(
     val target: String = "",
     val wordFrequencies: List<WordFrequency> = emptyList()
 )
+
 //the first run loading from local, the entity is empty;hence handle null
-    fun DictionaryEntity?.toDictionary(): Dictionary {
-        return Dictionary(
-            items = this?.items ?: emptyList(),
-            pronunciations = this?.pronunciations ?: emptyList(),
-            sentence = this?.sentence ?: "",
-            target = this?.target ?: "",
-            wordFrequencies = this?.wordFrequencies ?: emptyList()
-        )
-    }
+fun DictionaryEntity?.toDictionary(): Dictionary {
+    return Dictionary(
+        items = this?.items ?: emptyList(),
+        pronunciations = this?.pronunciations ?: emptyList(),
+        sentence = this?.sentence ?: "",
+        target = this?.target ?: "",
+        wordFrequencies = this?.wordFrequencies ?: emptyList()
+    )
+}
 
 

@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import com.jkangangi.en_dictionary.app.data.remote.dto.Definition
 import com.jkangangi.en_dictionary.app.data.remote.dto.Phrase
-import com.jkangangi.en_dictionary.app.widgets.HtmlParser
+import com.jkangangi.en_dictionary.app.util.HtmlParser
 
 @Composable
 fun WordDfnComponent(

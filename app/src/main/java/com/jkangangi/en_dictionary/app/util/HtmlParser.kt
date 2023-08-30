@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.app.widgets
+package com.jkangangi.en_dictionary.app.util
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

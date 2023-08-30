@@ -2,8 +2,10 @@ package com.jkangangi.en_dictionary.app.data.repository
 
 import android.util.Log
 import com.jkangangi.en_dictionary.app.data.local.DictionaryDao
+import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.local.toDictionary
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import com.jkangangi.en_dictionary.app.data.model.toDictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.remote.toDictionaryEntity
 import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
@@ -13,6 +15,7 @@ import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -27,7 +30,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     private val dictionaryService: DictionaryServiceImpl
 ) : DictionaryRepository {
 
-    override suspend fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary?>> = flow {
+    override fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary?>> = flow {
         emit(NetworkResult.Loading())
 
         val sentence = "${request.textBeforeSelection} ${request.selection} ${request.textAfterSelection}"
@@ -40,7 +43,7 @@ class DictionaryRepositoryImpl @Inject constructor(
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
             if (remoteData != null) {
-                //dao.deleteDictionaryResponse(remoteData.toDictionaryEntity())
+                dao.deleteDictionaryItem(remoteData.toDictionaryEntity())
                 dao.insertDictionaryResponse(remoteData.toDictionaryEntity())
             }
 
@@ -85,10 +88,20 @@ class DictionaryRepositoryImpl @Inject constructor(
         emit(NetworkResult.Success(data = newWord))
     }
 
-    override suspend fun getDictionary(sentence: String): Flow<Dictionary?> = flow {
-        val dictionary = dao.getDictionaryResponse(sentence).toDictionary()
-        Log.i("DICT REPO IMPL","DICTIONARY = $dictionary")
-        emit(dictionary)
+    override fun getAllHistory(): Flow<List<DictionaryEntity>> {
+        Log.i("DICT REPOIMPL","ALL HISTO CALLED ")
+       return dao.getAllDefinitions()
+    }
+
+
+    override suspend fun deleteDictionaryItem(dictionary: DictionaryEntity) {
+        Log.i("DICT REPOIMPL","DELETE ITEM CALLED ")
+       dao.deleteDictionaryItem(dictionary)
+    }
+
+    override suspend fun deleteAllDictionaryItems(dictionaries: List<DictionaryEntity>) {
+        Log.i("DICT REPOIMPL","DELETE ITEMS CALLED")
+        dao.deleteAllDictItems(dictionaries)
     }
 
     fun closeClient() {
