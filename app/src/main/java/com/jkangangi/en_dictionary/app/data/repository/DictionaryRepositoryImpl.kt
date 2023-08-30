@@ -5,8 +5,8 @@ import com.jkangangi.en_dictionary.app.data.local.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.toDictionary
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
-import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
 import com.jkangangi.en_dictionary.app.data.remote.toDictionaryEntity
+import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException
@@ -16,61 +16,18 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * Data Source to be used in the view models
+ * This is Data Source to be used in the view models
  * Get Data from Api -> Insert into the Database -> Show the UI
  * All data will come from the database; ie Single Source of Truth
  *
- *
  */
-/*override suspend fun getWord(word: String): Flow<NetworkResult<List<Word>>> = flow {
-       emit(NetworkResult.Loading())
-
-
-       val localWordData = dao.getWord(word = word).map { it.toWord() }
-       emit(NetworkResult.Loading(data = localWordData))
-
-       try {
-           val remoteWordData = dictionaryService.getSearchDTO(word = word)
-           dao.deleteWord(remoteWordData.map { it.word })
-           dao.insertWord(remoteWordData.map { it.toWordEntity() })
-
-       } catch (e: RedirectResponseException) {
-           //3xx
-           emit(
-               NetworkResult.Error(
-                   message = "Error ${e.response.status.description}",
-                   data = localWordData
-               )
-           )
-           Log.e("RepoImpl", e.response.status.description)
-       } catch (e: ClientRequestException) {
-           //4xx
-           emit(
-               NetworkResult.Error(
-                   message = "Check your internet connection",
-                   data = localWordData
-               )
-           )
-           Log.e("RepoImpl", e.response.status.description)
-
-       } catch (e: ServerResponseException) {
-           //5xx
-           emit(NetworkResult.Error(message = e.response.status.description, data = localWordData))
-           Log.e("RepoImpl", e.response.status.description)
-       } catch (e: Throwable) {
-           emit(NetworkResult.Error(message = e.stackTraceToString(), data = localWordData))
-           Log.e("RepoImpl", e.stackTraceToString())
-       }
-       val newWord = dao.getWord(word).map { it.toWord() }
-       emit(NetworkResult.Success(data = newWord))
-   }*/
 
 class DictionaryRepositoryImpl @Inject constructor(
     private val dao: DictionaryDao,
     private val dictionaryService: DictionaryServiceImpl
 ) : DictionaryRepository {
 
-    override fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary>> = flow {
+    override suspend fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary?>> = flow {
         emit(NetworkResult.Loading())
 
         val sentence = "${request.textBeforeSelection} ${request.selection} ${request.textAfterSelection}"
@@ -83,7 +40,7 @@ class DictionaryRepositoryImpl @Inject constructor(
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
             if (remoteData != null) {
-                dao.deleteDictionaryResponse(remoteData.sentence)
+                //dao.deleteDictionaryResponse(remoteData.toDictionaryEntity())
                 dao.insertDictionaryResponse(remoteData.toDictionaryEntity())
             }
 
@@ -126,7 +83,12 @@ class DictionaryRepositoryImpl @Inject constructor(
          */
         val newWord = dao.getDictionaryResponse(sentence = sentence).toDictionary()
         emit(NetworkResult.Success(data = newWord))
-        Log.d("DICT REPO IMPL", newWord.sentence)
+    }
+
+    override suspend fun getDictionary(sentence: String): Flow<Dictionary?> = flow {
+        val dictionary = dao.getDictionaryResponse(sentence).toDictionary()
+        Log.i("DICT REPO IMPL","DICTIONARY = $dictionary")
+        emit(dictionary)
     }
 
     fun closeClient() {

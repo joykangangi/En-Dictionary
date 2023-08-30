@@ -1,54 +1,34 @@
 package com.jkangangi.en_dictionary.definitions
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.bumble.appyx.core.modality.BuildContext
-import com.bumble.appyx.core.node.Node
-import com.bumble.appyx.navmodel.backstack.BackStack
-import com.jkangangi.en_dictionary.app.navigation.Route
-import com.jkangangi.en_dictionary.search.SearchViewModel
-
-class WordDetailRoute(
-    buildContext: BuildContext,
-    private val backStack: BackStack<Route>
-) : Node(buildContext = buildContext) {
+import com.jkangangi.en_dictionary.app.data.model.Dictionary
 
 
-    @Composable
-    override fun View(
-        modifier: Modifier,
-    ) {
+@Composable
+fun WordDetailView(
+    modifier: Modifier,
+    viewModel: DefinitionsViewModel = hiltViewModel(),
+    onBack: () -> Unit,
+    defn: Dictionary,
+) {
 
-        val onBack: () -> Unit = remember {
-            {
-                backStack.handleUpNavigation()
-            }
-        }
-        WordDetailView(modifier = modifier, onBack = onBack)
+    val onBackClick = remember { onBack }
+    val context = LocalContext.current
 
+    val onSpeakerClicked = remember {
+        { viewModel.onSpeakerClick(context, word = defn) }
     }
 
-    //change word to list of words in UI
-    @Composable
-    private fun WordDetailView(
-        modifier: Modifier,
-        viewModel: SearchViewModel = hiltViewModel(),
-        onBack: () -> Unit,
-    ) {
-        val state by viewModel.detailState.collectAsState()
-
-        state.word?.let {
-            WordScreen(
-                word = it,
-                modifier = modifier,
-                onSpeakerClick = { },
-                onBack = onBack
-            )
-        }
-    }
+    WordScreen(
+        word = defn,
+        modifier = modifier,
+        onSpeakerClick = onSpeakerClicked,
+        onBack = onBackClick
+    )
 }
+
 

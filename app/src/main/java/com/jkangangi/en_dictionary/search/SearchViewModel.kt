@@ -3,11 +3,9 @@ package com.jkangangi.en_dictionary.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.NetworkResult
-import com.jkangangi.en_dictionary.definitions.WordDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,8 +22,6 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
     private val _searchState = MutableStateFlow(SearchScreenState())
     val searchState = _searchState.asStateFlow()
 
-    private val _detailState = MutableStateFlow(WordDetailState())
-    val detailState = _detailState.asStateFlow()
 
     fun updateQuery(queries: RequestDTO) {
         _queries.update { queries }
@@ -63,10 +59,6 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
         }
     }
 
-    fun setBook(word: Dictionary): Dictionary {
-        _detailState.value = WordDetailState(word = word)
-        return word
-    }
 
     fun closeClient() {
         Log.d("SearchVM", "calling close from the viewModel...")

@@ -46,10 +46,9 @@ fun PhoneticsSection(
  */
 @Composable
 private fun PhoneticsRow(modifier: Modifier, word: Dictionary, onSpeakerClick: () -> Unit) {
-    val hasAudio =
-        word.pronunciations.all { pronunciation -> pronunciation.entries.any { entry -> entry.audioFiles.isNotEmpty() } }
-    val isPhrase =
-        word.pronunciations.all { pronunciation -> pronunciation.entries.any { entry -> !entry.entry.isWord() } }
+    val entries = word.pronunciations[0].entries
+    val hasAudio = entries.any { entry -> entry.audioFiles.isNotEmpty() }
+    val isPhrase = entries.any { entry -> !entry.entry.isWord() }
 
     val isSpeakerOn = if (isPhrase) hasAudio else hasAudio
 
@@ -67,7 +66,7 @@ private fun PhoneticsRow(modifier: Modifier, word: Dictionary, onSpeakerClick: (
 
             if (!isPhrase) {
                 Text(
-                    text = word.pronunciations[0].entries[0].textual[0].pronunciation.phonetics(),
+                    text = entries[0].textual[0].pronunciation.phonetics(),
                     fontFamily = FontFamily.SansSerif,
                     style = MaterialTheme.typography.bodyMedium
                 )

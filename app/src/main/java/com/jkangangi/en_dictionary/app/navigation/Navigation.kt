@@ -1,6 +1,7 @@
 package com.jkangangi.en_dictionary.app.navigation
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
@@ -15,13 +16,14 @@ import com.bumble.appyx.core.composable.Children
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.node.ParentNode
+import com.bumble.appyx.core.node.node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import com.jkangangi.en_dictionary.definitions.WordDetailView
 import com.jkangangi.en_dictionary.history.HistoryRoute
 import com.jkangangi.en_dictionary.saved.SavedRoute
 import com.jkangangi.en_dictionary.search.SearchRoute
-import com.jkangangi.en_dictionary.definitions.WordDetailRoute
 import kotlinx.parcelize.Parcelize
 
 //navigation Destinations
@@ -63,10 +65,14 @@ class Navigation(
                     buildContext = buildContext,
                     backStack = backStack,
                 )
-            is Route.SearchDetail -> WordDetailRoute(
-                buildContext = buildContext,
-                backStack = backStack,
-            )
+
+            is Route.SearchDetail -> node(buildContext) {
+                WordDetailView(
+                    onBack = { backStack.handleUpNavigation() },
+                    defn = navTarget.definition,
+                    modifier = it
+                )
+            }
 
             is Route.Saved -> SavedRoute(
                 buildContext = buildContext,
@@ -87,7 +93,7 @@ sealed class Route(val icon: ImageVector? = null, val title: String? = null) :
     object Search : Route(icon = Icons.Default.Search, title = "Search")
 
     @Parcelize
-    data class SearchDetail(val dictionary: Dictionary) : Route(title = "SearchDetail")
+    data class SearchDetail(val definition: Dictionary) : Route(title = "SearchDetail")
 
     @Parcelize
     object Saved : Route(icon = Icons.Default.Bookmark, title = "Saved")
