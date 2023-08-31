@@ -5,14 +5,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 
-/*
-@Database(entities = [SearchEntity::class], version = 2, exportSchema = false)
-@TypeConverters(RoomConverters::class)
-abstract class WordDatabase: RoomDatabase() {
-
-        abstract fun wordDao(): WordDao
-
-}*/
 
 @Database(entities = [DictionaryEntity::class], version = 3, exportSchema = false)
 @TypeConverters(RoomConverters::class)

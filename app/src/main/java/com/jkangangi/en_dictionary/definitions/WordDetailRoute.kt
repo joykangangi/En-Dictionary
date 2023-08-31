@@ -16,18 +16,18 @@ fun WordDetailView(
     defn: Dictionary,
 ) {
 
-    val onBackClick = remember { onBack }
+   // val onBackClick = remember { onBack }
     val context = LocalContext.current
 
-    val onSpeakerClicked = remember {
+    val onSpeakerClicked =
         { viewModel.onSpeakerClick(context, word = defn) }
-    }
+
 
     WordScreen(
         word = defn,
         modifier = modifier,
         onSpeakerClick = onSpeakerClicked,
-        onBack = onBackClick
+        onBack = onBack
     )
 }
 

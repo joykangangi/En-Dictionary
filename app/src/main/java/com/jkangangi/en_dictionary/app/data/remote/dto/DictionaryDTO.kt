@@ -4,7 +4,6 @@ package com.jkangangi.en_dictionary.app.data.remote.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-//TODO; Change type to nullable from def value
 @Serializable
 data class DictionaryDTO(
     @SerialName("items")

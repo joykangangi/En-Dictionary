@@ -32,15 +32,15 @@ class DictionaryRepositoryImpl @Inject constructor(
         emit(NetworkResult.Loading())
 
         val sentence = "${request.textBeforeSelection.trim()} ${request.selection.trim()} ${request.textAfterSelection.trim()}"
-        val localData = dao.getDictionaryResponse(sentence = sentence).toDictionary()
-        emit(NetworkResult.Loading(data = localData))
+        //val localData = dao.getDictionaryResponse(sentence = sentence).toDictionary()
+        //emit(NetworkResult.Loading(data = localData))
 
         /**
          * API -> Database
          */
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
-            if (remoteData != null) {
+            if (remoteData != null && remoteData.items.isNotEmpty()) {
                 dao.deleteDictionaryItem(remoteData.toDictionaryEntity())
                 dao.insertDictionaryResponse(remoteData.toDictionaryEntity())
             }

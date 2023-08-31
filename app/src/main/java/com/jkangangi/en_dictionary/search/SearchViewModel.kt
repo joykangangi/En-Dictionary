@@ -36,7 +36,6 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
         val isValid = if (input.isNotEmpty()) {
             val requiredLength = input.length < 129
             val regex = Regex("^[a-zA-Z' ]+\$")
-            Log.i("SEARCHVM", "VALIDINP AND AND${regex.matches(input) && input != "'" && requiredLength}")
             regex.matches(input) && input != "'" && requiredLength
         } else {
             true

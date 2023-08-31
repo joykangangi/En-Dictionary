@@ -9,7 +9,6 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
 import com.jkangangi.en_dictionary.app.data.remote.dto.WordFrequency
 import kotlinx.parcelize.Parcelize
 
-//TODO; remove def value
 @Stable
 @Parcelize
 data class Dictionary(
