@@ -28,17 +28,17 @@ class HistoryRoute(
 
         val state by viewModel.historyState.collectAsState()
 
-        val onHistoryCleared = remember {
+        val onHistoryCleared =
             {
                 viewModel.deleteDictionaryItems(state.historyItems)
             }
-        }
 
-        val deleteDictionaryItem = remember {
+
+        val deleteDictionaryItem =
             { dictionary: DictionaryEntity ->
                 viewModel.deleteDictionaryItem(dictionary)
             }
-        }
+
 
         HistoryScreen(
             dictionaryItems = state.historyItems,

@@ -29,9 +29,9 @@ fun HistoryItemCard(
     onDeleteWord: (DictionaryEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val onDeleteDictionary = remember {
+    /*val onDeleteDictionary = remember {
         { onDeleteWord(dictionary) }
-    }
+    }*/
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -50,7 +50,7 @@ fun HistoryItemCard(
                 overflow = TextOverflow.Ellipsis,
                 modifier = modifier.weight(1f)
             )
-            IconButton(onClick = onDeleteDictionary, content = {
+            IconButton(onClick = {onDeleteWord(dictionary)}, content = {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(id = R.string.delete),

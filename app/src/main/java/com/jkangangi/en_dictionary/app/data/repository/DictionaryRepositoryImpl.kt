@@ -5,7 +5,6 @@ import com.jkangangi.en_dictionary.app.data.local.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.local.toDictionary
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
-import com.jkangangi.en_dictionary.app.data.model.toDictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.remote.toDictionaryEntity
 import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
@@ -15,7 +14,6 @@ import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -33,7 +31,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     override fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary?>> = flow {
         emit(NetworkResult.Loading())
 
-        val sentence = "${request.textBeforeSelection} ${request.selection} ${request.textAfterSelection}"
+        val sentence = "${request.textBeforeSelection.trim()} ${request.selection.trim()} ${request.textAfterSelection.trim()}"
         val localData = dao.getDictionaryResponse(sentence = sentence).toDictionary()
         emit(NetworkResult.Loading(data = localData))
 
@@ -89,18 +87,15 @@ class DictionaryRepositoryImpl @Inject constructor(
     }
 
     override fun getAllHistory(): Flow<List<DictionaryEntity>> {
-        Log.i("DICT REPOIMPL","ALL HISTO CALLED ")
        return dao.getAllDefinitions()
     }
 
 
     override suspend fun deleteDictionaryItem(dictionary: DictionaryEntity) {
-        Log.i("DICT REPOIMPL","DELETE ITEM CALLED ")
        dao.deleteDictionaryItem(dictionary)
     }
 
     override suspend fun deleteAllDictionaryItems(dictionaries: List<DictionaryEntity>) {
-        Log.i("DICT REPOIMPL","DELETE ITEMS CALLED")
         dao.deleteAllDictItems(dictionaries)
     }
 

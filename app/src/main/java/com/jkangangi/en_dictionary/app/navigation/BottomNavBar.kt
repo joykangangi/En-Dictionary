@@ -45,16 +45,14 @@ fun BottomNavigator(
         mutableStateOf(backStack.activeElement)
     }
 
-    val showBottomBar by remember(backStackNavigator.activeElement) {
-        derivedStateOf {
+    val showBottomBar = remember(backStackNavigator.activeElement) {
             when (backStackNavigator.activeElement) {
                 Route.History, Route.Saved, Route.Search -> true
                 else -> false
             }
-        }
     }
 
-    Log.i("Navigation","A.E = ${backStack.activeElement} || ${backStack.activeElement?.title}, C.R = ${currentRoute.value?.title}")
+    Log.i("Navigation","A.E = ${backStack.activeElement?.title}, C.R = ${currentRoute.value?.title}")
     val selected: (screen: Route) -> Boolean = remember {
         { screen ->
             screen == currentRoute.value

@@ -16,16 +16,32 @@ import javax.inject.Inject
 //private const val DELAY_TIME = 500L
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val repository: DictionaryRepositoryImpl) : ViewModel() {
+class SearchViewModel @Inject constructor(private val repository: DictionaryRepositoryImpl) :
+    ViewModel() {
 
     private val _queries = MutableStateFlow(RequestDTO())
     private val _searchState = MutableStateFlow(SearchScreenState())
     val searchState = _searchState.asStateFlow()
 
-
     fun updateQuery(queries: RequestDTO) {
         _queries.update { queries }
         _searchState.update { it.copy(requests = queries) }
+        _searchState.update { it.copy(beforeError = validateInput(_queries.value.textBeforeSelection)) }
+        _searchState.update { it.copy(targetError = validateInput(_queries.value.selection) && _queries.value.selection.isNotEmpty()) }
+        _searchState.update {  it.copy(afterError = validateInput(_queries.value.textAfterSelection)) }
+    }
+
+
+    private fun validateInput(input: String): Boolean {
+        val isValid = if (input.isNotEmpty()) {
+            val requiredLength = input.length < 129
+            val regex = Regex("^[a-zA-Z' ]+\$")
+            Log.i("SEARCHVM", "VALIDINP AND AND${regex.matches(input) && input != "'" && requiredLength}")
+            regex.matches(input) && input != "'" && requiredLength
+        } else {
+            true
+        }
+        return isValid
     }
 
     fun doWordSearch() {
@@ -36,7 +52,8 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
                     when (result) {
                         is NetworkResult.Error -> {
                             state.copy(
-                                error = result.message ?: "Unexpected error occurred, try again.",
+                                serverError = result.message
+                                    ?: "Unexpected error occurred, try again.",
                                 isLoading = false,
                                 wordItem = null
                             )
@@ -50,7 +67,7 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
                             state.copy(
                                 wordItem = result.data,
                                 isLoading = false,
-                                error = ""
+                                serverError = ""
                             )
                         }
                     }

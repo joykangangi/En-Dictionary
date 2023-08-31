@@ -43,11 +43,10 @@ class SearchRoute(
             }
         }
 
-        val onSearchClicked = remember {
+        val onSearchClicked =
             {
                 viewModel.doWordSearch()
             }
-        }
 
         DisposableEffect(key1 = Unit, effect = {
             onDispose { viewModel.closeClient() }

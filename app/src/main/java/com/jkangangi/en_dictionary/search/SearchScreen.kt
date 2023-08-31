@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -102,8 +101,8 @@ fun SearchScreen(
                 input = state.requests.textBeforeSelection,
                 onInputChange = { updateQuery(state.requests.copy(textBeforeSelection = it)) },
                 txtLabel = stringResource(id = R.string.string_b4),
-                isRequired = false,
-                onClearInput = { updateQuery(state.requests.copy(textBeforeSelection = "")) }
+                onClearInput = { updateQuery(state.requests.copy(textBeforeSelection = "")) },
+                isValid = state.beforeError
             )
 
             //target
@@ -113,7 +112,8 @@ fun SearchScreen(
                 onInputChange = { updateQuery(state.requests.copy(selection = it)) },
                 txtLabel = stringResource(id = R.string.target),
                 isRequired = true,
-                onClearInput = { updateQuery(state.requests.copy(selection = "")) }
+                onClearInput = { updateQuery(state.requests.copy(selection = "")) },
+                isValid = state.targetError
             )
 
             //afterTarget
@@ -122,16 +122,15 @@ fun SearchScreen(
                 input = state.requests.textAfterSelection,
                 onInputChange = { updateQuery(state.requests.copy(textAfterSelection = it)) },
                 txtLabel = stringResource(id = R.string.string_after),
-                isRequired = false,
-                imeAction = ImeAction.Done,
-                onClearInput = { updateQuery(state.requests.copy(textAfterSelection = "")) }
+                onClearInput = { updateQuery(state.requests.copy(textAfterSelection = "")) },
+                isValid = state.afterError
             )
 
             Spacer(modifier = modifier)
 
             Button(
                 modifier = modifier,
-                enabled = state.requests.selection.isNotEmpty(),
+                enabled = (state.beforeError && state.targetError && state.afterError),
                 onClick = {
                     keyBoardController?.hide()
                     onSearchClick()
@@ -174,9 +173,9 @@ private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClic
                 )
             }
             if (state.isLoading)  CircularProgressIndicator()
-            if (state.error.isNotBlank()) {
+            if (state.serverError.isNotBlank()) {
                 Text(
-                    text = state.error,
+                    text = state.serverError,
                     color = MaterialTheme.colorScheme.error,
                     textAlign = TextAlign.Center,
                     modifier = modifier,
