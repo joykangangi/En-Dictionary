@@ -46,12 +46,12 @@ fun PhoneticsSection(
  * Phrases don't have pronunciations;ONLY sound
  */
 @Composable
-private fun PhoneticsRow(modifier: Modifier, word: Dictionary, onSpeakerClick: () -> Unit) {
-    val entries = word.pronunciations[0].entries
-    val hasAudio = entries.any { entry -> entry.audioFiles.isNotEmpty() }
-    val isPhrase = entries.any { entry -> !entry.entry.isWord() }
+private fun PhoneticsRow(modifier: Modifier, word: Dictionary?, onSpeakerClick: () -> Unit) {
+    val entries = word?.pronunciations?.getOrNull(0)?.entries
+    val hasAudio = entries?.any { entry -> entry.audioFiles.isNotEmpty() }
+    val isPhrase = entries?.any { entry -> !entry.entry.isWord() }
 
-    val isSpeakerOn = if (isPhrase) hasAudio else hasAudio
+    val isSpeakerOn = if (isPhrase == true) hasAudio else hasAudio
 
     Row(
         modifier = modifier,
@@ -62,10 +62,10 @@ private fun PhoneticsRow(modifier: Modifier, word: Dictionary, onSpeakerClick: (
             SpeakerIcon(
                 modifier = modifier,
                 onSpeakerClick = onSpeakerClick,
-                isSpeakerOn = isSpeakerOn
+                isSpeakerOn = isSpeakerOn == true
             )
 
-            if (!isPhrase) {
+            if (isPhrase == false) {
                 Text(
                     text = HtmlParser.htmlToString(entries[0].textual[0].pronunciation.phonetics()),
                     fontFamily = FontFamily.SansSerif,

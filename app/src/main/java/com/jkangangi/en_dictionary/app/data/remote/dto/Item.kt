@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Item(
     @SerialName("antonyms")
-    val antonyms: List<String> = listOf(),
+    val antonyms: List<String>? = listOf(),
     @SerialName("definitions")
     val definitions: List<Definition> = listOf(),
     @SerialName("inflectionalForms")
@@ -20,7 +20,7 @@ data class Item(
     @SerialName("phrases")
     val phrases: List<Phrase>? = listOf(),
     @SerialName("synonyms")
-    val synonyms: List<String> = listOf(),
+    val synonyms: List<String>? = listOf(),
     @SerialName("word")
     val word: String = ""
 ): Parcelable

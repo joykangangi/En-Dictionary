@@ -1,7 +1,6 @@
 package com.jkangangi.en_dictionary.definitions
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,14 +15,12 @@ fun WordDetailView(
     defn: Dictionary,
 ) {
 
-   // val onBackClick = remember { onBack }
     val context = LocalContext.current
-
     val onSpeakerClicked =
         { viewModel.onSpeakerClick(context, word = defn) }
 
 
-    WordScreen(
+    DefinitionScreen(
         word = defn,
         modifier = modifier,
         onSpeakerClick = onSpeakerClicked,

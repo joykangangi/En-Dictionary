@@ -12,10 +12,10 @@ import org.jsoup.nodes.Element
 
 class HtmlParser {
     companion object {
-        fun htmlToString(html: String): AnnotatedString {
-            val parsedHtml = Jsoup.parse(html)
+        fun htmlToString(html: String?): AnnotatedString {
+            val parsedHtml = html?.let { Jsoup.parse(it) }
             val builder = AnnotatedString.Builder()
-            parseHtmlElements(parsedHtml.body(), builder)
+            parsedHtml?.let { parseHtmlElements(it.body(), builder) }
             return builder.toAnnotatedString()
         }
 
