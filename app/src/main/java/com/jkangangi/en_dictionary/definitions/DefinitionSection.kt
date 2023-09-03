@@ -8,105 +8,87 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.remote.dto.Item
 import com.jkangangi.en_dictionary.app.data.remote.dto.Phrase
-import com.jkangangi.en_dictionary.app.util.HtmlParser
 import com.jkangangi.en_dictionary.app.util.isWord
 
+/**
+ * WordDFN       | PhraseDFN
+ * one word      | greater > one word
+ * has synonyms  | has no synonyms
+ * has antonyms  | has no antonyms
+ * has phonetics | has no phonetics
+ *
+ */
 @Composable
 fun DefinitionSection(
-    word: Dictionary,
+    dictionary: DictionaryEntity,
     modifier: Modifier,
 ) {
-    val isWord by rememberSaveable { mutableStateOf(word.sentence.isWord()) } 
+    val isWord= dictionary.sentence.isWord()
+
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
             )
             .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-
-    ) {
-        if (isWord) {
-            word.items.forEach { item ->
-                DefinitionHeader(modifier = Modifier, headerTxt = item.partOfSpeech)
-                DefinitionBody(wordDefinitions = item.definitions)
-                item.synonyms?.let { Thesaurus(titleText = "Synonyms", bodyText = it) }
-                item.antonyms?.let { Thesaurus(titleText = "Antonyms", bodyText = it) }
-            }
-        } else {
-            word.items.forEach { item ->
-                item.phrases?.let { phrases ->
-                    PhraseDefinition(modifier = modifier, phrases = phrases)
-                    item.synonyms?.let { Thesaurus(titleText = "Synonyms", bodyText = it) }
-                    item.antonyms?.let { Thesaurus(titleText = "Antonyms", bodyText = it) }
+            .padding(12.dp)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        content = {
+            dictionary.items.forEach { item ->
+                if (isWord){
+                    WordDefinition(item = item)
+                    Thesaurus(item = item)
+                }
+                else{
+                    item.phrases?.let { phrases ->  
+                        PhraseDefinition(phrases = phrases)
+                    }
                 }
             }
-        }
+        },
+    )
+}
+
+@Composable
+private fun WordDefinition(
+    modifier: Modifier = Modifier,
+    item: Item,
+) {
+    Column {
+        DefinitionHeader(headerTxt = item.partOfSpeech, modifier = modifier)
+        DefinitionBody(wordDefinitions = item.definitions, modifier = modifier)
     }
 }
 
 @Composable
 private fun PhraseDefinition(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     phrases: List<Phrase?>,
 ) {
     Column {
-        phrases.forEach { phrases ->
-            DefinitionHeader(modifier = Modifier, headerTxt = phrases?.phrase)
-            DefinitionBody(wordDefinitions = phrases?.definitions)
+        phrases.forEach { phrase ->
+            DefinitionHeader(modifier = modifier, headerTxt = phrase?.phrase)
+            DefinitionBody(wordDefinitions = phrase?.definitions, modifier = modifier)
         }
     }
 }
 
-//antonyms+synonyms
+//synonyms + antonyms
 @Composable
-fun Thesaurus(modifier: Modifier = Modifier, titleText: String, bodyText:List<String>) {
-    Text(
-        buildAnnotatedString {
-
-            withStyle(
-                style = SpanStyle(
-                    fontFamily = FontFamily.SansSerif,
-                    fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    textDecoration = TextDecoration.Underline,
-                )
-            ) {
-                append(titleText)
-            }
-
-            bodyText.forEach { text ->
-                withStyle(
-                    style = SpanStyle(
-                        fontFamily = FontFamily.SansSerif,
-                        fontStyle = MaterialTheme.typography.bodyMedium.fontStyle
-                    )
-                ) {
-                    val parsedDefinition = HtmlParser.htmlToString(text)
-                    append(parsedDefinition)
-                }
-            }
-        },
-        modifier = modifier,
-    )
+private fun Thesaurus(item: Item, modifier: Modifier = Modifier) {
+    if (!item.synonyms.isNullOrEmpty()) {
+        DefinitionDetail(titleText = "Synonyms", bodyText = item.synonyms, modifier = modifier)
+    }
+    if (!item.antonyms.isNullOrEmpty()) {
+        DefinitionDetail(titleText = "Antonyms", bodyText = item.antonyms, modifier = modifier)
+    }
 }

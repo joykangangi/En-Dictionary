@@ -41,8 +41,9 @@ class DictionaryRepositoryImpl @Inject constructor(
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
             if (remoteData != null && remoteData.items.isNotEmpty()) {
-                dao.deleteDictionaryItem(remoteData.toDictionaryEntity())
-                dao.insertDictionaryResponse(remoteData.toDictionaryEntity())
+                val entities = listOf(remoteData.toDictionaryEntity()) //db has no duplicate
+                dao.deleteDictionaryItems(entities.map { it.sentence })
+                dao.insertDictionaryItem(remoteData.toDictionaryEntity())
             }
 
         } catch (e: RedirectResponseException) {
@@ -82,7 +83,7 @@ class DictionaryRepositoryImpl @Inject constructor(
         /**
          * Database -> UI
          */
-        val newWord = dao.getDictionaryResponse(sentence = sentence).toDictionary()
+        val newWord = dao.getDictionaryItem(sentence = sentence).toDictionary()
         emit(NetworkResult.Success(data = newWord))
     }
 
@@ -90,13 +91,12 @@ class DictionaryRepositoryImpl @Inject constructor(
        return dao.getAllDefinitions()
     }
 
-
-    override suspend fun deleteDictionaryItem(dictionary: DictionaryEntity) {
-       dao.deleteDictionaryItem(dictionary)
+    override suspend fun deleteDictionaryItems(sentences: List<String>) {
+        dao.deleteDictionaryItems(sentences)
     }
 
-    override suspend fun deleteAllDictionaryItems(dictionaries: List<DictionaryEntity>) {
-        dao.deleteAllDictItems(dictionaries)
+    override suspend fun getDictionaryItem(sentence: String): DictionaryEntity? {
+      return dao.getDictionaryItem(sentence)
     }
 
     fun closeClient() {

@@ -39,7 +39,7 @@ class SearchRoute(
 
         val toWordClick  = remember {
             { dfn: Dictionary ->
-                backStack.singleTop(Route.SearchDetail(definition = dfn))
+                backStack.singleTop(Route.SearchDetail(sentence = dfn.sentence))
             }
         }
 

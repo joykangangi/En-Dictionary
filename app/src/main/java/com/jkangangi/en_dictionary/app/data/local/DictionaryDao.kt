@@ -10,18 +10,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DictionaryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDictionaryResponse(dictionaryEntity: DictionaryEntity)
+    suspend fun insertDictionaryItem(dictionaryEntity: DictionaryEntity)
 
-    //Delete 1 item
-    @Delete
-    suspend fun deleteDictionaryItem(dictionaryEntity: DictionaryEntity)
-
-    //clear the whole db
-    @Delete
-    suspend fun deleteAllDictItems(searchEntities: List<DictionaryEntity>)
+    @Query("DELETE FROM dictionaryentity WHERE sentence IN(:sentences)")
+    suspend fun deleteDictionaryItems(sentences: List<String>)
 
     @Query("SELECT * FROM dictionaryentity WHERE sentence = TRIM(:sentence)")
-    suspend fun getDictionaryResponse(sentence: String): DictionaryEntity?
+    suspend fun getDictionaryItem(sentence: String): DictionaryEntity?
 
     //all History
     @Query("SELECT * FROM dictionaryentity")

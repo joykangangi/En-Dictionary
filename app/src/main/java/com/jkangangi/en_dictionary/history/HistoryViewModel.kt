@@ -40,15 +40,9 @@ class HistoryViewModel @Inject constructor(private val repositoryImpl: Dictionar
         initialValue = persistentListOf()
     )*/
 
-    fun deleteDictionaryItem(dictionary: DictionaryEntity) {
+    fun deleteDictionaryItems(sentences: List<String>) {
         viewModelScope.launch {
-            repositoryImpl.deleteDictionaryItem(dictionary)
-        }
-    }
-
-    fun deleteDictionaryItems(dictionaries: List<DictionaryEntity>) {
-        viewModelScope.launch {
-            repositoryImpl.deleteAllDictionaryItems(dictionaries)
+            repositoryImpl.deleteDictionaryItems(sentences)
         }
     }
 

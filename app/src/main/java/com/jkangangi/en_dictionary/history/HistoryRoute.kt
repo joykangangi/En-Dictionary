@@ -3,12 +3,10 @@ package com.jkangangi.en_dictionary.history
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 
 class HistoryRoute(
     buildContext: BuildContext,
@@ -30,20 +28,20 @@ class HistoryRoute(
 
         val onHistoryCleared =
             {
-                viewModel.deleteDictionaryItems(state.historyItems)
+                viewModel.deleteDictionaryItems(state.historyItems.map { it.sentence })
             }
 
 
-        val deleteDictionaryItem =
-            { dictionary: DictionaryEntity ->
-                viewModel.deleteDictionaryItem(dictionary)
+        val deleteDictionaryItems =
+            { sentences: List<String> ->
+                viewModel.deleteDictionaryItems(sentences)
             }
 
 
         HistoryScreen(
             dictionaryItems = state.historyItems,
             onClearHistory = onHistoryCleared,
-            deleteWord = deleteDictionaryItem,
+            deleteWord = deleteDictionaryItems,
             modifier = modifier
         )
 

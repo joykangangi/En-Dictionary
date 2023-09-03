@@ -5,9 +5,16 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import androidx.lifecycle.viewModelScope
+import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.isWord
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import java.io.IOException
 import javax.inject.Inject
 
@@ -15,31 +22,32 @@ import javax.inject.Inject
 private const val AUDIO_BASE_URL = "https://download.xfd.plus/xfed/audio/"
 
 @HiltViewModel
-class DefinitionsViewModel @Inject constructor(): ViewModel() {
+class DefinitionsViewModel @Inject constructor(repositoryImpl: DictionaryRepositoryImpl): ViewModel() {
 
-    /*
     private val sentence = MutableStateFlow("")
-    val definition = sentence.map { phrase ->
-        when (phrase) {
-            "" -> Dictionary()
-            else -> repository.getDictionary(phrase).last()?:Dictionary()
+
+
+    val dictionary = sentence.map { words->
+        when(words) {
+            "" -> DictionaryEntity()
+            else -> repositoryImpl.getDictionaryItem(words)?: DictionaryEntity()
         }
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000),
-        Dictionary(),
+        initialValue = DictionaryEntity()
     )
 
     fun getDictionary(phrase: String) {
         this.sentence.update { phrase }
-    }*/
+    }
 
     private val mediaPlayer = MediaPlayer()
     /**
      * Handle sound clicks for a word and words
      */
-    fun onSpeakerClick(context: Context, word: Dictionary?) {
-        val audioURL = word?.let { getAudioLink(word = it) }
+    fun onSpeakerClick(context: Context, dictionary: DictionaryEntity?) {
+        val audioURL = dictionary?.let { getAudioLink(word = it) }
         mediaPlayer.setAudioAttributes(
             AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -58,7 +66,7 @@ class DefinitionsViewModel @Inject constructor(): ViewModel() {
 
 
 
-    private fun getAudioLink(word: Dictionary): String {
+    private fun getAudioLink(word: DictionaryEntity): String {
         val entries = word.pronunciations[0].entries
         val isPhrase = entries.any { entry -> !entry.entry.isWord() }
         val phraseIndex = entries.indexOfFirst { entry -> !entry.entry.isWord() }

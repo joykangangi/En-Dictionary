@@ -31,7 +31,7 @@ import kotlinx.collections.immutable.persistentListOf
 fun HistoryScreen(
     dictionaryItems: ImmutableList<DictionaryEntity>,
     onClearHistory: () -> Unit,
-    deleteWord: (DictionaryEntity) -> Unit,
+    deleteWord: (List<String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isEmpty = dictionaryItems.isEmpty()

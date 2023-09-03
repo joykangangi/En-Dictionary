@@ -13,19 +13,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefinitionScreen(
     modifier: Modifier = Modifier,
-    word: Dictionary,
+    dictionary: DictionaryEntity,
     onSpeakerClick: () -> Unit,
     onBack: () -> Unit,
 ) {
 
     Scaffold(
+        modifier = modifier,
         topBar = { DefinitionTopBar(onBack = onBack) },
         content = {
             Column(
@@ -44,13 +45,13 @@ fun DefinitionScreen(
                         content = {
                             PhoneticsSection(
                                 modifier = modifier,
-                                word = word,
+                                dictionary = dictionary,
                                 onSpeakerClick = onSpeakerClick
                             )
                         }
                     )
                     DefinitionSection(
-                        word = word,
+                        dictionary = dictionary,
                         modifier = modifier.weight(.2f),
                     )
                 },
@@ -65,12 +66,12 @@ fun DefinitionScreen(
 fun WordScreenPreview() {
     En_DictionaryTheme {
         Scaffold {
-            val word = Dictionary()
+            val word = DictionaryEntity()
             DefinitionScreen(
                 modifier = Modifier.padding(it),
                 onBack = { },
                 onSpeakerClick = { },
-                word = word
+                dictionary = word
             )
         }
 

@@ -13,7 +13,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,7 +25,7 @@ import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 @Composable
 fun HistoryItemCard(
     dictionary: DictionaryEntity,
-    onDeleteWord: (DictionaryEntity) -> Unit,
+    onDeleteWord: (List<String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     /*val onDeleteDictionary = remember {
@@ -50,7 +49,7 @@ fun HistoryItemCard(
                 overflow = TextOverflow.Ellipsis,
                 modifier = modifier.weight(1f)
             )
-            IconButton(onClick = {onDeleteWord(dictionary)}, content = {
+            IconButton(onClick = {onDeleteWord(listOf(dictionary.sentence))}, content = {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(id = R.string.delete),
