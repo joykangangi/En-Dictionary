@@ -20,6 +20,7 @@ import com.jkangangi.en_dictionary.app.util.isWord
 /**
  * WordDFN       | PhraseDFN
  * one word      | greater > one word
+ * NO Phrase     | has Phrase class
  * has synonyms  | has no synonyms
  * has antonyms  | has no antonyms
  * has phonetics | has no phonetics
@@ -30,7 +31,7 @@ fun DefinitionSection(
     dictionary: DictionaryEntity,
     modifier: Modifier,
 ) {
-    val isWord= dictionary.sentence.isWord()
+    val isWord=  dictionary.sentence.isWord()
 
     Column(
         modifier = modifier

@@ -49,7 +49,7 @@ class HtmlParser {
 fun PrevHtml() {
     @Composable
     fun HtmlText() {
-        val html = "<b>Staff only!</b>access can access your <i>entire</i> wallet."
+        val html = "<b>Staff only!</b>  can access your <i>entire</i> wallet."
         val formattedText = HtmlParser.htmlToString(html)
         Text(text = formattedText)
     }

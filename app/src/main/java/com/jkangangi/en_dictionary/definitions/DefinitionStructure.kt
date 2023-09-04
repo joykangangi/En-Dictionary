@@ -3,10 +3,7 @@ package com.jkangangi.en_dictionary.definitions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -65,7 +62,7 @@ fun DefinitionBody(
                     bodyText = listOf(word?.examples?.getOrNull(0)),
                     modifier = modifier
                 ) //just the 1st example if its not null
-            Spacer(modifier = modifier.height(4.dp))
+            //Spacer(modifier = modifier.height(4.dp))
         }
     }
 }
@@ -76,14 +73,12 @@ fun DefinitionDetail(
     titleText: String? = null,
     bodyText: List<String?>,
 ) {
-
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
-        verticalAlignment = Alignment.CenterVertically,
         content = {
             Text(
-                text = titleText?:"",
+                text = "\n$titleText",
                 fontFamily = FontFamily.SansSerif,
                 fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
                 fontWeight = FontWeight.Bold,
@@ -127,13 +122,13 @@ fun PreviewDefDetail() {
             )
             DefinitionDetail(
                 modifier = Modifier,
-                titleText = "2.",
-                bodyText = listOf("A spherical ball")
-            )
-            DefinitionDetail(
-                modifier = Modifier,
                 titleText = "Example",
                 bodyText = listOf("She is playing football despite the showers.")
+            )
+            DefinitionDetail(
+                modifier = Modifier ,
+                titleText = "Synonyms",
+                bodyText = listOf("nice","good","word","word","does")
             )
         }
     }

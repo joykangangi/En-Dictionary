@@ -85,8 +85,7 @@ class Navigation(
     }
 }
 
-sealed class Route(val icon: ImageVector? = null, val title: String? = null) :
-    Parcelable {
+sealed class Route(val icon: ImageVector? = null, val title: String? = null) : Parcelable {
 
     @Parcelize
     object Search : Route(icon = Icons.Default.Search, title = "Search")

@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Games
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.activeElement
@@ -46,13 +50,16 @@ fun BottomNavigator(
     }
 
     val showBottomBar = remember(backStackNavigator.activeElement) {
-            when (backStackNavigator.activeElement) {
-                Route.History, Route.Saved, Route.Search -> true
-                else -> false
-            }
+        when (backStackNavigator.activeElement) {
+            Route.History, Route.Saved, Route.Search -> true
+            else -> false
+        }
     }
 
-    Log.i("Navigation","A.E = ${backStack.activeElement?.title}, C.R = ${currentRoute.value?.title}")
+    Log.i(
+        "Navigation",
+        "A.E = ${backStack.activeElement?.title}, C.R = ${currentRoute.value?.title}"
+    )
     val selected: (screen: Route) -> Boolean = remember {
         { screen ->
             screen == currentRoute.value
@@ -117,10 +124,35 @@ private fun BottomAppBarItem(
             if (title != null) {
                 Text(
                     text = title,
-                    color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
+                    color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
         }
     )
 }
 
+@Preview
+@Composable
+fun PrevBottomNavItems() {
+    Row {
+        BottomAppBarItem(
+            title = "Search",
+            icon = Icons.Default.Search,
+            selected = true,
+            onClick = { }
+        )
+        BottomAppBarItem(
+            title = "Play",
+            icon = Icons.Default.Games,
+            selected = false,
+            onClick = { }
+        )
+        BottomAppBarItem(
+            title = "History",
+            icon = Icons.Default.History,
+            selected = false,
+            onClick = { }
+        )
+    }
+}
