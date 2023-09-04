@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.En_Dictionary" parent="android:Theme.Material.Light">
+        <item name="android:statusBarColor">@color/purple_500</item>
+    </style>
 
-    <style name="Theme.En_Dictionary" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="SplashScreenTheme" parent="Theme.En_Dictionary">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
 </resources>

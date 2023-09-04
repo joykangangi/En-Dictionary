@@ -3,8 +3,6 @@ package com.jkangangi.en_dictionary.app.data.repository
 import android.util.Log
 import com.jkangangi.en_dictionary.app.data.local.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
-import com.jkangangi.en_dictionary.app.data.local.toDictionary
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.remote.toDictionaryEntity
 import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
@@ -28,7 +26,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     private val dictionaryService: DictionaryServiceImpl
 ) : DictionaryRepository {
 
-    override fun postSearch(request: RequestDTO): Flow<NetworkResult<Dictionary?>> = flow {
+    override fun postSearch(request: RequestDTO): Flow<NetworkResult<DictionaryEntity?>> = flow {
         emit(NetworkResult.Loading())
 
         val sentence = "${request.textBeforeSelection.trim()} ${request.selection.trim()} ${request.textAfterSelection.trim()}"
@@ -83,7 +81,7 @@ class DictionaryRepositoryImpl @Inject constructor(
         /**
          * Database -> UI
          */
-        val newWord = dao.getDictionaryItem(sentence = sentence).toDictionary()
+        val newWord = dao.getDictionaryItem(sentence = sentence)
         emit(NetworkResult.Success(data = newWord))
     }
 

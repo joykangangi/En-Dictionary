@@ -11,7 +11,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.singleTop
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -38,7 +38,7 @@ class SearchRoute(
         val state = viewModel.searchState.collectAsState()
 
         val toWordClick  = remember {
-            { dfn: Dictionary ->
+            { dfn: DictionaryEntity ->
                 backStack.singleTop(Route.SearchDetail(sentence = dfn.sentence))
             }
         }

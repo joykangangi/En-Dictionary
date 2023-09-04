@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
+import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.widgets.TextInput
 
@@ -47,7 +47,7 @@ fun SearchScreen(
     state: SearchScreenState,
     updateQuery: (RequestDTO) -> Unit,
     onSearchClick: () -> Unit,
-    onWordClick: (Dictionary) -> Unit,
+    onWordClick: (DictionaryEntity) -> Unit,
 ) {
     val keyBoardController = LocalSoftwareKeyboardController.current
 
@@ -151,7 +151,7 @@ fun SearchScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClick: (Dictionary) -> Unit) {
+private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClick: (DictionaryEntity) -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier.padding(top=8.dp),

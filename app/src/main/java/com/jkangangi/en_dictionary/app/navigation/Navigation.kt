@@ -18,7 +18,6 @@ import com.bumble.appyx.core.node.ParentNode
 import com.bumble.appyx.core.node.node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
-import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.definitions.DefinitionView
 import com.jkangangi.en_dictionary.history.HistoryRoute
 import com.jkangangi.en_dictionary.saved.SavedRoute

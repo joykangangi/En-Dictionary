@@ -12,6 +12,7 @@ junit-test = "1.1.5"
 compose-activity = "1.7.0"
 jsoup = "1.16.1"
 hilt-navigation = "1.0.0"
+splash-screen = "1.0.0"
 
 compose = "2023.04.00"
 compose-compiler = "1.4.6"
@@ -30,6 +31,7 @@ appyx = { module = "com.bumble.appyx:core", version.ref = "appyx" }
 # Core
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 core-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "core-appcompat" }
+core-splashscreen = {module = "androidx.core:core-splashscreen", version.ref = "splash-screen"}
 
 # Compose
 compose = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }

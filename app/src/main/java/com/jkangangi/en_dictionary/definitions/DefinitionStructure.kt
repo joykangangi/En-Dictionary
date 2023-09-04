@@ -10,9 +10,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.data.remote.dto.Definition
@@ -35,7 +38,7 @@ fun DefinitionHeader(modifier: Modifier, headerTxt: String?) {
                     text = it,
                     style = MaterialTheme.typography.bodyLarge,
                     fontFamily = FontFamily.SansSerif,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
             Divider(modifier.weight(0.3f))
@@ -73,27 +76,31 @@ fun DefinitionDetail(
     titleText: String? = null,
     bodyText: List<String?>,
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-        content = {
-            Text(
-                text = "\n$titleText",
-                fontFamily = FontFamily.SansSerif,
-                fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-            )
-
-            bodyText.forEach { text -> //convert to list since coz of thesaurus section
-                val parsedDefinition = HtmlParser.htmlToString(text)
-                Text(
-                    text = parsedDefinition,
+    Text(
+        text = buildAnnotatedString {
+            withStyle(
+                style = SpanStyle(
                     fontFamily = FontFamily.SansSerif,
                     fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
                 )
+            ) {
+                append(titleText)
+            }
+            bodyText.forEach { text ->
+                val parsedText = HtmlParser.htmlToString(text)
+                withStyle(
+                    style = SpanStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
+                    )
+                ) {
+                    append(parsedText)
+                }
             }
         },
+        modifier = modifier
     )
 }
 
@@ -126,9 +133,9 @@ fun PreviewDefDetail() {
                 bodyText = listOf("She is playing football despite the showers.")
             )
             DefinitionDetail(
-                modifier = Modifier ,
+                modifier = Modifier,
                 titleText = "Synonyms",
-                bodyText = listOf("nice","good","word","word","does")
+                bodyText = listOf("nice", "good", "word", "word", "does")
             )
         }
     }

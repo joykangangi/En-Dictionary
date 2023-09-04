@@ -82,6 +82,7 @@ dependencies {
     //core
     implementation(libs.core.ktx)
     implementation(libs.core.appcompat)
+    implementation(libs.core.splashscreen)
 
     // Material Design
     implementation(libs.compose.material3)
@@ -92,6 +93,7 @@ dependencies {
     implementation(libs.compose.activity)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
+
     debugImplementation(libs.compose.ui.tooling)
     androidTestImplementation(platform(libs.compose))
 
