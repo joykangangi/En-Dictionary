@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.saved
+package com.jkangangi.en_dictionary.game
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -15,3 +15,11 @@ fun String.isWord(): Boolean {
 fun String.phonetics(): String {
     return this.substringAfter(':')
 }
+
+/**
+ * scramble a word
+ */
+
+fun String.scramble(): String {
+    return this.toCharArray().shuffle().toString()
+}

@@ -32,7 +32,7 @@ import com.bumble.appyx.navmodel.backstack.operation.push
 
 private val bottomNavScreens = listOf(
     Route.Search,
-    Route.Saved,
+    Route.Game,
     Route.History
 )
 
@@ -51,7 +51,7 @@ fun BottomNavigator(
 
     val showBottomBar = remember(backStackNavigator.activeElement) {
         when (backStackNavigator.activeElement) {
-            Route.History, Route.Saved, Route.Search -> true
+            Route.History, Route.Game, Route.Search -> true
             else -> false
         }
     }

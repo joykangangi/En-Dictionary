@@ -54,7 +54,7 @@ fun DefinitionBody(
     Column {
         wordDefinitions?.forEachIndexed { index, word ->
             DefinitionDetail(
-                titleText = "${index + 1}.",
+                titleText = "\n${index + 1}.",
                 bodyText = listOf(word?.definition),
                 modifier = modifier
             )
@@ -86,7 +86,7 @@ fun DefinitionDetail(
                     color = MaterialTheme.colorScheme.primary,
                 )
             ) {
-                append(titleText)
+                append("\n$titleText")
             }
             bodyText.forEach { text ->
                 val parsedText = HtmlParser.htmlToString(text)

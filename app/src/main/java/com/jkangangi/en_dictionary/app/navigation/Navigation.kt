@@ -20,7 +20,7 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
 import com.jkangangi.en_dictionary.definitions.DefinitionView
 import com.jkangangi.en_dictionary.history.HistoryRoute
-import com.jkangangi.en_dictionary.saved.SavedRoute
+import com.jkangangi.en_dictionary.game.GameRoute
 import com.jkangangi.en_dictionary.search.SearchRoute
 import kotlinx.parcelize.Parcelize
 
@@ -72,7 +72,7 @@ class Navigation(
                 )
             }
 
-            is Route.Saved -> SavedRoute(
+            is Route.Game -> GameRoute(
                 buildContext = buildContext,
                 backStack = backStack,
             )
@@ -93,7 +93,7 @@ sealed class Route(val icon: ImageVector? = null, val title: String? = null) : P
     data class SearchDetail(val sentence: String) : Route(title = "SearchDetail")
 
     @Parcelize
-    object Saved : Route(icon = Icons.Default.Bookmark, title = "Saved")
+    object Game : Route(icon = Icons.Default.Bookmark, title = "Game")
 
     @Parcelize
     object History : Route(icon = Icons.Default.History, title = "History")
