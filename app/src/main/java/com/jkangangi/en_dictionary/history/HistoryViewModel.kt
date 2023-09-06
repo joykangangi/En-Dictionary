@@ -16,13 +16,13 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(private val repositoryImpl: DictionaryRepositoryImpl) :
     ViewModel() {
 
-    val allHistoryItems = repositoryImpl.getAllHistory().map { entities ->
-        entities.toPersistentList()
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = persistentListOf()
-    )
+    val allHistoryItems = repositoryImpl.getAllHistory()
+        .map { entities -> entities.toPersistentList() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = persistentListOf()
+        )
 
     fun clearDictionaryItems() {
         viewModelScope.launch {

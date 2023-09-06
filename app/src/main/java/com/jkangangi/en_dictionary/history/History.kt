@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.widgets.EmptyListView
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -46,7 +47,7 @@ fun HistoryScreen(
         },
         content = { contentPadding ->
             if (isEmpty) {
-                EmptyHistory(modifier = modifier.fillMaxSize())
+                EmptyListView(stringId = R.string.empty_history)
             } else {
                 // List of search history items
                 LazyColumn(

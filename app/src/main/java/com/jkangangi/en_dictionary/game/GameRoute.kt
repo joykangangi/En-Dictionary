@@ -14,7 +14,7 @@ class GameRoute(
 
     @Composable
     override fun View(modifier: Modifier) {
-        SavedWords(savedWords = listOf() , onDeleteClicked = { }, doSort = true, sortWords = { })
+        GameScreen(savedWords = listOf() , onDeleteClicked = { }, doSort = true, sortWords = { })
     }
     
 }

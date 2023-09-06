@@ -8,11 +8,14 @@
     <string name="delete">delete</string>
     <string name="clear_history">Clear History</string>
     <string name="empty_history">Empty History</string>
-    <string name="empty_saves">No Saved Words</string>
+    <string name="empty_saves">Search more than 5 words to play</string>
     <string name="sort_abc">A-Z</string>
     <string name="go_back">Go back</string>
     <string name="string_b4">Text Before Target</string>
     <string name="string_after">Text After Target</string>
     <string name="target">Target</string>
     <string name="inputError">Text can contain only letters and \'</string>
+    <string name="game_instructions">Unscramble the word using all the letters.</string>
+    <string name="word_count">%d of 6 words</string>
+    <string name="score_count">Score: %d /30</string>
 </resources>

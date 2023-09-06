@@ -17,9 +17,16 @@ fun String.phonetics(): String {
 }
 
 /**
- * scramble a word
+ * scramble a word ensuring no possibilities of
+ * getting the same word after a shuffle
  */
 
-fun String.scramble(): String {
-    return this.toCharArray().shuffle().toString()
+fun String?.scramble(): String {
+   val stringCharacters = this?.toCharArray()
+    stringCharacters?.shuffle()
+    while (stringCharacters?.let { String(it) } == (this)) {
+        stringCharacters?.shuffle()
+    }
+
+    return stringCharacters.toString()
 }

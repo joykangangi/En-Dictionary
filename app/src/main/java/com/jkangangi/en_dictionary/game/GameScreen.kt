@@ -14,12 +14,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -34,113 +36,54 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
+import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
+import com.jkangangi.en_dictionary.app.widgets.EmptyListView
 import com.jkangangi.en_dictionary.history.EmptyHistory
-
-//Todo Table 1 Room
-data class SavedItem(
-    val word: String,
-    val phonetics: String,
-    val meaning: String
-)
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SavedWords(
-    savedWords: List<SavedItem>,
-    onDeleteClicked: (SavedItem) -> Unit,
-    doSort: Boolean,
-    sortWords: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
+fun GameScreen(
+    modifier: Modifier,
+    currentScore: Int,
+    wordCount: Int,
+    dictionaries: ImmutableSet<DictionaryEntity>
+
+
 ) {
     Scaffold(
         modifier = modifier
             .shadow(elevation = 3.dp),
         topBar = {
-            TopAppBar(
-                title = { },
-                actions = {
-                    FilterChip(
-                        selected = doSort,
-                        onClick = { sortWords(!doSort) },
-                        label = { Text(text = stringResource(id = R.string.sort_abc)) },
-                        leadingIcon = {
-                            if (doSort) {
-                                Icon(
-                                    imageVector = Icons.Default.CheckCircle,
-                                    contentDescription = stringResource(
-                                        id = R.string.sort_abc
-                                    ),
-                                )
-                            }
-                        },
-                        shape = RoundedCornerShape(50)
-                    )
-                },
-            )
+            GameTopBar(modifier = modifier, currentScore = currentScore, currentWord = wordCount)
         },
         content = { contentPadding ->
-            if (savedWords.isEmpty()) {
-                EmptyHistory(
-                    modifier = modifier.fillMaxSize(),
-                )
+            if (dictionaries.isEmpty()) {
+                EmptyListView(stringId = R.string.empty_saves)
 
             } else {
-                LazyColumn(contentPadding = contentPadding) {
-                    items(savedWords) { savedItem ->
-                        SavedWordCard(item = savedItem, onDeleteClicked = onDeleteClicked)
-                    }
-                }
+
             }
         })
 }
 
 @Composable
-fun SavedWordCard(
-    item: SavedItem,
-    onDeleteClicked: (SavedItem) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    ElevatedCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        ) {
-        Column(modifier = modifier.padding(8.dp)) {
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = item.word,
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                )
-
-                IconButton(
-                    onClick = { onDeleteClicked(item) }
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = stringResource(id = R.string.delete)
-                    )
-                }
+private fun ButtonSection(modifier: Modifier, onSkipClicked: () -> Unit, onNextClicked: () -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = modifier,
+        content = {
+            OutlinedButton(onClick = onSkipClicked) {
+                Text(text = "Skip")
             }
 
-            Text(
-                text = item.phonetics,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            Text(
-                text = item.meaning,
-                style = TextStyle(fontSize = 18.sp)
-            )
+            Button(onClick = onNextClicked) {
+                Text(text = "Next")
+            }
         }
-    }
+    )
 }
 
 
@@ -150,26 +93,7 @@ fun SavedWordCard(
 fun PreviewSavedWords() {
     En_DictionaryTheme {
         Scaffold {
-            val saves = listOf(
-                SavedItem(word = "goat", phonetics = "/gout/", meaning = "A herbivore"),
-                SavedItem(
-                    word = "cat",
-                    phonetics = "/caet/",
-                    meaning = "A pet that is of the lion family. It is kept to catch rats and aesthetics"
-                ),
-                SavedItem(
-                    word = "Bury",
-                    phonetics = "/bery/",
-                    meaning = "To dig and put something inside the soil"
-                ),
-            )
-            SavedWords(
-                savedWords = saves,
-                modifier = Modifier.padding(it),
-                onDeleteClicked = { },
-                doSort = true,
-                sortWords = { }
-            )
+
         }
     }
 }
