@@ -1,6 +1,23 @@
 # En-Dictionary
-English Dictionary App
-Libraries Used:
+English Dictionary App. Search phrases or a word
+### Why English Dictionary
+- I recently was asked to read an excerpt in public, but I was not sure of how to pronounce some words. Unfortunately, the dictionary app that I was using then did not have phonetics.
+-  Hence, the idea for creating my own version of a dictionary was born.
+- The application consumes this [Dictionary API](https://rapidapi.com/xf-innovations-xf-innovations-default/api/xf-english-dictionary1)
+
+### Libraries Used:
+- Jetpack Compose - for UI creation
+- Appyx - for navigation (It is is very straightforward, no ambiguous annotations)
+- Ktor Client - for establishing a network connection between the API and the mobile client. (This too is very straightforward to write)
+- Room - for storing searched words / caching
+- Jsoup- for parsing HTML content from the API to readable text in the screen
+
+### App Functionalities /how it works
+- One can search for a phrase e.g `kick the bucket` or a word `aseity` via a network.
+- The app works offline with the help of caching
+- One can see and delete their search history
+- One can play a personilized word game from their search history. 😀
+  
 ### Appyx 
 Model driven navigation library library that provides a declarative approach to handle navigation in your Android app.
 It follows the principles of the Model-View-Intent (MVI) architecture, separating the navigation logic from the UI components.
