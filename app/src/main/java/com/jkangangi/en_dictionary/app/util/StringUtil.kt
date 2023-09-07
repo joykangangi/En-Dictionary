@@ -21,12 +21,12 @@ fun String.phonetics(): String {
  * getting the same word after a shuffle
  */
 
-fun String?.scramble(): String {
-   val stringCharacters = this?.toCharArray()
-    stringCharacters?.shuffle()
-    while (stringCharacters?.let { String(it) } == (this)) {
-        stringCharacters?.shuffle()
+fun String.scramble(): String {
+   val stringCharacters = this.toCharArray()
+    stringCharacters.shuffle()
+    while (String(stringCharacters) == (this)) {
+        stringCharacters.shuffle()
     }
 
-    return stringCharacters.toString()
+    return String(stringCharacters)
 }

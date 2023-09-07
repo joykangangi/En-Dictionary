@@ -18,4 +18,5 @@
     <string name="game_instructions">Unscramble the word using all the letters.</string>
     <string name="word_count">%d of 6 words</string>
     <string name="score_count">Score: %d /30</string>
+    <string name="game_txt_label">Your Guess…</string>
 </resources>

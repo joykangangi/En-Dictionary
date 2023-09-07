@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.history
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -8,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
+import org.jsoup.select.Evaluator.IsEmpty
 
 class HistoryRoute(
     buildContext: BuildContext,
@@ -26,6 +28,7 @@ class HistoryRoute(
     ) {
 
         val state by viewModel.allHistoryItems.collectAsState()
+        Log.i("HistoryRoute","IsEmpty = ${state.isEmpty()}}")
 
         val onHistoryCleared = remember {
             {
