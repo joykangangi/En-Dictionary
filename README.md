@@ -14,9 +14,11 @@ English Dictionary App. Search phrases or a word
 
 ### App Functionalities /how it works
 - One can search for a phrase e.g `kick the bucket` or a word `aseity` via a network.
+- One can read definitions and examples of their search queries.
+- One can read and listen to phonetics of words or phrases.
 - The app works offline with the help of caching
 - One can see and delete their search history
-- One can play a personilized word game from their search history. 😀
+- One can play a personalized word game from their search history. 😀
   
 ### Appyx 
 Model driven navigation library library that provides a declarative approach to handle navigation in your Android app.
@@ -43,3 +45,8 @@ Intent: Intents are emitted by the view layer to signal user interactions or eve
 Back Stack Management: The model manages the back stack, allowing for forward and backward navigation. It ensures that the correct screen or destination is displayed when navigating back or forward.
 
 By following this model-driven approach, Appyx helps you decouple the navigation logic from the view layer and provides a structured way to handle navigation in your app. It promotes a single source of truth for the navigation state and simplifies the management of complex navigation flows.
+
+### Challenges faced
+- Finding a free API with content I wanted.
+- Managing UI states.
+- Learning new libraries which at the time did not not have many referrals. Special thanks to the owner of [this repo](https://github.com/KotlinGeekDev/Nosky/tree/main), their work was of great help in understanding Appyx.
