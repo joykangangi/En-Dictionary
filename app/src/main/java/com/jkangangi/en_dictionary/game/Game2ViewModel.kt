@@ -7,48 +7,53 @@ import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.scramble
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
+import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class GameViewModel2 @Inject constructor(repositoryImpl: DictionaryRepositoryImpl) : ViewModel() {
+class GameViewModel2 @Inject constructor(
+    repositoryImpl: DictionaryRepositoryImpl
+) : ViewModel() {
 
-    private val playedWords = MutableStateFlow(persistentSetOf<DictionaryEntity>())
+    private var unscrambledWord: DictionaryEntity? = null
+
     private val _guess = MutableStateFlow("")
-    //val guess = _guess.asStateFlow()
+    val guess = _guess.asStateFlow()
     private val _score = MutableStateFlow(0)
-   // val score = _score.asStateFlow()
     private val _hintClick = MutableStateFlow(0)
-    //val hintClick = _hintClick.asStateFlow()
+    private val playedWords = MutableStateFlow(persistentSetOf<DictionaryEntity>())
+
 
     val gameState = combine(
-        flow = repositoryImpl.getAllHistory(),
-        flow2 = _guess,
-        flow3 = _score,
-        flow4 = _hintClick,
-        flow5 = playedWords,
-        transform = { allWords, guessedAns, score, hints, played ->
-            val entity = allWords.random()
-            played.add(entity)
-            allWords.minus(playedWords)
+        flow = _score,
+        flow2 = _hintClick,
+        flow3 = playedWords,
+        flow4 = repositoryImpl.getAllHistory(),
+        transform = { score, hints, played, allHistoryItems->
+            unscrambledWord = allHistoryItems.random()
+            played.add(unscrambledWord!!)
+            allHistoryItems.minus(unscrambledWord!!) //diff btwn minus & remove
 
             GameUIState(
-                dictionaries = allWords.toPersistentSet(),
-                correctWord = entity.sentence,
-                hint = entity.items[0].definitions[0].definition,
-                scrambledWord = entity.sentence.scramble(),
-                guess = guessedAns,
+                isEmpty = allHistoryItems.isEmpty(),
+                hint = unscrambledWord?.items?.get(0)?.definitions?.get(0)?.definition ?: "",
+                scrambledWord = unscrambledWord?.sentence?.scramble()?:"",
                 wordCount = played.size,
                 score = score,
                 hintClick = hints,
-                btnEnabled = entity.sentence.length == _guess.value.length,
+                btnEnabled = unscrambledWord?.sentence?.length == _guess.value.length,
                 isGameOver = played.size == MAX_WORDS
             )
         }
@@ -58,19 +63,24 @@ class GameViewModel2 @Inject constructor(repositoryImpl: DictionaryRepositoryImp
         initialValue = GameUIState()
     )
 
+
     fun updateInput(input: String) {
         _guess.update { input }
         Log.i("GAME VM", "GameState = ${gameState.value.wordCount}")
+        Log.i("GAME VM", "GameState = ${playedWords.value.size}")
     }
 
     fun onNextClicked() {
-        if ( _guess.value == gameState.value.correctWord) {
-            _score.update {  it.plus(GameConstants.SCORE_INCREASE) }
+        if (_guess.value == unscrambledWord?.sentence) {
+            _score.update { it.plus(SCORE_INCREASE) }
+        }
+        else{
+            _score.update { it.minus(SCORE_INCREASE) }
         }
     }
 
     fun skipQuestion() {
-       _score.update { it.minus(GameConstants.SKIP_DECREASE) }
+        _score.update { it.minus(GameConstants.SKIP_DECREASE) }
     }
 
     fun checkHint() {
@@ -82,7 +92,7 @@ class GameViewModel2 @Inject constructor(repositoryImpl: DictionaryRepositoryImp
 
     fun resetGame() {
         playedWords.value.clear()
-       // gameState.value = GameUIState()
+        // gameState.value = GameUIState()
     }
 
 

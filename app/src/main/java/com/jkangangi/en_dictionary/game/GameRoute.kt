@@ -33,11 +33,12 @@ class GameRoute(
 
         val gameState by viewModel2.gameState.collectAsState()
 
-        Log.i("GameRoute", "IsEmpty = ${gameState.dictionaries.isEmpty()}")
+        Log.i("GameRoute", "IsEmpty = ${gameState.isEmpty}")
 
         GameScreen(
             modifier = modifier,
             state = gameState,
+            guess = viewModel2.guess.collectAsState().value,
             onGuessChanged = viewModel2::updateInput,
             onNextClicked = viewModel2::onNextClicked,
             onSkipClicked = viewModel2::skipQuestion,

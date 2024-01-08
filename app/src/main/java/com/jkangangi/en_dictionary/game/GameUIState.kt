@@ -5,10 +5,8 @@ import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 
 data class GameUIState(
-    val dictionaries: ImmutableSet<DictionaryEntity> = persistentSetOf(),
-    val correctWord: String = "",
+    val isEmpty: Boolean = false,
     val scrambledWord: String = "",
-    val guess: String = "",
     val hint: String = "",
     val wordCount: Int = 0,
     val score: Int = 0,

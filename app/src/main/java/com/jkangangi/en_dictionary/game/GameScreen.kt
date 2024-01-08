@@ -21,6 +21,7 @@ import kotlinx.collections.immutable.ImmutableSet
 fun GameScreen(
     modifier: Modifier,
     state: GameUIState,
+    guess: String,
     onGuessChanged: (String) -> Unit,
     onNextClicked: () -> Unit,
     onSkipClicked: () -> Unit,
@@ -31,27 +32,27 @@ fun GameScreen(
         modifier = modifier
             .shadow(elevation = 3.dp),
         topBar = {
-            GameTopBar(modifier = modifier, currentScore = state.score, currentWord = state.wordCount)
+            GameTopBar(currentScore = state.score, currentWord = state.wordCount)
         },
         content = { contentPadding ->
-            if (state.dictionaries.isEmpty()) {
+            if (state.isEmpty) {
                 EmptyListView(stringId = R.string.empty_saves)
 
             } else {
                 GameLayout(
-                        modifier = modifier
-                            .padding(contentPadding),
-                           // .verticalScroll(rememberScrollState()),
-                        onGuessChanged = onGuessChanged,
-                        onNextClicked = onNextClicked,
-                        onSkipClicked = onSkipClicked,
-                        state = state,
-                        onHintClicked = onHintClicked
-                    )
+                    modifier = modifier
+                        .padding(contentPadding),
+                    // .verticalScroll(rememberScrollState()),
+                    guess = guess,
+                    onGuessChanged = onGuessChanged,
+                    onNextClicked = onNextClicked,
+                    onSkipClicked = onSkipClicked,
+                    state = state,
+                    onHintClicked = onHintClicked
+                )
             }
         })
 }
-
 
 
 @Preview

@@ -11,12 +11,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.LightbulbCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -38,17 +36,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
-import com.jkangangi.en_dictionary.app.widgets.TextInput
 
 
 @Composable
 fun GameLayout(
-    modifier: Modifier,
     state: GameUIState,
+    guess: String,
     onGuessChanged: (String) -> Unit,
     onNextClicked: () -> Unit,
     onSkipClicked: () -> Unit,
     onHintClicked: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(12.dp),
@@ -58,13 +56,12 @@ fun GameLayout(
                 modifier = Modifier.padding(8.dp),
                 scrambledWord = state.scrambledWord,
                 hint = state.hint,
-                guess = state.guess,
+                guess = guess,
                 onGuessChanged = onGuessChanged,
                 onHintClicked = onHintClicked
             )
 
             ButtonSection(
-                modifier = Modifier.fillMaxWidth(),
                 onSkipClicked = onSkipClicked,
                 onNextClicked = onNextClicked,
                 btnEnabled = state.btnEnabled
@@ -186,18 +183,18 @@ private fun HintSection(
 
 @Composable
 private fun ButtonSection(
-    modifier: Modifier,
     onSkipClicked: () -> Unit,
     onNextClicked: () -> Unit,
     btnEnabled: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier.fillMaxWidth().padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
         content = {
             OutlinedButton(
                 onClick = onSkipClicked,
-                modifier = modifier.weight(.1f),
+               // modifier = modifier.weight(.1f),
                 content = {
                     Text(text = "Skip")
                 }
@@ -206,7 +203,7 @@ private fun ButtonSection(
             Button(
                 onClick = onNextClicked,
                 enabled = btnEnabled,
-                modifier = modifier.weight(.1f),
+               // modifier = modifier.weight(.1f),
                 content = {
                     Text(text = "Next")
                 }

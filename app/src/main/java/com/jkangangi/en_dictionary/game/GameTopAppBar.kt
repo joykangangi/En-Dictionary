@@ -15,7 +15,11 @@ import com.jkangangi.en_dictionary.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameTopBar(modifier: Modifier, currentScore: Int, currentWord: Int) {
+fun GameTopBar(
+    currentScore: Int,
+    currentWord: Int,
+    modifier: Modifier = Modifier
+) {
     TopAppBar(
         title = { },
         actions = {
@@ -25,8 +29,8 @@ fun GameTopBar(modifier: Modifier, currentScore: Int, currentWord: Int) {
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 content = {
-                    Text(text = stringResource(id = R.string.word_count, currentWord))
-                    Text(text = stringResource(id = R.string.score_count, currentScore))
+                    Text(text = stringResource(id = R.string.word_count, currentWord), modifier = Modifier.padding(6.dp))
+                    Text(text = stringResource(id = R.string.score_count, currentScore), modifier = Modifier.padding(6.dp))
                 }
             )
         }
