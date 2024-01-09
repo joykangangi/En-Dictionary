@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game
+package com.jkangangi.en_dictionary.game.rfgame
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
