@@ -1,6 +1,7 @@
 package com.jkangangi.en_dictionary.app.data.repository
 
 import android.util.Log
+import androidx.compose.ui.text.toLowerCase
 import com.jkangangi.en_dictionary.app.data.local.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
@@ -12,6 +13,7 @@ import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -29,7 +31,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     override fun postSearch(request: RequestDTO): Flow<NetworkResult<DictionaryEntity?>> = flow {
         emit(NetworkResult.Loading())
 
-        val sentence = "${request.textBeforeSelection.trim()} ${request.selection.trim()} ${request.textAfterSelection.trim()}"
+        val sentence = "${request.textBeforeSelection.trim().lowercase()} ${request.selection.trim().lowercase()} ${request.textAfterSelection.trim().lowercase()}"
         //val localData = dao.getDictionaryResponse(sentence = sentence).toDictionary()
         //emit(NetworkResult.Loading(data = localData))
 

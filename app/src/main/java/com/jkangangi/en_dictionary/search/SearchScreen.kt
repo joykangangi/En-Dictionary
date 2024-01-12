@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -151,47 +152,56 @@ fun SearchScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClick: (DictionaryEntity) -> Unit) {
+private fun OnSearchRes(
+    state: SearchScreenState,
+    modifier: Modifier,
+    onWordClick: (DictionaryEntity) -> Unit
+) {
+    Log.i("SearchScreen", "State: $state")
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.padding(top=8.dp),
+        modifier = modifier.padding(top = 8.dp),
         content = {
-            if (state.wordItem != null) {
-                ElevatedCard(
-                    modifier = modifier,
-                    onClick = { onWordClick(state.wordItem) },
-                    content = {
-                        Column(modifier.padding(12.dp)) {
-                            Text(
-                                text = state.wordItem.sentence,
-                                textAlign = TextAlign.Center,
-                                fontFamily = FontFamily.SansSerif,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+            when {
+                state.isLoading -> CircularProgressIndicator()
+
+                state.serverError?.isNotEmpty() == true && state.wordItem == null -> {
+                    Text(
+                        text = state.serverError,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = modifier,
+                        fontFamily = FontFamily.SansSerif,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+                state.wordItem != null -> {
+                    ElevatedCard(
+                        modifier = modifier,
+                        onClick = { onWordClick(state.wordItem) },
+                        content = {
+                            Column(modifier.padding(12.dp)) {
+                                Text(
+                                    text = state.wordItem.sentence,
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = FontFamily.SansSerif,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
                         }
-                    }
-                )
-            }
-            if (state.isLoading)  CircularProgressIndicator()
-            if (state.serverError.isNotBlank()) {
-                Text(
-                    text = state.serverError,
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center,
-                    modifier = modifier,
-                    fontFamily = FontFamily.SansSerif,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-            if (state.wordItem?.items?.isEmpty() == true){
-                Text(
-                    text = "Word not found, check spelling",
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center,
-                    modifier = modifier,
-                    fontFamily = FontFamily.SansSerif,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                    )
+                }
+
+//                else -> {
+//                    Text(
+//                        text = "Word not found, check spelling",
+//                        color = MaterialTheme.colorScheme.error,
+//                        textAlign = TextAlign.Center,
+//                        modifier = modifier,
+//                        fontFamily = FontFamily.SansSerif,
+//                        style = MaterialTheme.typography.bodyMedium,
+//                    )
+//                }
             }
         }
     )

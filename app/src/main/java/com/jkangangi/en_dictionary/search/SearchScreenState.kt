@@ -7,7 +7,7 @@ data class SearchScreenState(
    // val wordItems: ImmutableList<Word> = persistentListOf(),
     val wordItem: DictionaryEntity? = null,
     val isLoading: Boolean = false,
-    val serverError: String = "",
+    val serverError: String? = null,
     val requests: RequestDTO = RequestDTO(),
     val beforeError: Boolean = false,
     val targetError: Boolean = false,
