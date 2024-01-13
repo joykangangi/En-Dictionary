@@ -13,29 +13,28 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.singleTop
 import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
+import com.jkangangi.en_dictionary.app.settings.SettingsViewModel
 
 class SearchRoute(
     buildContext: BuildContext,
     private val backStack: BackStack<Route>, //navController
 ) : Node(buildContext = buildContext) {
 
-    private val isDarkTheme = MutableStateFlow(true) //TODO SETTINGS VM
-
     @Composable
     override fun View(modifier: Modifier) {
+
         SearchScreenView(modifier = modifier)
     }
 
     @Composable
     fun SearchScreenView(
         modifier: Modifier,
-        viewModel: SearchViewModel = hiltViewModel(),
+        searchViewModel: SearchViewModel = hiltViewModel(),
+        settingsViewModel: SettingsViewModel = hiltViewModel(),
     ) {
-        val switch = isDarkTheme.collectAsState().value
 
-        val state = viewModel.searchState.collectAsState()
+        val state = searchViewModel.searchState.collectAsState()
+        val hasDark = settingsViewModel.isDarkThemeEnabled.collectAsState()
 
         val toWordClick  = remember {
             { dfn: DictionaryEntity ->
@@ -45,27 +44,22 @@ class SearchRoute(
 
         val onSearchClicked =
             {
-                viewModel.doWordSearch()
+                searchViewModel.doWordSearch()
             }
 
         DisposableEffect(key1 = Unit, effect = {
-            onDispose { viewModel.closeClient() }
+            onDispose { searchViewModel.closeClient() }
         } )
 
 
         SearchScreen(
             modifier = modifier.fillMaxWidth() ,
-            isDarkTheme = switch,
-            toggleTheme = this::updateTheme,
+            isDarkTheme = hasDark.value,
+            toggleTheme = settingsViewModel::saveTheme,
             state = state.value,
-            updateQuery = viewModel::updateQuery,
+            updateQuery = searchViewModel::updateQuery,
             onSearchClick = onSearchClicked,
             onWordClick =  { state.value.wordItem?.let { toWordClick(it) } }
         )
-    }
-
-
-    private fun updateTheme(darkTheme: Boolean) {
-        isDarkTheme.update { !darkTheme }
     }
 }

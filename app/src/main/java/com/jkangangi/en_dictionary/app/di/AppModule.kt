@@ -4,9 +4,10 @@ import android.app.Application
 import androidx.room.Room
 import com.jkangangi.en_dictionary.app.data.local.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.DictionaryDatabase
-import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
+import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
+import com.jkangangi.en_dictionary.app.settings.DataStoreUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,5 +47,12 @@ object AppModule {
             dictionaryService = service
         )
     }
+
+    @Provides
+    @Singleton
+    fun providesDataStoreUtil(application: Application): DataStoreUtil {
+        return DataStoreUtil(context = application)
+    }
+
 
 }

@@ -3,7 +3,6 @@ package com.jkangangi.en_dictionary.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.NetworkResult
@@ -47,7 +46,7 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
                 val regex = Regex("^[a-zA-Z' ]+\$") //Input only has letters/spaces/apostrophes
                 regex.matches(input) && input != "'" && requiredLength
             } else {
-                true
+                true //optional fields can be empty
             }
         return isValid
     }
@@ -61,7 +60,6 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
                         is NetworkResult.Success -> {
                             state.copy(
                                 wordItem = result.data,
-                                //serverError = null,
                                 isLoading = false,
                             )
                         }
