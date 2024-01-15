@@ -1,5 +1,8 @@
 package com.jkangangi.en_dictionary.app.settings
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,19 +26,29 @@ class SettingsViewModel @Inject constructor(
 
 
     fun getTheme(isSystemDarkTheme: Boolean): Flow<Boolean> {
-        _isDarkThemeEnabled.update { isSystemDarkTheme }
         return dataStore.data
             .map { preferences ->
+                _isDarkThemeEnabled.update { preferences[DataStoreUtil.THEME_KEY] ?: isSystemDarkTheme }
                 preferences[DataStoreUtil.THEME_KEY] ?: isSystemDarkTheme
             }
     }
 
-    fun saveTheme(isDarkThemeEnabled: Boolean) {
+    fun saveTheme(darkTheme: Boolean) {
         viewModelScope.launch {
             dataStore.edit { preferences ->
-                preferences[DataStoreUtil.THEME_KEY] = isDarkThemeEnabled
+                preferences[DataStoreUtil.THEME_KEY] = darkTheme
+                _isDarkThemeEnabled.update { preferences[DataStoreUtil.THEME_KEY] ?: darkTheme }
             }
         }
     }
 
+}
+
+@Composable
+fun rememberSettingsViewModel():SettingsViewModel {
+    val context = LocalContext.current
+    val dataStoreUtil = DataStoreUtil(context)
+    return remember {
+        SettingsViewModel(dataStoreUtil = dataStoreUtil)
+    }
 }

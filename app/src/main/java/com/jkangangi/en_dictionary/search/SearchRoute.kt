@@ -1,5 +1,7 @@
 package com.jkangangi.en_dictionary.search
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -26,6 +28,7 @@ class SearchRoute(
         SearchScreenView(modifier = modifier)
     }
 
+    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun SearchScreenView(
         modifier: Modifier,
@@ -36,7 +39,7 @@ class SearchRoute(
         val state = searchViewModel.searchState.collectAsState()
         val hasDark = settingsViewModel.isDarkThemeEnabled.collectAsState()
 
-        val toWordClick  = remember {
+        val toWordClick = remember {
             { dfn: DictionaryEntity ->
                 backStack.singleTop(Route.SearchDetail(sentence = dfn.sentence))
             }
@@ -49,17 +52,21 @@ class SearchRoute(
 
         DisposableEffect(key1 = Unit, effect = {
             onDispose { searchViewModel.closeClient() }
-        } )
+        })
 
-
-        SearchScreen(
-            modifier = modifier.fillMaxWidth() ,
-            isDarkTheme = hasDark.value,
-            toggleTheme = settingsViewModel::saveTheme,
-            state = state.value,
-            updateQuery = searchViewModel::updateQuery,
-            onSearchClick = onSearchClicked,
-            onWordClick =  { state.value.wordItem?.let { toWordClick(it) } }
-        )
+        AnimatedContent(
+            targetState = hasDark.value,
+            label = "theme"
+        ) { currentTheme: Boolean ->
+            SearchScreen(
+                modifier = modifier.fillMaxWidth(),
+                isDarkTheme = currentTheme,
+                toggleTheme = settingsViewModel::saveTheme,
+                state = state.value,
+                updateQuery = searchViewModel::updateQuery,
+                onSearchClick = onSearchClicked,
+                onWordClick = { state.value.wordItem?.let { toWordClick(it) } }
+            )
+        }
     }
 }

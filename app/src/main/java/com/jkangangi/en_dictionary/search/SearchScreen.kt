@@ -1,6 +1,10 @@
 package com.jkangangi.en_dictionary.search
 
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Search
@@ -17,9 +22,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -39,7 +45,9 @@ import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.widgets.TextInput
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalAnimationApi::class
+)
 
 @Composable
 fun SearchScreen(
@@ -52,11 +60,7 @@ fun SearchScreen(
     onWordClick: (DictionaryEntity) -> Unit,
 ) {
     val keyBoardController = LocalSoftwareKeyboardController.current
-    val onToggleTheme = remember {
-        {
-            toggleTheme(isDarkTheme)
-        }
-    }
+    val interactionSource = remember{ MutableInteractionSource() }
 
     Scaffold(
         modifier = modifier,
@@ -70,16 +74,23 @@ fun SearchScreen(
                     )
                 },
                 actions = {
-                    IconButton(
-                        onClick = onToggleTheme,
-                        content = {
-                            Icon(
-                                imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.WbSunny,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
+                        Switch(
+                            modifier = Modifier.size(50.dp).animateContentSize(tween(durationMillis = 1500)),
+                            checked = isDarkTheme,
+                            onCheckedChange = {
+                                toggleTheme(it)
+                            },
+                            thumbContent = {
+                                Icon(
+                                    imageVector = if (isDarkTheme) Icons.Default.WbSunny else Icons.Default.DarkMode,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimary
+                                )
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colorScheme.primary
                             )
-                        }
-                    )
+                        )
                 },
                 modifier = modifier.shadow(elevation = 2.dp),
             )
