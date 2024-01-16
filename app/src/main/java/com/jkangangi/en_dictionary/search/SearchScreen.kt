@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,133 +66,163 @@ fun SearchScreen(
                 actions = {
                     IconButton(onClick = { toggleTheme(isDarkTheme) }) {
                         Icon(
-                            imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.WbSunny,
+                            imageVector = if (isDarkTheme) Icons.Default.WbSunny else Icons.Default.DarkMode,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                    /*Switch(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .animateContentSize(tween(durationMillis = 1500)),
+                        checked = isDarkTheme,
+                        onCheckedChange = {
+                            toggleTheme(it)
+                        },
+                        thumbContent = {
+                            Icon(
+                                imageVector = if (isDarkTheme) Icons.Default.WbSunny else Icons.Default.DarkMode,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.primary
+                        )
+                    )*/
                 },
                 modifier = modifier.shadow(elevation = 2.dp),
             )
         },
-    ) { contentPadding ->
-        Column(
-            modifier = modifier
-                .padding(contentPadding)
-                .padding(start = 12.dp, end = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(3.dp),
-        ) {
+        content = { contentPadding ->
+            Column(
+                modifier = modifier
+                    .padding(contentPadding)
+                    .padding(start = 12.dp, end = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(3.dp),
+                content = {
 
-            Row(
-                modifier = modifier.padding(top = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "search")
-                Text(
-                    text = "Search for a word or a phrase",
-                    fontFamily = FontFamily.SansSerif,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+                    Row(
+                        modifier = modifier.padding(top = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "search")
+                        Text(
+                            text = "Search for a word or a phrase",
+                            fontFamily = FontFamily.SansSerif,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
 
-            //BeforeTarget
-            TextInput(
-                modifier = modifier,
-                input = state.requests.textBeforeSelection,
-                onInputChange = { updateQuery(state.requests.copy(textBeforeSelection = it)) },
-                txtLabel = stringResource(id = R.string.string_b4),
-                onClearInput = { updateQuery(state.requests.copy(textBeforeSelection = "")) },
-                isValid = state.beforeError
-            )
+                    //BeforeTarget
+                    TextInput(
+                        modifier = modifier,
+                        input = state.requests.textBeforeSelection,
+                        onInputChange = { updateQuery(state.requests.copy(textBeforeSelection = it)) },
+                        txtLabel = stringResource(id = R.string.string_b4),
+                        onClearInput = { updateQuery(state.requests.copy(textBeforeSelection = "")) },
+                        isValid = state.beforeError
+                    )
 
-            //target
-            TextInput(
-                modifier = modifier,
-                input = state.requests.selection,
-                onInputChange = { updateQuery(state.requests.copy(selection = it)) },
-                txtLabel = stringResource(id = R.string.target),
-                isRequired = true,
-                onClearInput = { updateQuery(state.requests.copy(selection = "")) },
-                isValid = state.targetError
-            )
+                    //target
+                    TextInput(
+                        modifier = modifier,
+                        input = state.requests.selection,
+                        onInputChange = { updateQuery(state.requests.copy(selection = it)) },
+                        txtLabel = stringResource(id = R.string.target),
+                        isRequired = true,
+                        onClearInput = { updateQuery(state.requests.copy(selection = "")) },
+                        isValid = state.targetError
+                    )
 
-            //afterTarget
-            TextInput(
-                modifier = modifier,
-                input = state.requests.textAfterSelection,
-                onInputChange = { updateQuery(state.requests.copy(textAfterSelection = it)) },
-                txtLabel = stringResource(id = R.string.string_after),
-                onClearInput = { updateQuery(state.requests.copy(textAfterSelection = "")) },
-                isValid = state.afterError
-            )
+                    //afterTarget
+                    TextInput(
+                        modifier = modifier,
+                        input = state.requests.textAfterSelection,
+                        onInputChange = { updateQuery(state.requests.copy(textAfterSelection = it)) },
+                        txtLabel = stringResource(id = R.string.string_after),
+                        onClearInput = { updateQuery(state.requests.copy(textAfterSelection = "")) },
+                        isValid = state.afterError
+                    )
 
-            Spacer(modifier = modifier)
+                    Spacer(modifier = modifier)
 
-            Button(
-                modifier = modifier,
-                enabled = (state.beforeError && state.targetError && state.afterError),
-                onClick = {
-                    keyBoardController?.hide()
-                    onSearchClick()
+                    Button(
+                        modifier = modifier,
+                        enabled = (state.beforeError && state.targetError && state.afterError),
+                        onClick = {
+                            keyBoardController?.hide()
+                            onSearchClick()
 
+                        }
+                    ) {
+                        Text(
+                            text = "Search",
+                            fontFamily = FontFamily.SansSerif,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                    Spacer(modifier = modifier.height(10.dp))
+                    SearchResult(state = state, modifier = modifier, onWordClick = onWordClick)
                 }
-            ) {
-                Text(
-                    text = "Search",
-                    fontFamily = FontFamily.SansSerif,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Spacer(modifier = modifier.height(10.dp))
-            OnSearchRes(state = state, modifier = modifier, onWordClick = onWordClick)
-        }
-    }
+            )
+        })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClick: (DictionaryEntity) -> Unit) {
+private fun SearchResult(
+    state: SearchScreenState,
+    modifier: Modifier,
+    onWordClick: (DictionaryEntity) -> Unit
+) {
+
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.padding(top=8.dp),
+        modifier = modifier.padding(top = 8.dp),
         content = {
-            if (state.wordItem != null) {
-                ElevatedCard(
-                    modifier = modifier,
-                    onClick = { onWordClick(state.wordItem) },
-                    content = {
-                        Column(modifier.padding(12.dp)) {
-                            Text(
-                                text = state.wordItem.sentence,
-                                textAlign = TextAlign.Center,
-                                fontFamily = FontFamily.SansSerif,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+            when {
+                state.isLoading -> CircularProgressIndicator()
+
+                state.serverError?.isNotEmpty() == true && state.wordItem == null -> {
+                    Text(
+                        text = state.serverError,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = modifier,
+                        fontFamily = FontFamily.SansSerif,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+
+                state.wordItem != null -> {
+                    ElevatedCard(
+                        modifier = modifier,
+                        onClick = { onWordClick(state.wordItem) },
+                        content = {
+                            Column(modifier.padding(12.dp)) {
+                                Text(
+                                    text = state.wordItem.sentence,
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = FontFamily.SansSerif,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
                         }
-                    }
-                )
-            }
-            if (state.isLoading)  CircularProgressIndicator()
-            if (state.serverError.isNotBlank()) {
-                Text(
-                    text = state.serverError,
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center,
-                    modifier = modifier,
-                    fontFamily = FontFamily.SansSerif,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-            if (state.wordItem?.items?.isEmpty() == true){
-                Text(
-                    text = "Word not found, check spelling",
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center,
-                    modifier = modifier,
-                    fontFamily = FontFamily.SansSerif,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                    )
+                }
+
+//                else -> {
+//                    Text(
+//                        text = "Word not found, check spelling",
+//                        color = MaterialTheme.colorScheme.error,
+//                        textAlign = TextAlign.Center,
+//                        modifier = modifier,
+//                        fontFamily = FontFamily.SansSerif,
+//                        style = MaterialTheme.typography.bodyMedium,
+//                    )
+//                }
             }
         }
     )
@@ -202,23 +233,5 @@ private fun OnSearchRes(state: SearchScreenState, modifier: Modifier, onWordClic
 @Composable
 private fun HomePreview() {
 
-    /* En_DictionaryTheme {
-         SearchScreen(
-             modifier = Modifier,
-             isDarkTheme = false,
-             toggleTheme = { },
-             queryT = "",
-             updateQueryT = { },
-             queryA = "",
-             updateQueryA = { },
-             queryB = "",
-             updateQueryB = { },
-             state = SearchScreenState(),
-             onWordClick = { },
-             onClearInputT = { },
-             onClearInputA = { },
-             onClearInputB = { },
-             searchWord = { }
-         )
-     }*/
+
 }

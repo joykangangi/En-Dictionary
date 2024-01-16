@@ -8,7 +8,7 @@
     <string name="delete">delete</string>
     <string name="clear_history">Clear History</string>
     <string name="empty_history">Empty History</string>
-    <string name="empty_saves">Search more than 5 words to play</string>
+    <string name="empty_saves">Search at least 6 words to play</string>
     <string name="sort_abc">A-Z</string>
     <string name="go_back">Go back</string>
     <string name="string_b4">Text Before Target</string>

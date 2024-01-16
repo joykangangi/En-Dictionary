@@ -1,8 +1,8 @@
 package com.jkangangi.en_dictionary.game
 
 import android.util.Log
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -31,18 +31,23 @@ class GameRoute(
         viewModel2: GameViewModel2 = hiltViewModel()
     ) {
 
-        val gameState by viewModel2.gameState.collectAsState()
+        val gameState by viewModel2.gameUIState.collectAsState()
 
-        Log.i("GameRoute", "IsEmpty = ${gameState.dictionaries.isEmpty()}")
+        Log.i("GameRoute", "IsEmpty = ${gameState.isEmpty}")
 
+        LaunchedEffect(key1 = gameState.isGameOver, block = {
+            viewModel2.resetGame()
+        })
         GameScreen(
             modifier = modifier,
             state = gameState,
+            guess = viewModel2.guessedAns.collectAsState().value,
             onGuessChanged = viewModel2::updateInput,
             onNextClicked = viewModel2::onNextClicked,
-            onSkipClicked = viewModel2::skipQuestion,
-            onHintClicked = viewModel2::checkHint
+            onSkipClicked = viewModel2::onSkipClicked,
+            onHintClicked = viewModel2::onHintClicked
         )
+
 
     }
 

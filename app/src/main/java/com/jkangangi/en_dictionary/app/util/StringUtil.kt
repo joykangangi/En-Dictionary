@@ -4,7 +4,7 @@ package com.jkangangi.en_dictionary.app.util
  * Check if string is one word;
  */
 fun String.isWord(): Boolean {
-    return !(this.any { it == ' ' || it == '-' })
+    return !(this.any { (it == ' ') || (it == '-') })
 }
 
 

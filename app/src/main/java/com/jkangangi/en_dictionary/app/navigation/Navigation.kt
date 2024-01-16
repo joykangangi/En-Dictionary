@@ -19,8 +19,8 @@ import com.bumble.appyx.core.node.node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
 import com.jkangangi.en_dictionary.definitions.DefinitionView
-import com.jkangangi.en_dictionary.history.HistoryRoute
 import com.jkangangi.en_dictionary.game.GameRoute
+import com.jkangangi.en_dictionary.history.HistoryRoute
 import com.jkangangi.en_dictionary.search.SearchRoute
 import kotlinx.parcelize.Parcelize
 

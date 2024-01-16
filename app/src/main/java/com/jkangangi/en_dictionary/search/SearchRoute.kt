@@ -1,5 +1,7 @@
 package com.jkangangi.en_dictionary.search
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -13,31 +15,31 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.singleTop
 import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
+import com.jkangangi.en_dictionary.app.settings.SettingsViewModel
 
 class SearchRoute(
     buildContext: BuildContext,
     private val backStack: BackStack<Route>, //navController
 ) : Node(buildContext = buildContext) {
 
-    private val isDarkTheme = MutableStateFlow(true) //TODO SETTINGS VM
-
     @Composable
     override fun View(modifier: Modifier) {
+
         SearchScreenView(modifier = modifier)
     }
 
+    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun SearchScreenView(
         modifier: Modifier,
-        viewModel: SearchViewModel = hiltViewModel(),
+        searchViewModel: SearchViewModel = hiltViewModel(),
+        settingsViewModel: SettingsViewModel = hiltViewModel(),
     ) {
-        val switch = isDarkTheme.collectAsState().value
 
-        val state = viewModel.searchState.collectAsState()
+        val state = searchViewModel.searchState.collectAsState()
+        val hasDark = settingsViewModel.isDarkTheme.collectAsState()
 
-        val toWordClick  = remember {
+        val toWordClick = remember {
             { dfn: DictionaryEntity ->
                 backStack.singleTop(Route.SearchDetail(sentence = dfn.sentence))
             }
@@ -45,27 +47,26 @@ class SearchRoute(
 
         val onSearchClicked =
             {
-                viewModel.doWordSearch()
+                searchViewModel.doWordSearch()
             }
 
         DisposableEffect(key1 = Unit, effect = {
-            onDispose { viewModel.closeClient() }
-        } )
+            onDispose { searchViewModel.closeClient() }
+        })
 
-
-        SearchScreen(
-            modifier = modifier.fillMaxWidth() ,
-            isDarkTheme = switch,
-            toggleTheme = this::updateTheme,
-            state = state.value,
-            updateQuery = viewModel::updateQuery,
-            onSearchClick = onSearchClicked,
-            onWordClick =  { state.value.wordItem?.let { toWordClick(it) } }
-        )
-    }
-
-
-    private fun updateTheme(darkTheme: Boolean) {
-        isDarkTheme.update { !darkTheme }
+        AnimatedContent(
+            targetState = hasDark.value,
+            label = "theme"
+        ) { currentTheme: Boolean ->
+            SearchScreen(
+                modifier = modifier.fillMaxWidth(),
+                isDarkTheme = currentTheme,
+                toggleTheme = settingsViewModel::updateTheme,
+                state = state.value,
+                updateQuery = searchViewModel::updateQuery,
+                onSearchClick = onSearchClicked,
+                onWordClick = { state.value.wordItem?.let { toWordClick(it) } }
+            )
+        }
     }
 }
