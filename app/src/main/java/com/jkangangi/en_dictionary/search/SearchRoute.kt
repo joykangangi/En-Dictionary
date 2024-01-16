@@ -37,7 +37,7 @@ class SearchRoute(
     ) {
 
         val state = searchViewModel.searchState.collectAsState()
-        val hasDark = settingsViewModel.isDarkThemeEnabled.collectAsState()
+        val hasDark = settingsViewModel.isDarkTheme.collectAsState()
 
         val toWordClick = remember {
             { dfn: DictionaryEntity ->
@@ -61,7 +61,7 @@ class SearchRoute(
             SearchScreen(
                 modifier = modifier.fillMaxWidth(),
                 isDarkTheme = currentTheme,
-                toggleTheme = settingsViewModel::saveTheme,
+                toggleTheme = settingsViewModel::updateTheme,
                 state = state.value,
                 updateQuery = searchViewModel::updateQuery,
                 onSearchClick = onSearchClicked,
