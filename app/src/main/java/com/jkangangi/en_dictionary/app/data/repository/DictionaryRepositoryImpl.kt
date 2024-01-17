@@ -1,9 +1,8 @@
 package com.jkangangi.en_dictionary.app.data.repository
 
 import android.util.Log
-import androidx.compose.ui.text.toLowerCase
-import com.jkangangi.en_dictionary.app.data.local.DictionaryDao
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryDao
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.remote.toDictionaryEntity
 import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
@@ -13,7 +12,6 @@ import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.util.Locale
 import javax.inject.Inject
 
 /**

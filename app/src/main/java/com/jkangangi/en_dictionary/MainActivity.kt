@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.integration.NodeHost
 import com.bumble.appyx.core.integrationpoint.NodeComponentActivity
 import com.jkangangi.en_dictionary.app.navigation.Navigation
+import com.jkangangi.en_dictionary.app.settings.Constants.DARK_THEME
 import com.jkangangi.en_dictionary.app.settings.SettingsViewModel
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,9 +21,9 @@ class MainActivity : NodeComponentActivity() {
 
         setContent {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
-            val isDarkMode by settingsViewModel.isDarkTheme.collectAsState()
+            val theme by settingsViewModel.isDarkTheme.collectAsState()
             En_DictionaryTheme(
-                darkTheme = isDarkMode,
+                darkTheme = theme == DARK_THEME,
                 content = {
                     NodeHost(
                         integrationPoint = appyxIntegrationPoint,

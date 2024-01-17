@@ -1,6 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 
 data class SearchScreenState(

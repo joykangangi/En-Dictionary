@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.app.data.local
+package com.jkangangi.en_dictionary.app.data.local.room
 
 import androidx.room.TypeConverter
 import com.jkangangi.en_dictionary.app.data.remote.dto.Item

@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.app.data.local
+package com.jkangangi.en_dictionary.app.data.local.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

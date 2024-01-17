@@ -1,6 +1,6 @@
 package com.jkangangi.en_dictionary.app.data.repository
 
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import kotlinx.coroutines.flow.Flow

@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.search
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -13,8 +12,10 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.singleTop
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
+import com.jkangangi.en_dictionary.app.settings.Constants.DARK_THEME
+import com.jkangangi.en_dictionary.app.settings.Constants.LIGHT_THEME
 import com.jkangangi.en_dictionary.app.settings.SettingsViewModel
 
 class SearchRoute(
@@ -49,24 +50,27 @@ class SearchRoute(
             {
                 searchViewModel.doWordSearch()
             }
+        val onUpdateTheme =
+            { isDark: Boolean ->
+                if (isDark)
+                settingsViewModel.updateTheme(DARK_THEME)
+                else{
+                    settingsViewModel.updateTheme(LIGHT_THEME)
+                }
+            }
 
         DisposableEffect(key1 = Unit, effect = {
             onDispose { searchViewModel.closeClient() }
         })
 
-        AnimatedContent(
-            targetState = hasDark.value,
-            label = "theme"
-        ) { currentTheme: Boolean ->
             SearchScreen(
                 modifier = modifier.fillMaxWidth(),
-                isDarkTheme = currentTheme,
-                toggleTheme = settingsViewModel::updateTheme,
+                isDarkTheme = hasDark.value == DARK_THEME,
+                toggleTheme = { onUpdateTheme(hasDark.value == DARK_THEME) },
                 state = state.value,
                 updateQuery = searchViewModel::updateQuery,
                 onSearchClick = onSearchClicked,
                 onWordClick = { state.value.wordItem?.let { toWordClick(it) } }
             )
-        }
     }
 }

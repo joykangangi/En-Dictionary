@@ -6,7 +6,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.util.isWord
 import dagger.hilt.android.lifecycle.HiltViewModel

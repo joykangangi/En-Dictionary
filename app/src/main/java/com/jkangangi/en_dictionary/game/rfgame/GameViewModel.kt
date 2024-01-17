@@ -1,31 +1,5 @@
 package com.jkangangi.en_dictionary.game.rfgame
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
-import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
-import com.jkangangi.en_dictionary.app.util.scramble
-import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
-import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
-import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.minus
-import kotlinx.collections.immutable.persistentSetOf
-import kotlinx.collections.immutable.toPersistentSet
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 /**
  * The app will use searched words (cached in db).
  *

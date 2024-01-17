@@ -1,6 +1,6 @@
 package com.jkangangi.en_dictionary.app.data.remote
 
-import com.jkangangi.en_dictionary.app.data.local.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.DictionaryDTO
 
 
