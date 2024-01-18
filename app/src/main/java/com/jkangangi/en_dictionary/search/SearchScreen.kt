@@ -1,11 +1,13 @@
 package com.jkangangi.en_dictionary.search
 
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -36,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
+import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.TextInput
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -64,13 +67,16 @@ fun SearchScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = { toggleTheme(isDarkTheme) }) {
-                        Icon(
-                            imageVector = if (isDarkTheme) Icons.Default.WbSunny else Icons.Default.DarkMode,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    IconButton(
+                        modifier = Modifier.animateContentSize(),
+                        onClick = { toggleTheme(!isDarkTheme) },
+                        content = {
+                            Icon(
+                                imageVector = if (isDarkTheme) Icons.Default.WbSunny else Icons.Default.DarkMode,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        })
                     /*Switch(
                         modifier = Modifier
                             .size(50.dp)
@@ -231,7 +237,16 @@ private fun SearchResult(
 
 @Preview
 @Composable
-private fun HomePreview() {
-
-
+private fun SearchScreenPreview() {
+    En_DictionaryTheme {
+        SearchScreen(
+            modifier = Modifier.fillMaxWidth(),
+            isDarkTheme = false,
+            toggleTheme = { },
+            state = SearchScreenState(),
+            updateQuery = { },
+            onSearchClick = { },
+            onWordClick = { }
+        )
+    }
 }

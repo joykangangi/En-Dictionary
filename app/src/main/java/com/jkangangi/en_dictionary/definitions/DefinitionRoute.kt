@@ -17,11 +17,13 @@ fun DefinitionView(
 ) {
     LaunchedEffect(key1 = Unit, block = {
         viewModel.getDictionary(sentence)
-    } )
+    })
 
     val dictionary = viewModel.dictionary.collectAsState()
     val context = LocalContext.current
-    val onSpeakerClicked = { viewModel.onSpeakerClick(context, dictionary = dictionary.value) }
+    val onSpeakerClicked = {
+        viewModel.onSpeakerClick(context, dictionary = dictionary.value)
+    }
 
 
     DefinitionScreen(

@@ -17,8 +17,10 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.Item
 import com.jkangangi.en_dictionary.app.data.remote.dto.Phrase
 import com.jkangangi.en_dictionary.app.util.isWord
 
-/**
- * WordDFN       | PhraseDFN
+/** Differences:
+ *
+ * WORD_DFN       | PHRASE_DFN
+ *-------------------------------------
  * one word      | greater > one word
  * NO Phrase     | has Phrase class
  * has synonyms  | has no synonyms

@@ -43,7 +43,7 @@ fun En_DictionaryTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme.switch(),
+        colorScheme = colorScheme,
         typography = Typography,
         content = content
     )

@@ -4,10 +4,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.datastore.DictionaryDataStore
-import com.jkangangi.en_dictionary.app.settings.Constants.LIGHT_THEME
 import com.jkangangi.en_dictionary.app.settings.PreferenceKeys.THEME_KEY
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,20 +40,21 @@ object Constants {
     const val DARK_THEME = "dark_theme"
 }
 
+@HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val userPreferences: DictionaryDataStore
+    private val dataStore: DictionaryDataStore
 ) : ViewModel() {
 
-    val isDarkTheme = userPreferences.getData(key = THEME_KEY)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2500L),
-            initialValue = LIGHT_THEME
-        )
+    val isDarkTheme = dataStore.getData(key = THEME_KEY).flowOn(Dispatchers.Default)
+//        .stateIn( //X not be cached
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(2500L),
+//            initialValue = LIGHT_THEME
+//        )
 
     fun updateTheme(newTheme: String) {
         viewModelScope.launch {
-            userPreferences.setData(key = THEME_KEY, value = newTheme)
+            dataStore.setData(key = THEME_KEY, value = newTheme)
         }
     }
 

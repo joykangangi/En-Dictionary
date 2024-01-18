@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.search
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -17,6 +16,7 @@ import com.jkangangi.en_dictionary.app.navigation.Route
 import com.jkangangi.en_dictionary.app.settings.Constants.DARK_THEME
 import com.jkangangi.en_dictionary.app.settings.Constants.LIGHT_THEME
 import com.jkangangi.en_dictionary.app.settings.SettingsViewModel
+import com.jkangangi.en_dictionary.isDarkTheme
 
 class SearchRoute(
     buildContext: BuildContext,
@@ -29,7 +29,6 @@ class SearchRoute(
         SearchScreenView(modifier = modifier)
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun SearchScreenView(
         modifier: Modifier,
@@ -38,7 +37,6 @@ class SearchRoute(
     ) {
 
         val state = searchViewModel.searchState.collectAsState()
-        val hasDark = settingsViewModel.isDarkTheme.collectAsState()
 
         val toWordClick = remember {
             { dfn: DictionaryEntity ->
@@ -50,14 +48,15 @@ class SearchRoute(
             {
                 searchViewModel.doWordSearch()
             }
-        val onUpdateTheme =
+        val onUpdateTheme = remember {
             { isDark: Boolean ->
                 if (isDark)
-                settingsViewModel.updateTheme(DARK_THEME)
-                else{
+                    settingsViewModel.updateTheme(DARK_THEME)
+                else {
                     settingsViewModel.updateTheme(LIGHT_THEME)
                 }
             }
+        }
 
         DisposableEffect(key1 = Unit, effect = {
             onDispose { searchViewModel.closeClient() }
@@ -65,8 +64,8 @@ class SearchRoute(
 
             SearchScreen(
                 modifier = modifier.fillMaxWidth(),
-                isDarkTheme = hasDark.value == DARK_THEME,
-                toggleTheme = { onUpdateTheme(hasDark.value == DARK_THEME) },
+                isDarkTheme = isDarkTheme(),
+                toggleTheme = onUpdateTheme,
                 state = state.value,
                 updateQuery = searchViewModel::updateQuery,
                 onSearchClick = onSearchClicked,

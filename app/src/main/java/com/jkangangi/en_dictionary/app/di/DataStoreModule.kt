@@ -12,6 +12,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+private const val USER_PREFERENCES = "user_preferences"
 @InstallIn(SingletonComponent::class)
 @Module
 
@@ -21,7 +22,7 @@ object DataStoreModule {
     fun providePreferencesDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create(
             produceFile = {
-                context.preferencesDataStoreFile(name = "USER_PREFERENCES")
+                context.preferencesDataStoreFile(name = USER_PREFERENCES)
             }
         )
     }

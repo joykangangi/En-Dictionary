@@ -1,12 +1,9 @@
 package com.jkangangi.en_dictionary.definitions
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,29 +27,18 @@ fun DefinitionScreen(
         topBar = { DefinitionTopBar(onBack = onBack) },
         content = {
             Column(
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
-                    .padding(it),
+                modifier = Modifier.padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 content = {
-                    Box(
-                        modifier = modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(12.dp)
-                            .weight(.1f),
-                        contentAlignment = Alignment.Center,
-                        content = {
-                            PhoneticsSection(
-                                modifier = modifier,
-                                dictionary = dictionary,
-                                onSpeakerClick = onSpeakerClick
-                            )
-                        }
+                    PhoneticsSection(
+                        modifier = modifier,
+                        dictionary = dictionary,
+                        onSpeakerClick = onSpeakerClick
                     )
                     DefinitionSection(
-                        dictionary = dictionary,
-                        modifier = modifier.weight(.2f),
+                        dictionary = dictionary ,
+                        modifier = modifier
                     )
                 },
             )

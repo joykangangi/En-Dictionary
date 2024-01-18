@@ -2,13 +2,17 @@ package com.jkangangi.en_dictionary
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.integration.NodeHost
 import com.bumble.appyx.core.integrationpoint.NodeComponentActivity
 import com.jkangangi.en_dictionary.app.navigation.Navigation
 import com.jkangangi.en_dictionary.app.settings.Constants.DARK_THEME
+import com.jkangangi.en_dictionary.app.settings.Constants.LIGHT_THEME
 import com.jkangangi.en_dictionary.app.settings.SettingsViewModel
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,10 +24,8 @@ class MainActivity : NodeComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val settingsViewModel: SettingsViewModel = hiltViewModel()
-            val theme by settingsViewModel.isDarkTheme.collectAsState()
             En_DictionaryTheme(
-                darkTheme = theme == DARK_THEME,
+                darkTheme = isDarkTheme(),
                 content = {
                     NodeHost(
                         integrationPoint = appyxIntegrationPoint,
@@ -31,6 +33,20 @@ class MainActivity : NodeComponentActivity() {
                     )
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun isDarkTheme(): Boolean {
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val systemTheme = isSystemInDarkTheme()
+    val theme by settingsViewModel.isDarkTheme.collectAsState(initial = if (systemTheme) DARK_THEME else LIGHT_THEME)
+    return remember(theme) {
+        when (theme) {
+            LIGHT_THEME -> false
+            DARK_THEME -> true
+            else -> systemTheme
         }
     }
 }
