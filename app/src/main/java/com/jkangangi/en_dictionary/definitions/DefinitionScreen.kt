@@ -3,6 +3,8 @@ package com.jkangangi.en_dictionary.definitions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -27,9 +29,12 @@ fun DefinitionScreen(
         topBar = { DefinitionTopBar(onBack = onBack) },
         content = {
             Column(
-                modifier = Modifier.padding(it),
+                modifier = Modifier
+                    .padding(it)
+                    .padding(12.dp)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.SpaceEvenly,
                 content = {
                     PhoneticsSection(
                         modifier = modifier,

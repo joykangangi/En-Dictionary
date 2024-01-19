@@ -79,6 +79,7 @@ class Navigation(
 
             is Route.History -> HistoryRoute(
                 buildContext = buildContext,
+                backStack = backStack
             )
         }
     }

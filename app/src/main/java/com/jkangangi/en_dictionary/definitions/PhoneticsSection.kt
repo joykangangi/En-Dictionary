@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.remote.dto.AudioFile
 import com.jkangangi.en_dictionary.app.data.remote.dto.Entry
 import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
 import com.jkangangi.en_dictionary.app.data.remote.dto.Textual
@@ -43,74 +44,43 @@ fun PhoneticsSection(
 
     val isSpeakerOn = if (isPhrase == true) hasAudio else hasAudio
 
-    Row(
-        modifier = modifier.fillMaxWidth().padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+    ElevatedCard(
         content = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                // verticalArrangement = Arrangement.Bottom,
-                modifier = modifier.padding(8.dp),
+            Row(
+                modifier = modifier.fillMaxWidth().padding(12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
                 content = {
-                    Text(
-                       // modifier = Modifier.weight(0.75f),
-                        text = dictionary?.sentence ?: "word",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Column(
+                        modifier = Modifier.weight(1f).padding(8.dp),
+                        content = {
+                            Text(
+                                text = dictionary?.sentence ?: "",
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Bold
+                            )
 
-                    if (isPhrase == false) { //a word
-                        Text(
-                            text = HtmlParser.htmlToString(entries[0].textual[0].pronunciation.phonetics()),
-                            fontFamily = FontFamily.SansSerif,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.DarkGray
+                            if (isPhrase == false) { //a word
+                                Text(
+                                    text = HtmlParser.htmlToString(entries[0].textual[0].pronunciation.phonetics()),
+                                    fontFamily = FontFamily.SansSerif,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = Color.DarkGray,
+                                    maxLines = 2
+                                )
+                            }
+                        }
+                    )
+                    if (isSpeakerOn == true) {
+                        SpeakerIcon(
+                            onSpeakerClick = onSpeakerClick
                         )
                     }
                 }
-            )
-            SpeakerIcon(
-                modifier = Modifier.size(55.dp),
-                onSpeakerClick = onSpeakerClick,
-                isSpeakerOn = isSpeakerOn == true
+
             )
         }
-
     )
-    /*Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom,
-        modifier = modifier.padding(8.dp),
-        content = {
-            Row(
-                modifier = modifier,
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                content = {
-
-                    SpeakerIcon(
-                        modifier = modifier.size(35.dp),
-                        onSpeakerClick = onSpeakerClick,
-                        isSpeakerOn = isSpeakerOn == true
-                    )
-
-                    Text(
-                        text = dictionary?.sentence ?: "",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            )
-
-            if (isPhrase == false) { //a word
-                Text(
-                    text = HtmlParser.htmlToString(entries[0].textual[0].pronunciation.phonetics()),
-                    fontFamily = FontFamily.SansSerif,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
-    )*/
 }
 
 @Preview(showBackground = true)
@@ -120,10 +90,13 @@ fun PreviewPhoneticsSection() {
         PhoneticsSection(
             modifier = Modifier,
             dictionary = DictionaryEntity(
-                sentence = "Tether", pronunciations = listOf(
+                sentence = "Hippopotamus", pronunciations = listOf(
                     Pronunciation(
                         entries = listOf(
-                            Entry(textual = listOf(Textual(pronunciation = "/tidha/")))
+                            Entry(
+                                textual = listOf(Textual(pronunciation = "/haepopotamas/")),
+                                audioFiles = listOf(AudioFile(link = ""))
+                            )
                         )
                     )
                 )

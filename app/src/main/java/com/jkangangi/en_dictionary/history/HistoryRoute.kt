@@ -9,10 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
-import org.jsoup.select.Evaluator.IsEmpty
+import com.bumble.appyx.navmodel.backstack.BackStack
+import com.bumble.appyx.navmodel.backstack.operation.singleTop
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
+import com.jkangangi.en_dictionary.app.navigation.Route
 
 class HistoryRoute(
     buildContext: BuildContext,
+    private val backStack: BackStack<Route>
 ) : Node(buildContext = buildContext) {
 
     @Composable
@@ -42,11 +46,18 @@ class HistoryRoute(
             }
         }
 
+        val toWordClick = remember {
+            { dfn: DictionaryEntity ->
+                backStack.singleTop(Route.SearchDetail(sentence = dfn.sentence))
+            }
+        }
+
         HistoryScreen(
             dictionaryItems = state,
             onClearHistory = onHistoryCleared,
             deleteWord = deleteDictionaryItem,
-            modifier = modifier
+            modifier = modifier,
+            onWordClick =  toWordClick
         )
 
     }

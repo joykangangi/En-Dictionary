@@ -1,16 +1,10 @@
 package com.jkangangi.en_dictionary.definitions
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.Item
@@ -37,14 +31,8 @@ fun DefinitionSection(
 
     Column(
         modifier = modifier
-            .background(
-                color = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-            )
-            .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-            .padding(12.dp)
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
+            .padding(6.dp)
+            .fillMaxWidth(),
         content = {
             dictionary.items.forEach { item ->
                 if (isWord){

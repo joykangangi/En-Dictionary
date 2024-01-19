@@ -28,20 +28,19 @@ fun DefinitionHeader(modifier: Modifier, headerTxt: String?) {
     Row(
         modifier = modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         content = {
-            Divider(modifier.weight(0.3f))
+            //Divider(modifier.weight(0.3f))
             headerTxt?.let {
                 Text(
-                    modifier = modifier.weight(0.4f),
                     textAlign = TextAlign.Center,
                     text = it,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.titleLarge,
                     fontFamily = FontFamily.SansSerif,
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
-            Divider(modifier.weight(0.3f))
+            Divider()
         }
     )
 }

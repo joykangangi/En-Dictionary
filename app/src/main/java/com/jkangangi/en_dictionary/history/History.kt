@@ -28,6 +28,7 @@ fun HistoryScreen(
     dictionaryItems: ImmutableList<DictionaryEntity>,
     onClearHistory: () -> Unit,
     deleteWord: (List<String>) -> Unit,
+    onWordClick: (DictionaryEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isEmpty = dictionaryItems.isEmpty()
@@ -57,6 +58,7 @@ fun HistoryScreen(
                             HistoryItemCard(
                                 dictionary = dictionary,
                                 onDeleteWord = deleteWord,
+                                onWordClick = onWordClick,
                                 modifier = modifier.animateItemPlacement()
                             )
                         }
@@ -71,8 +73,9 @@ fun HistoryScreen(
 @Composable
 fun PreviewHistory() {
     HistoryScreen(
-        dictionaryItems = persistentListOf(),
+        dictionaryItems = persistentListOf(DictionaryEntity(sentence = "Magic"),DictionaryEntity(sentence = "Invalidate")),
         deleteWord = { },
-        onClearHistory = { }
+        onClearHistory = { },
+        onWordClick = { }
     )
 }
