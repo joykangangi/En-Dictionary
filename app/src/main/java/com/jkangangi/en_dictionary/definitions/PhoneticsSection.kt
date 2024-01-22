@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.definitions
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,13 +44,13 @@ fun PhoneticsSection(
     val isPhrase = entries?.any { entry -> !entry.entry.isWord() }
 
     val isSpeakerOn = if (isPhrase == true) hasAudio else hasAudio
-    Log.i("DefinitionPhonetics","hasAudio: $hasAudio, isSpeakerOn: $isSpeakerOn")
 
     ElevatedCard(
+        modifier = modifier.padding(12.dp).shadow(elevation = 8.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
         content = {
             Row(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -73,7 +72,7 @@ fun PhoneticsSection(
                                     text = HtmlParser.htmlToString(entries[0].textual[0].pronunciation.phonetics()),
                                     fontFamily = FontFamily.SansSerif,
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = Color.DarkGray,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     maxLines = 2
                                 )
                             }

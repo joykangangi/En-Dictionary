@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,16 +33,16 @@ fun HistoryScreen(
     val isEmpty = dictionaryItems.isEmpty()
 
     Scaffold(
-        modifier = modifier
-            .shadow(elevation = 3.dp),
         topBar = {
             TopAppBar(
                 title = { },
+                modifier = modifier.padding(10.dp),
                 actions = {
                     Button(onClick = onClearHistory, enabled = !isEmpty) {
                         Text(stringResource(id = R.string.clear_history))
                     }
-                })
+                }
+            )
         },
         content = { contentPadding ->
             if (isEmpty) {

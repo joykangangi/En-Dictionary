@@ -7,27 +7,17 @@ import androidx.compose.ui.graphics.Color
 internal val lightColorScheme = lightColorScheme(
     primary = Color(0xFF38086F),
     onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFFE6DEFF),
-    secondary = Color(0xFFAF2B40),
-    onSecondary = Color(0xFFFFFFFF),
-    error = Color(0xFFBA1A1A),
-    onError = Color(0xFFFFFFFF),
     background = Color(0xFFFFFBFF),
     onBackground = Color(0xFF1C1B1F),
-    surface = Color(0xFFC4BEC4),
-    onSurface = Color(0xFF1C1B1F),
+    surface = Color(0xFFF7F3F7),
+    error = Color(0xFFBA1A1A),
 )
 
 internal val darkColorScheme = darkColorScheme(
-    primary = Color(0xFFCABEFF),
-    onPrimary = Color(0xFF312075),
-    primaryContainer = Color(0xFF48398D),
-    secondary = Color(0xFFFFB3B6),
-    onSecondary = Color(0xFF68001A),
-    error = Color(0xFFFFB4AB),
-    onError = Color(0xFF690005),
-    background = Color(0xFF1C1B1F),
+    primary = Color(0xFFCABEFF), //button
+    onPrimary = Color(0xFF0C021D),//button text
+    background = Color(0xFF1A0244),
     onBackground = Color(0xFFE6E1E6),
-    surface = Color(0xFF1C1B1F),
-    onSurface = Color(0xFFE6E1E6),
+    surface = Color(0xFF673AB7), //top&bottom bar + cards
+    error = Color(0xFFFFB4AB),
 )

@@ -11,7 +11,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -31,7 +30,7 @@ fun TextInput(
     isValid: Boolean = false,
 ) {
 
-    val optionalColor = Color.DarkGray //grey
+    val optionalColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
     val optional = if (isRequired) "" else " (optional)"
     val transformedLabel = buildAnnotatedString {
         append(txtLabel)
@@ -63,7 +62,7 @@ fun TextInput(
             if (!isValid) Text(
                 text = stringResource(id = R.string.inputError),
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.DarkGray
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
             )
         }
     )
