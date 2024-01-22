@@ -1,10 +1,12 @@
 package com.jkangangi.en_dictionary.definitions
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,25 +36,31 @@ import com.jkangangi.en_dictionary.app.widgets.SpeakerIcon
  */
 @Composable
 fun PhoneticsSection(
-    modifier: Modifier,
     dictionary: DictionaryEntity?,
-    onSpeakerClick: () -> Unit
+    onSpeakerClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val entries = dictionary?.pronunciations?.getOrNull(0)?.entries
     val hasAudio = entries?.any { entry -> entry.audioFiles.isNotEmpty() }
     val isPhrase = entries?.any { entry -> !entry.entry.isWord() }
 
     val isSpeakerOn = if (isPhrase == true) hasAudio else hasAudio
+    Log.i("DefinitionPhonetics","hasAudio: $hasAudio, isSpeakerOn: $isSpeakerOn")
 
     ElevatedCard(
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
         content = {
             Row(
-                modifier = modifier.fillMaxWidth().padding(12.dp),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 content = {
                     Column(
-                        modifier = Modifier.weight(1f).padding(8.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(8.dp),
                         content = {
                             Text(
                                 text = dictionary?.sentence ?: "",
@@ -72,9 +80,7 @@ fun PhoneticsSection(
                         }
                     )
                     if (isSpeakerOn == true) {
-                        SpeakerIcon(
-                            onSpeakerClick = onSpeakerClick
-                        )
+                        SpeakerIcon(onSpeakerClick = onSpeakerClick)
                     }
                 }
 

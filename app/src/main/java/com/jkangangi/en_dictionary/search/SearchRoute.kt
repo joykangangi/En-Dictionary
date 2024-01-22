@@ -3,6 +3,7 @@ package com.jkangangi.en_dictionary.search
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -43,6 +44,11 @@ class SearchRoute(
                 backStack.singleTop(Route.SearchDetail(sentence = dfn.sentence))
             }
         }
+        LaunchedEffect(key1 = state.value.wordItem != null, block = {
+                state.value.wordItem?.let { toWordClick(it) }
+        }
+        )
+
 
         val onSearchClicked =
             {
@@ -62,14 +68,13 @@ class SearchRoute(
             onDispose { searchViewModel.closeClient() }
         })
 
-            SearchScreen(
-                modifier = modifier.fillMaxWidth(),
-                isDarkTheme = isDarkTheme(),
-                toggleTheme = onUpdateTheme,
-                state = state.value,
-                updateQuery = searchViewModel::updateQuery,
-                onSearchClick = onSearchClicked,
-                onWordClick = { state.value.wordItem?.let { toWordClick(it) } }
-            )
+        SearchScreen(
+            modifier = modifier.fillMaxWidth(),
+            isDarkTheme = isDarkTheme(),
+            toggleTheme = onUpdateTheme,
+            state = state.value,
+            updateQuery = searchViewModel::updateQuery,
+            onSearchClick = onSearchClicked
+        )
     }
 }

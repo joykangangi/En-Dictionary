@@ -2,6 +2,8 @@ package com.jkangangi.en_dictionary.definitions
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,6 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
+import com.jkangangi.en_dictionary.app.data.remote.dto.AudioFile
+import com.jkangangi.en_dictionary.app.data.remote.dto.Definition
+import com.jkangangi.en_dictionary.app.data.remote.dto.Entry
+import com.jkangangi.en_dictionary.app.data.remote.dto.Item
+import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
+import com.jkangangi.en_dictionary.app.data.remote.dto.Textual
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,11 +33,10 @@ fun DefinitionScreen(
 ) {
 
     Scaffold(
-        modifier = modifier,
         topBar = { DefinitionTopBar(onBack = onBack) },
         content = {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .padding(it)
                     .padding(12.dp)
                     .verticalScroll(rememberScrollState()),
@@ -37,13 +44,12 @@ fun DefinitionScreen(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 content = {
                     PhoneticsSection(
-                        modifier = modifier,
                         dictionary = dictionary,
                         onSpeakerClick = onSpeakerClick
                     )
+                    Spacer(modifier = Modifier.height(10.dp))
                     DefinitionSection(
-                        dictionary = dictionary ,
-                        modifier = modifier
+                        dictionary = dictionary
                     )
                 },
             )
@@ -57,7 +63,35 @@ fun DefinitionScreen(
 fun WordScreenPreview() {
     En_DictionaryTheme {
         Scaffold {
-            val word = DictionaryEntity()
+            val word = DictionaryEntity(
+                items = listOf(
+                    Item(
+                        partOfSpeech = "noun",
+                        definitions = listOf(
+                            Definition(
+                                definition = "A group of individuals formed to transact business",
+                                examples = listOf("A gambling syndicate")
+                            )
+                        ),
+                        synonyms = listOf("Group"," Union")
+                    )
+                ),
+                pronunciations = listOf(
+                    Pronunciation(
+                        entries = listOf(
+                            Entry(
+                                audioFiles = listOf(
+                                    AudioFile(link = "kkkkk")
+                                ),
+                                textual = listOf(Textual(pronunciation = "/sIndIket/"))
+                            )
+                        )
+                    )
+                ),
+                sentence = "Syndicate",
+                target = "Syndicate",
+                wordFrequencies = emptyList()
+            )
             DefinitionScreen(
                 modifier = Modifier.padding(it),
                 onBack = { },

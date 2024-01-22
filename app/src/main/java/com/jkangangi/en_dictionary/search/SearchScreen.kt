@@ -1,6 +1,7 @@
 package com.jkangangi.en_dictionary.search
 
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +25,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -36,7 +38,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.TextInput
@@ -51,9 +52,11 @@ fun SearchScreen(
     state: SearchScreenState,
     updateQuery: (RequestDTO) -> Unit,
     onSearchClick: () -> Unit,
-    onWordClick: (DictionaryEntity) -> Unit,
 ) {
     val keyBoardController = LocalSoftwareKeyboardController.current
+    val showSearchStatus = remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         modifier = modifier,
@@ -160,7 +163,7 @@ fun SearchScreen(
                         onClick = {
                             keyBoardController?.hide()
                             onSearchClick()
-
+                            showSearchStatus.value = true
                         }
                     ) {
                         Text(
@@ -170,18 +173,20 @@ fun SearchScreen(
                         )
                     }
                     Spacer(modifier = modifier.height(10.dp))
-                    SearchResult(state = state, modifier = modifier, onWordClick = onWordClick)
+                    AnimatedVisibility(visible = showSearchStatus.value) {
+                        SearchResult(state = state, modifier = modifier)
+                    }
+
                 }
             )
         })
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 private fun SearchResult(
     state: SearchScreenState,
     modifier: Modifier,
-    onWordClick: (DictionaryEntity) -> Unit
 ) {
 
     Box(
@@ -201,34 +206,16 @@ private fun SearchResult(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-
-                state.wordItem != null -> {
-                    ElevatedCard(
+                state.serverError == null && state.wordItem == null -> {
+                    Text(
+                        text = "Word not found, check spelling",
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
                         modifier = modifier,
-                        onClick = { onWordClick(state.wordItem) },
-                        content = {
-                            Column(modifier.padding(12.dp)) {
-                                Text(
-                                    text = state.wordItem.sentence,
-                                    textAlign = TextAlign.Center,
-                                    fontFamily = FontFamily.SansSerif,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
+                        fontFamily = FontFamily.SansSerif,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-
-//                else -> {
-//                    Text(
-//                        text = "Word not found, check spelling",
-//                        color = MaterialTheme.colorScheme.error,
-//                        textAlign = TextAlign.Center,
-//                        modifier = modifier,
-//                        fontFamily = FontFamily.SansSerif,
-//                        style = MaterialTheme.typography.bodyMedium,
-//                    )
-//                }
             }
         }
     )
@@ -245,8 +232,7 @@ private fun SearchScreenPreview() {
             toggleTheme = { },
             state = SearchScreenState(),
             updateQuery = { },
-            onSearchClick = { },
-            onWordClick = { }
+            onSearchClick = { }
         )
     }
 }

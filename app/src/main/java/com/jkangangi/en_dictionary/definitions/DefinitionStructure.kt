@@ -3,6 +3,8 @@ package com.jkangangi.en_dictionary.definitions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -24,20 +27,20 @@ import com.jkangangi.en_dictionary.app.util.HtmlParser
 
 
 @Composable
-fun DefinitionHeader(modifier: Modifier, headerTxt: String?) {
+fun DefinitionHeader(modifier: Modifier = Modifier, headerTxt: String?) {
     Row(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         content = {
-            //Divider(modifier.weight(0.3f))
             headerTxt?.let {
                 Text(
                     textAlign = TextAlign.Center,
                     text = it,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontFamily = FontFamily.SansSerif,
                     color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
                 )
             }
             Divider()
@@ -48,32 +51,31 @@ fun DefinitionHeader(modifier: Modifier, headerTxt: String?) {
 @Composable
 fun DefinitionBody(
     wordDefinitions: List<Definition?>?,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
-    Column {
-        wordDefinitions?.forEachIndexed { index, word ->
-            DefinitionDetail(
-                titleText = "\n${index + 1}.",
-                bodyText = listOf(word?.definition),
-                modifier = modifier
-            )
 
-            if (!word?.examples.isNullOrEmpty())
-                DefinitionDetail(
-                    titleText = "Example",
-                    bodyText = listOf(word?.examples?.getOrNull(0)),
-                    modifier = modifier
-                ) //just the 1st example if its not null
-            //Spacer(modifier = modifier.height(4.dp))
-        }
+    wordDefinitions?.forEachIndexed { index, word ->
+        DefinitionDetail(
+            titleText = "${index + 1}.",
+            bodyText = listOf(word?.definition),
+            modifier = modifier
+        )
+        Spacer(modifier = modifier.height(4.dp))
+        if (!word?.examples.isNullOrEmpty())
+            DefinitionDetail(
+                titleText = "Example ",
+                bodyText = listOf(word?.examples?.getOrNull(0)),
+                modifier = modifier
+            ) //just the 1st example if its not null
     }
 }
 
 @Composable
 fun DefinitionDetail(
     modifier: Modifier,
-    titleText: String? = null,
     bodyText: List<String?>,
+    bodyColor: Color = Color.Unspecified,
+    titleText: String? = null,
 ) {
     Text(
         text = buildAnnotatedString {
@@ -85,7 +87,7 @@ fun DefinitionDetail(
                     color = MaterialTheme.colorScheme.primary,
                 )
             ) {
-                append("\n$titleText")
+                append("$titleText")
             }
             bodyText.forEach { text ->
                 val parsedText = HtmlParser.htmlToString(text)
@@ -93,6 +95,7 @@ fun DefinitionDetail(
                     style = SpanStyle(
                         fontFamily = FontFamily.SansSerif,
                         fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
+                        color = bodyColor
                     )
                 ) {
                     append(parsedText)
@@ -108,10 +111,10 @@ fun DefinitionDetail(
 fun PreviewDefHeader() {
     En_DictionaryTheme {
         Column {
-            DefinitionHeader(modifier = Modifier, headerTxt = "Adjective")
-            DefinitionHeader(modifier = Modifier, headerTxt = "noun")
-            DefinitionHeader(modifier = Modifier, headerTxt = "put up with")
-            DefinitionHeader(modifier = Modifier, headerTxt = "interjection")
+            DefinitionHeader(headerTxt = "Adjective")
+            DefinitionHeader(headerTxt = "noun")
+            DefinitionHeader(headerTxt = "put up with")
+            DefinitionHeader(headerTxt = "interjection")
         }
     }
 }
@@ -121,6 +124,7 @@ fun PreviewDefHeader() {
 fun PreviewDefDetail() {
     En_DictionaryTheme {
         Column {
+            DefinitionHeader(modifier = Modifier, headerTxt = "noun")
             DefinitionDetail(
                 modifier = Modifier,
                 titleText = "1.",
