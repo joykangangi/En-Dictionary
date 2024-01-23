@@ -5,7 +5,7 @@ import com.jkangangi.en_dictionary.app.data.local.room.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.remote.toDictionaryEntity
-import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
+import com.jkangangi.en_dictionary.app.data.service.DictionaryService
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class DictionaryRepositoryImpl @Inject constructor(
     private val dao: DictionaryDao,
-    private val dictionaryService: DictionaryServiceImpl
+    private val dictionaryService: DictionaryService
 ) : DictionaryRepository {
 
     override fun postSearch(request: RequestDTO): Flow<NetworkResult<DictionaryEntity?>> = flow {
@@ -97,7 +97,7 @@ class DictionaryRepositoryImpl @Inject constructor(
       return dao.getDictionaryItem(sentence)
     }
 
-    fun closeClient() {
+    override fun closeClient() {
         dictionaryService.closeClient()
     }
 }

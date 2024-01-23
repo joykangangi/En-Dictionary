@@ -31,7 +31,7 @@ fun GameScreen(
             GameTopBar(currentScore = state.score, currentWord = state.wordCount)
         },
         content = { contentPadding ->
-            if (state.isEmpty) {
+            if (!state.isGameOn) {
                 EmptyListView(stringId = R.string.empty_saves)
 
             } else {
@@ -55,6 +55,14 @@ fun GameScreen(
 @Composable
 fun PreviewSavedWords() {
     En_DictionaryTheme {
-
+        GameScreen(
+            modifier = Modifier,
+            state = GameUIState(scrambledWord = "asftkreab", hint = "meal eaten in the early morning."),
+            guess = "" ,
+            onGuessChanged = { } ,
+            onNextClicked = {  },
+            onSkipClicked = { },
+            onHintClicked = { }
+        )
     }
 }

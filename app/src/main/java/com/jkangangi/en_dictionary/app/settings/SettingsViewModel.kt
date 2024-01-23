@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * UserPreference -> UserRepositoryImpl -> SettingsVM
+ *
+ * DataStoreImpl (repositoryImpl) -> SettingsVM
  */
 
 //@HiltViewModel

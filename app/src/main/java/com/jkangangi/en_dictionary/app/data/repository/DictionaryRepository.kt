@@ -14,4 +14,6 @@ interface DictionaryRepository {
 
     suspend fun getDictionaryItem(sentence: String): DictionaryEntity?
 
+    fun closeClient()
+
 }

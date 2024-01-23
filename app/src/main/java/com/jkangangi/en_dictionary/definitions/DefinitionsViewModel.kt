@@ -7,7 +7,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
-import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
+import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ import javax.inject.Inject
 private const val AUDIO_BASE_URL = "https://download.xfd.plus/xfed/audio/"
 
 @HiltViewModel
-class DefinitionsViewModel @Inject constructor(repositoryImpl: DictionaryRepositoryImpl): ViewModel() {
+class DefinitionsViewModel @Inject constructor(repository: DictionaryRepository): ViewModel() {
 
     private val sentence = MutableStateFlow("")
 
@@ -30,7 +30,7 @@ class DefinitionsViewModel @Inject constructor(repositoryImpl: DictionaryReposit
     val dictionary = sentence.map { words->
         when(words) {
             "" -> DictionaryEntity()
-            else -> repositoryImpl.getDictionaryItem(words)?: DictionaryEntity()
+            else -> repository.getDictionaryItem(words)?: DictionaryEntity()
         }
     }.stateIn(
         viewModelScope,

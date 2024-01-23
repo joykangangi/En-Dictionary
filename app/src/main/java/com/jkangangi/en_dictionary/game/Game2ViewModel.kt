@@ -3,7 +3,7 @@ package com.jkangangi.en_dictionary.game
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
-import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
+import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
 import com.jkangangi.en_dictionary.app.util.scramble
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel2 @Inject constructor(
-    private val repositoryImpl: DictionaryRepositoryImpl
+    private val repository: DictionaryRepository
 ) : ViewModel() {
     private val _gameUIState = MutableStateFlow(GameUIState())
     val gameUIState = _gameUIState.asStateFlow()
@@ -39,8 +39,8 @@ class GameViewModel2 @Inject constructor(
 
     private fun getWord() {
         viewModelScope.launch {
-            val words = repositoryImpl.getAllHistory().first().filter { it.sentence.isWord() }
-            _gameUIState.update { it.copy(isEmpty = words.isEmpty()) }
+            val words = repository.getAllHistory().first().filter { it.sentence.isWord() }
+            _gameUIState.update { it.copy(isGameOn = words.isEmpty()) }
             _currentWord = words.first()
             _gameUIState.update {
                 it.copy(

@@ -46,7 +46,7 @@ fun PhoneticsSection(
     val isSpeakerOn = if (isPhrase == true) hasAudio else hasAudio
 
     ElevatedCard(
-        modifier = modifier.padding(12.dp).shadow(elevation = 8.dp),
+        modifier = modifier.padding(12.dp).shadow(elevation = 8.dp, shape = CardDefaults.shape),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
         content = {
             Row(

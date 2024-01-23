@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
-import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
+import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
  */
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val repository: DictionaryRepositoryImpl) :
+class SearchViewModel @Inject constructor(private val repository: DictionaryRepository) :
     ViewModel() {
 
     private val _queries = MutableStateFlow(RequestDTO())

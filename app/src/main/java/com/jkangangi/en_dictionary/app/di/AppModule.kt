@@ -4,9 +4,6 @@ import android.app.Application
 import androidx.room.Room
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryDatabase
-import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
-import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
-import com.jkangangi.en_dictionary.app.data.service.DictionaryServiceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,16 +31,4 @@ object AppModule {
         return database.dictionaryDao()
     }
 
-
-    @Provides
-    @Singleton
-    fun providesDictionaryRepository(
-        database: DictionaryDatabase,
-        service: DictionaryServiceImpl
-    ): DictionaryRepository {
-        return DictionaryRepositoryImpl(
-            dao = database.dictionaryDao(),
-            dictionaryService = service
-        )
-    }
 }

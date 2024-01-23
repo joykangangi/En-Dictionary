@@ -72,7 +72,7 @@ class Navigation(
                 )
             }
 
-            is Route.Game -> GameRoute(
+            is Route.Play -> GameRoute(
                 buildContext = buildContext,
                 backStack = backStack,
             )
@@ -94,7 +94,7 @@ sealed class Route(val icon: ImageVector? = null, val title: String? = null) : P
     data class SearchDetail(val sentence: String) : Route(title = "SearchDetail")
 
     @Parcelize
-    object Game : Route(icon = Icons.Default.Bookmark, title = "Game")
+    object Play : Route(icon = Icons.Default.Bookmark, title = "Play")
 
     @Parcelize
     object History : Route(icon = Icons.Default.History, title = "History")

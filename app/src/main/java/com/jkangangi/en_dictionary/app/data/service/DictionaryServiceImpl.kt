@@ -98,7 +98,7 @@ class DictionaryServiceImpl @Inject constructor() : DictionaryService {
         }.body()
     }
 
-    fun closeClient() {
+    override fun closeClient() {
         Log.d("Dictionary Service", "Closing the client...")
         closableClient?.close()
         closableClient = null

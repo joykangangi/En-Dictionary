@@ -11,6 +11,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.jkangangi.en_dictionary.app.navigation.Route
+import com.jkangangi.en_dictionary.game.rfgame.GameViewModel
 
 class GameRoute(
     buildContext: BuildContext,
@@ -28,24 +29,24 @@ class GameRoute(
     @Composable
     fun GameScreenView(
         modifier: Modifier,
-        viewModel2: GameViewModel2 = hiltViewModel()
+        viewModel: GameViewModel = hiltViewModel()
     ) {
 
-        val gameState by viewModel2.gameUIState.collectAsState()
+        val gameState by viewModel.gameUIState.collectAsState()
 
-        Log.i("GameRoute", "IsEmpty = ${gameState.isEmpty}")
+        Log.i("GameRoute", "IsGameOn = ${gameState.isGameOn}")
 
         LaunchedEffect(key1 = gameState.isGameOver, block = {
-            viewModel2.resetGame()
+            viewModel.resetGame()
         })
         GameScreen(
             modifier = modifier,
             state = gameState,
-            guess = viewModel2.guessedAns.collectAsState().value,
-            onGuessChanged = viewModel2::updateInput,
-            onNextClicked = viewModel2::onNextClicked,
-            onSkipClicked = viewModel2::onSkipClicked,
-            onHintClicked = viewModel2::onHintClicked
+            guess = viewModel.guessedWord.collectAsState().value,
+            onGuessChanged = viewModel::updateInput,
+            onNextClicked = viewModel::onNextClicked,
+            onSkipClicked = viewModel::onSkipClicked,
+            onHintClicked = viewModel::onHintClicked
         )
 
 
