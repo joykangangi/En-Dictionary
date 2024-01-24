@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.game
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
+import com.jkangangi.en_dictionary.app.util.HtmlParser
 
 
 @Composable
@@ -60,7 +61,8 @@ fun GameLayout(
                 hint = state.hint,
                 guess = guess,
                 onGuessChanged = onGuessChanged,
-                onHintClicked = onHintClicked
+                onHintClicked = onHintClicked,
+                showHint = state.showHint,
             )
 
             ButtonSection(
@@ -82,6 +84,7 @@ private fun GameCard(
     guess: String,
     onGuessChanged: (String) -> Unit,
     onHintClicked: () -> Unit,
+    showHint: Boolean,
 ) {
 
     val keyboard = LocalSoftwareKeyboardController.current
@@ -128,7 +131,7 @@ private fun GameCard(
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = { shutKeyBoard() }),
                     )
-                    HintSection(hint = hint,onHintClicked = onHintClicked)
+                    HintSection(hint = hint, onHintClicked = onHintClicked, showHint = showHint)
                 },
             )
         }
@@ -138,10 +141,10 @@ private fun GameCard(
 @Composable
 private fun HintSection(
     hint: String,
-    modifier: Modifier = Modifier,
     onHintClicked: () -> Unit,
+    showHint: Boolean,
+    modifier: Modifier = Modifier,
 ) {
-    val showHint = remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -158,28 +161,29 @@ private fun HintSection(
                     )
 
                     TextButton(
-                        onClick = {
-                            onHintClicked()
-                            showHint.value = !showHint.value
-                        }) {
-                        Text(text = "Show Hint", style = MaterialTheme.typography.bodyMedium)
-                    }
+                        onClick = onHintClicked,
+                        content = {
+                            Text(text = "Show Hint", style = MaterialTheme.typography.bodyMedium)
+                        }
+                    )
                 },
             )
 
-            //Todo, animation
-            if (showHint.value) {
+            AnimatedVisibility(visible = showHint) {
                 Box(
                     modifier = modifier.padding(6.dp),
                     contentAlignment = Alignment.Center,
                     content = {
-                        Column(content = {
-                            Text(
-                                text = "Meaning: $hint",
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        })
-                    })
+                        Column(
+                            content = {
+                                Text(
+                                    text = "Meaning: ${HtmlParser.htmlToString(hint)}",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        )
+                    }
+                )
             }
         }
     )
@@ -227,11 +231,12 @@ fun PrevGameCard() {
     En_DictionaryTheme {
         GameCard(
             modifier = Modifier,
-            scrambledWord = "Runge Kutta",
+            scrambledWord = "RungeKutta",
             hint = "Fourth Order Formula",
             guess = "",
             onGuessChanged = { },
-            onHintClicked = { }
+            onHintClicked = { },
+            showHint = true
         )
     }
 }

@@ -40,7 +40,7 @@ class GameViewModel2 @Inject constructor(
     private fun getWord() {
         viewModelScope.launch {
             val words = repository.getAllHistory().first().filter { it.sentence.isWord() }
-            _gameUIState.update { it.copy(isGameOn = words.isEmpty()) }
+            _gameUIState.update { it.copy(isGameOn = words.isNotEmpty()) }
             _currentWord = words.first()
             _gameUIState.update {
                 it.copy(

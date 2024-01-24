@@ -10,8 +10,10 @@ import com.jkangangi.en_dictionary.app.util.NetworkResult
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 /**
@@ -26,7 +28,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     private val dictionaryService: DictionaryService
 ) : DictionaryRepository {
 
-    override fun postSearch(request: RequestDTO): Flow<NetworkResult<DictionaryEntity?>> = flow {
+    override fun postSearch(request: RequestDTO): Flow<NetworkResult<DictionaryEntity>> = flow {
         emit(NetworkResult.Loading())
 
         val sentence = "${request.textBeforeSelection.trim().lowercase()} ${request.selection.trim().lowercase()} ${request.textAfterSelection.trim().lowercase()}"
@@ -38,7 +40,7 @@ class DictionaryRepositoryImpl @Inject constructor(
          */
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
-            if (remoteData != null && remoteData.items.isNotEmpty()) {
+            if (remoteData.items.isNotEmpty()) {
                 val entities = listOf(remoteData.toDictionaryEntity()) //db has no duplicate
                 dao.deleteDictionaryItems(entities.map { it.sentence })
                 dao.insertDictionaryItem(remoteData.toDictionaryEntity())
@@ -83,7 +85,7 @@ class DictionaryRepositoryImpl @Inject constructor(
          */
         val newWord = dao.getDictionaryItem(sentence = sentence)
         emit(NetworkResult.Success(data = newWord))
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun getAllHistory(): Flow<List<DictionaryEntity>> {
        return dao.getAllDefinitions()

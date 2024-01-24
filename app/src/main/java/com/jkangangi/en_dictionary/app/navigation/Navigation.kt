@@ -17,6 +17,7 @@ import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.node.ParentNode
 import com.bumble.appyx.core.node.node
 import com.bumble.appyx.navmodel.backstack.BackStack
+import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
 import com.jkangangi.en_dictionary.definitions.DefinitionView
 import com.jkangangi.en_dictionary.game.GameRoute
@@ -66,7 +67,7 @@ class Navigation(
 
             is Route.SearchDetail -> node(buildContext) {
                 DefinitionView(
-                    onBack = { backStack.handleUpNavigation() },
+                    onBack = { backStack.pop() },
                     sentence = navTarget.sentence,
                     modifier = it
                 )

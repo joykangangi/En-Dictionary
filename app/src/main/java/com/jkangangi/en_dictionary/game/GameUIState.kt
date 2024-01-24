@@ -14,4 +14,5 @@ data class GameUIState(
     val isGameOver: Boolean = false,
     val isGameOn: Boolean = false,
     val showSubmit: Boolean = false,
+    val showHint: Boolean = false,
 )

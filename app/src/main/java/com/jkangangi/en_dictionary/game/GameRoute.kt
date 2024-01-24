@@ -2,7 +2,6 @@ package com.jkangangi.en_dictionary.game
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -36,9 +35,10 @@ class GameRoute(
 
         Log.i("GameRoute", "IsGameOn = ${gameState.isGameOn}")
 
-        LaunchedEffect(key1 = gameState.isGameOver, block = {
+
+        if (gameState.isGameOver) {
             viewModel.resetGame()
-        })
+        }
         GameScreen(
             modifier = modifier,
             state = gameState,

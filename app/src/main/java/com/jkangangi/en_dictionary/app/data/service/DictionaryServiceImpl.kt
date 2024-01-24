@@ -87,7 +87,7 @@ class DictionaryServiceImpl @Inject constructor() : DictionaryService {
         }
     }
 
-    override suspend fun postSearchRequest(search: RequestDTO): DictionaryDTO? {
+    override suspend fun postSearchRequest(search: RequestDTO): DictionaryDTO {
         return client().post {
             url(WORD_URL)
             parameter(key = "selection", value = search.selection)

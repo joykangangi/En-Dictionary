@@ -11,7 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
-import com.bumble.appyx.navmodel.backstack.operation.singleTop
+import com.bumble.appyx.navmodel.backstack.operation.push
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
 import com.jkangangi.en_dictionary.app.settings.Constants.DARK_THEME
@@ -41,7 +41,7 @@ class SearchRoute(
 
         val toWordClick = remember {
             { dfn: DictionaryEntity ->
-                backStack.singleTop(Route.SearchDetail(sentence = dfn.sentence))
+                backStack.push(Route.SearchDetail(sentence = dfn.sentence))
             }
         }
         LaunchedEffect(key1 = state.value.wordItem != null, block = {
