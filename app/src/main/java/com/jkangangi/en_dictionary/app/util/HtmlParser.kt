@@ -44,7 +44,7 @@ class HtmlParser {
 
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PrevHtml() {
     @Composable

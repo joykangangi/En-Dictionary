@@ -10,6 +10,7 @@ import com.jkangangi.en_dictionary.app.util.NetworkResult
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 /**
  * This is Data Source to be used in the view models
- * Get Data from Api -> Insert into the Database -> Show the UI
+ * Get Data from Api/service -> Insert into the Database -> Show the UI
  * All data will come from the database; ie Single Source of Truth
  *
  */
@@ -41,9 +42,9 @@ class DictionaryRepositoryImpl @Inject constructor(
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
             if (remoteData.items.isNotEmpty()) {
-                val entities = listOf(remoteData.toDictionaryEntity()) //db has no duplicate
-                dao.deleteDictionaryItems(entities.map { it.sentence })
-                dao.insertDictionaryItem(remoteData.toDictionaryEntity())
+                val entity = remoteData.toDictionaryEntity() //db has no duplicate
+                dao.deleteDictionaryItems(persistentListOf(entity.sentence))
+                dao.insertDictionaryItem(entity)
             }
 
         } catch (e: RedirectResponseException) {

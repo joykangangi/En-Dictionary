@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.app.data.local.room
 
+import androidx.compose.runtime.Stable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.jkangangi.en_dictionary.app.data.model.Dictionary
@@ -8,6 +9,7 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
 import com.jkangangi.en_dictionary.app.data.remote.dto.WordFrequency
 import kotlinx.serialization.Serializable
 
+@Stable
 @Serializable
 @Entity
 data class DictionaryEntity(

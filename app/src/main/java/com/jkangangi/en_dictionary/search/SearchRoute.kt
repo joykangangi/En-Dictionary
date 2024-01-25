@@ -49,7 +49,6 @@ class SearchRoute(
         }
         )
 
-
         val onSearchClicked =
             {
                 searchViewModel.doWordSearch()

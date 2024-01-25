@@ -9,8 +9,8 @@ fun String.isWord(): Boolean {
 
 
 /**
- * (UK, US) IPA: /səkˈsɛs/ becomes /səkˈsɛs/
  * extract Phonetics from API;
+ * (UK, US) IPA: /səkˈsɛs/ becomes /səkˈsɛs/
  */
 fun String.phonetics(): String {
     return this.substringAfter(':')

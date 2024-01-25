@@ -13,6 +13,7 @@ import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
 import com.jkangangi.en_dictionary.game.GameUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -33,8 +34,8 @@ class GameViewModel @Inject constructor(private val repository: DictionaryReposi
     private val _hintClicks = MutableStateFlow(0)
     private val _gameUIState = MutableStateFlow(GameUIState())
     val gameUIState = _gameUIState.asStateFlow()
-    private val allWordItems = mutableListOf<DictionaryEntity>()
-    private val playedWords = mutableListOf<DictionaryEntity>()
+    private val allWordItems  = persistentListOf<DictionaryEntity>()
+    private val playedWords = persistentListOf<DictionaryEntity>()
 
     init {
         getWordItem()

@@ -8,7 +8,7 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.Item
 import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
 import com.jkangangi.en_dictionary.app.data.remote.dto.WordFrequency
 import kotlinx.parcelize.Parcelize
-
+//not in use atm;entity is enough
 @Stable
 @Parcelize
 data class Dictionary(
