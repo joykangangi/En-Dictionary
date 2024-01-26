@@ -3,7 +3,6 @@ package com.jkangangi.en_dictionary.search
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -14,10 +13,11 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.push
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
-import com.jkangangi.en_dictionary.app.settings.Constants.DARK_THEME
-import com.jkangangi.en_dictionary.app.settings.Constants.LIGHT_THEME
-import com.jkangangi.en_dictionary.app.settings.SettingsViewModel
 import com.jkangangi.en_dictionary.isDarkTheme
+import com.jkangangi.en_dictionary.settings.SettingsViewModel
+import com.jkangangi.en_dictionary.settings.Theme.DARK_THEME
+import com.jkangangi.en_dictionary.settings.Theme.LIGHT_THEME
+import com.jkangangi.en_dictionary.settings.fonts.Font
 
 class SearchRoute(
     buildContext: BuildContext,
@@ -44,10 +44,7 @@ class SearchRoute(
                 backStack.push(Route.SearchDetail(sentence = dfn.sentence))
             }
         }
-        LaunchedEffect(key1 = state.value.wordItem != null, block = {
-                state.value.wordItem?.let { toWordClick(it) }
-        }
-        )
+
 
         val onSearchClicked =
             {
@@ -63,6 +60,12 @@ class SearchRoute(
             }
         }
 
+        val onUpdateFont = remember {
+            { font: Font ->
+                settingsViewModel.updateFont(font.name)
+            }
+        }
+
         DisposableEffect(key1 = Unit, effect = {
             onDispose { searchViewModel.closeClient() }
         })
@@ -73,7 +76,8 @@ class SearchRoute(
             toggleTheme = onUpdateTheme,
             state = state.value,
             updateQuery = searchViewModel::updateQuery,
-            onSearchClick = onSearchClicked
+            onSearchClick = onSearchClicked,
+            toWordDefinition = toWordClick
         )
     }
 }

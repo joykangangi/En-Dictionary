@@ -11,9 +11,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.integration.NodeHost
 import com.bumble.appyx.core.integrationpoint.NodeComponentActivity
 import com.jkangangi.en_dictionary.app.navigation.Navigation
-import com.jkangangi.en_dictionary.app.settings.Constants.DARK_THEME
-import com.jkangangi.en_dictionary.app.settings.Constants.LIGHT_THEME
-import com.jkangangi.en_dictionary.app.settings.SettingsViewModel
+import com.jkangangi.en_dictionary.settings.Theme.DARK_THEME
+import com.jkangangi.en_dictionary.settings.Theme.LIGHT_THEME
+import com.jkangangi.en_dictionary.settings.SettingsViewModel
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,7 +41,7 @@ class MainActivity : NodeComponentActivity() {
 fun isDarkTheme(): Boolean {
     val settingsViewModel: SettingsViewModel = hiltViewModel()
     val systemTheme = isSystemInDarkTheme()
-    val theme by settingsViewModel.isDarkTheme.collectAsState(initial = if (systemTheme) DARK_THEME else LIGHT_THEME)
+    val theme by settingsViewModel.currentTheme.collectAsState(initial = if (systemTheme) DARK_THEME else LIGHT_THEME)
     return remember(theme) {
         when (theme) {
             LIGHT_THEME -> false

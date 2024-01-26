@@ -88,12 +88,11 @@ class SearchViewModel @Inject constructor(private val repository: DictionaryRepo
     fun closeClient() {
         Log.d("SearchVM", "calling close from the viewModel...")
         repository.closeClient()
-        _searchState.update { it.copy(wordItem = null) }
     }
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("SearchVM", "viewmodel onCleared called...")
+        Log.d("SearchVM", "Search view model onCleared called...")
         closeClient()
     }
 }

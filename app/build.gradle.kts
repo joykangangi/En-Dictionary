@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.compose.activity)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.fonts)
 
     debugImplementation(libs.compose.ui.tooling)
     androidTestImplementation(platform(libs.compose))

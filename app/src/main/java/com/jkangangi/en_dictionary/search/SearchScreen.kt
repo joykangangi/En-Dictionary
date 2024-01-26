@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.TextInput
@@ -52,6 +53,7 @@ fun SearchScreen(
     state: SearchScreenState,
     updateQuery: (RequestDTO) -> Unit,
     onSearchClick: () -> Unit,
+    toWordDefinition: (DictionaryEntity) -> Unit
 ) {
     val keyBoardController = LocalSoftwareKeyboardController.current
     val showSearchStatus = remember {
@@ -174,7 +176,7 @@ fun SearchScreen(
                     }
                     Spacer(modifier = modifier.height(10.dp))
                     AnimatedVisibility(visible = showSearchStatus.value) {
-                        SearchResult(state = state, modifier = modifier)
+                        SearchResult(state = state, modifier = modifier, toWordDefinition = toWordDefinition)
                     }
 
                 }
@@ -187,6 +189,7 @@ fun SearchScreen(
 private fun SearchResult(
     state: SearchScreenState,
     modifier: Modifier,
+    toWordDefinition: (DictionaryEntity) -> Unit,
 ) {
 
     Box(
@@ -216,6 +219,9 @@ private fun SearchResult(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
+                state.wordItem != null -> {
+                    toWordDefinition(state.wordItem)
+                }
             }
         }
     )
@@ -232,7 +238,8 @@ private fun SearchScreenPreview() {
             toggleTheme = { },
             state = SearchScreenState(),
             updateQuery = { },
-            onSearchClick = { }
+            onSearchClick = { },
+            toWordDefinition = { }
         )
     }
 }

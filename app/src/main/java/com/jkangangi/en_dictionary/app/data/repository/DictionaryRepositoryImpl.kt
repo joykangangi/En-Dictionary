@@ -33,8 +33,7 @@ class DictionaryRepositoryImpl @Inject constructor(
         emit(NetworkResult.Loading())
 
         val sentence = "${request.textBeforeSelection.trim().lowercase()} ${request.selection.trim().lowercase()} ${request.textAfterSelection.trim().lowercase()}"
-        //val localData = dao.getDictionaryResponse(sentence = sentence).toDictionary()
-        //emit(NetworkResult.Loading(data = localData))
+
 
         /**
          * API -> Database
@@ -42,7 +41,7 @@ class DictionaryRepositoryImpl @Inject constructor(
         try {
             val remoteData = dictionaryService.postSearchRequest(search = request)
             if (remoteData.items.isNotEmpty()) {
-                val entity = remoteData.toDictionaryEntity() //db has no duplicate
+                val entity = remoteData.toDictionaryEntity() //db has no duplicate, insert latest
                 dao.deleteDictionaryItems(persistentListOf(entity.sentence))
                 dao.insertDictionaryItem(entity)
             }
@@ -89,7 +88,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
     override fun getAllHistory(): Flow<List<DictionaryEntity>> {
-       return dao.getAllDefinitions()
+        return dao.getAllDefinitions()
     }
 
     override suspend fun deleteDictionaryItems(sentences: List<String>) {
@@ -97,7 +96,7 @@ class DictionaryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDictionaryItem(sentence: String): DictionaryEntity? {
-      return dao.getDictionaryItem(sentence)
+        return dao.getDictionaryItem(sentence)
     }
 
     override fun closeClient() {
