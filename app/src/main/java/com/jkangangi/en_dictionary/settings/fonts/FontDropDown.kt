@@ -9,24 +9,27 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.bumble.appyx.core.collections.immutableListOf
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
+import com.jkangangi.en_dictionary.settings.fonts.AppFont.MERRIWEATHER
+import com.jkangangi.en_dictionary.settings.fonts.AppFont.MONOSPACE
+import com.jkangangi.en_dictionary.settings.fonts.AppFont.SANS_SERIF
 
 
-val fontList = immutableListOf(Font.Sans, Font.Mono, Font.Merriweather)
+private val fontList = immutableListOf(SANS_SERIF, MONOSPACE, MERRIWEATHER)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FontDropDownMenu(
-    font: Font,
-    onFontChange: (Font) -> Unit,
+    font: String,
+    onFontChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
-    var expanded by remember {
+    var expanded by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -38,7 +41,7 @@ fun FontDropDownMenu(
         content = {
 
             TextField(
-                value = font.name,
+                value = font,
                 onValueChange = { },
                 modifier = modifier.menuAnchor(),
                 readOnly = true,
@@ -53,7 +56,7 @@ fun FontDropDownMenu(
                 content = {
                     fontList.forEach { fontOption ->
                         DropdownMenuItem(
-                            text = { Text(text = fontOption.name) },
+                            text = { Text(text = fontOption) },
                             onClick = {
                                 onFontChange(fontOption)
                                 expanded = false

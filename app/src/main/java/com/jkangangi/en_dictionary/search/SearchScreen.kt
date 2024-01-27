@@ -2,7 +2,6 @@ package com.jkangangi.en_dictionary.search
 
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,25 +11,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -42,20 +36,23 @@ import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.TextInput
+import com.jkangangi.en_dictionary.settings.fonts.AppFont.SANS_SERIF
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 
 @Composable
 fun SearchScreen(
     modifier: Modifier,
-    isDarkTheme: Boolean,
-    toggleTheme: (Boolean) -> Unit,
     state: SearchScreenState,
     updateQuery: (RequestDTO) -> Unit,
     onSearchClick: () -> Unit,
-    toWordDefinition: (DictionaryEntity) -> Unit
+    toWordDefinition: (DictionaryEntity) -> Unit,
+    isDarkTheme: Boolean,
+    updateTheme: (Boolean) -> Unit,
+    currentFont: String,
+    updateFont: (String) -> Unit,
 ) {
-    val keyBoardController = LocalSoftwareKeyboardController.current
+    val keyBoardController =  LocalSoftwareKeyboardController.current
     val showSearchStatus = remember {
         mutableStateOf(false)
     }
@@ -63,46 +60,11 @@ fun SearchScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.home_text),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontFamily = FontFamily.SansSerif
-                    )
-                },
-                actions = {
-                    IconButton(
-                        modifier = Modifier.animateContentSize(),
-                        onClick = { toggleTheme(!isDarkTheme) },
-                        content = {
-                            Icon(
-                                imageVector = if (isDarkTheme) Icons.Default.WbSunny else Icons.Default.DarkMode,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        })
-                    /*Switch(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .animateContentSize(tween(durationMillis = 1500)),
-                        checked = isDarkTheme,
-                        onCheckedChange = {
-                            toggleTheme(it)
-                        },
-                        thumbContent = {
-                            Icon(
-                                imageVector = if (isDarkTheme) Icons.Default.WbSunny else Icons.Default.DarkMode,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colorScheme.primary
-                        )
-                    )*/
-                },
-                modifier = modifier.shadow(elevation = 2.dp),
+            SearchTopBar(
+                isDarkTheme = isDarkTheme,
+                toggleTheme = updateTheme,
+                font = currentFont,
+                updateFont = updateFont
             )
         },
         content = { contentPadding ->
@@ -176,7 +138,11 @@ fun SearchScreen(
                     }
                     Spacer(modifier = modifier.height(10.dp))
                     AnimatedVisibility(visible = showSearchStatus.value) {
-                        SearchResult(state = state, modifier = modifier, toWordDefinition = toWordDefinition)
+                        SearchResult(
+                            state = state,
+                            modifier = modifier,
+                            toWordDefinition = toWordDefinition
+                        )
                     }
 
                 }
@@ -209,6 +175,7 @@ private fun SearchResult(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
+
                 state.serverError == null && state.wordItem == null -> {
                     Text(
                         text = "Word not found, check spelling",
@@ -219,6 +186,7 @@ private fun SearchResult(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
+
                 state.wordItem != null -> {
                     toWordDefinition(state.wordItem)
                 }
@@ -234,12 +202,14 @@ private fun SearchScreenPreview() {
     En_DictionaryTheme {
         SearchScreen(
             modifier = Modifier.fillMaxWidth(),
-            isDarkTheme = false,
-            toggleTheme = { },
             state = SearchScreenState(),
             updateQuery = { },
             onSearchClick = { },
-            toWordDefinition = { }
+            toWordDefinition = { },
+            isDarkTheme = false,
+            updateTheme = { },
+            currentFont = SANS_SERIF,
+            updateFont = { }
         )
     }
 }

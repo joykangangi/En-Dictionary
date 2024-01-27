@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
@@ -38,7 +37,7 @@ fun DefinitionHeader(modifier: Modifier = Modifier, headerTxt: String?) {
                     textAlign = TextAlign.Center,
                     text = it,
                     style = MaterialTheme.typography.headlineSmall,
-                    fontFamily = FontFamily.SansSerif,
+                    //fontFamily = FontFamily.SansSerif,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
@@ -81,7 +80,6 @@ fun DefinitionDetail(
         text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
-                    fontFamily = FontFamily.SansSerif,
                     fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
@@ -93,7 +91,6 @@ fun DefinitionDetail(
                 val parsedText = HtmlParser.htmlToString(text)
                 withStyle(
                     style = SpanStyle(
-                        fontFamily = FontFamily.SansSerif,
                         fontStyle = MaterialTheme.typography.bodyMedium.fontStyle,
                         color = bodyColor
                     )

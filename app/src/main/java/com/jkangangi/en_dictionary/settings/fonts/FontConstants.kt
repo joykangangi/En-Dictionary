@@ -1,8 +1,8 @@
 package com.jkangangi.en_dictionary.settings.fonts
 
 
-enum class Font {
-    Mono,
-    Sans,
-    Merriweather
+object AppFont {
+    const val MONOSPACE = "monospace"
+    const val SANS_SERIF = "sans_serif"
+    const val MERRIWEATHER = "merriweather"
 }

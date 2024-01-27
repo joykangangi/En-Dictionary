@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,10 +15,10 @@ import com.bumble.appyx.navmodel.backstack.operation.push
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
 import com.jkangangi.en_dictionary.isDarkTheme
+import com.jkangangi.en_dictionary.settings.AppTheme.DARK_THEME
+import com.jkangangi.en_dictionary.settings.AppTheme.LIGHT_THEME
 import com.jkangangi.en_dictionary.settings.SettingsViewModel
-import com.jkangangi.en_dictionary.settings.Theme.DARK_THEME
-import com.jkangangi.en_dictionary.settings.Theme.LIGHT_THEME
-import com.jkangangi.en_dictionary.settings.fonts.Font
+import com.jkangangi.en_dictionary.settings.fonts.AppFont.SANS_SERIF
 
 class SearchRoute(
     buildContext: BuildContext,
@@ -61,8 +62,8 @@ class SearchRoute(
         }
 
         val onUpdateFont = remember {
-            { font: Font ->
-                settingsViewModel.updateFont(font.name)
+            { font: String->
+                settingsViewModel.updateFont(font)
             }
         }
 
@@ -70,14 +71,19 @@ class SearchRoute(
             onDispose { searchViewModel.closeClient() }
         })
 
+        val font by settingsViewModel.currentFont.collectAsState(initial = SANS_SERIF)
+
         SearchScreen(
             modifier = modifier.fillMaxWidth(),
-            isDarkTheme = isDarkTheme(),
-            toggleTheme = onUpdateTheme,
             state = state.value,
             updateQuery = searchViewModel::updateQuery,
             onSearchClick = onSearchClicked,
-            toWordDefinition = toWordClick
+            toWordDefinition = toWordClick,
+            isDarkTheme = isDarkTheme(),
+            updateTheme = onUpdateTheme,
+            currentFont = font.toString(),
+            updateFont = onUpdateFont
+
         )
     }
 }
