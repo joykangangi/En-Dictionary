@@ -34,4 +34,7 @@ internal fun getTypography(fontFamily: FontFamily) = Typography(
     headlineSmall = TextStyle(fontFamily = fontFamily),
     headlineMedium = TextStyle(fontFamily = fontFamily),
     headlineLarge = TextStyle(fontFamily = fontFamily),
+    titleLarge = TextStyle(fontFamily = fontFamily),
+    titleMedium = TextStyle(fontFamily = fontFamily),
+    titleSmall = TextStyle(fontFamily = fontFamily),
 )

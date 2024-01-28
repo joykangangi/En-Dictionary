@@ -1,8 +1,7 @@
-package com.jkangangi.en_dictionary.game.rfgame
+package com.jkangangi.en_dictionary.game
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
@@ -11,14 +10,13 @@ import com.jkangangi.en_dictionary.game.GameConstants.HINT_DECREASE
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
-import com.jkangangi.en_dictionary.game.GameUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -27,50 +25,56 @@ import javax.inject.Inject
  */
 
 @HiltViewModel
-class GameViewModel @Inject constructor(private val repository: DictionaryRepository) : ViewModel() {
+class GameViewModel @Inject constructor(private val repository: DictionaryRepository) :
+    ViewModel() {
 
     private val _guessedWord = MutableStateFlow("")
     val guessedWord = _guessedWord.asStateFlow()
     private val _hintClicks = MutableStateFlow(0)
     private val _gameUIState = MutableStateFlow(GameUIState())
     val gameUIState = _gameUIState.asStateFlow()
-    private val allWordItems  = persistentListOf<DictionaryEntity>()
+
     private val playedWords = persistentListOf<DictionaryEntity>()
+    private val allWords = persistentListOf<DictionaryEntity>()
+
 
     init {
-        getWordItem()
+        repository.getAllHistory().map { allItems ->
+            _gameUIState.update { state ->
+                state.copy(wordItems = allItems.filter { it.sentence.isWord() }.toPersistentList())
+            }
+        }
+        _gameUIState.value.wordItems?.let { allWords.addAll(it) }
+        if (_gameUIState.value.wordItems?.isNotEmpty() == true) getWordItem()
     }
 
     private fun getWordItem() {
-        Log.i("GameVM","first = ${playedWords.size}")
-        viewModelScope.launch {
-           allWordItems.addAll(repository.getAllHistory().first().filter { it.sentence.isWord() } )
-            _gameUIState.update { it.copy(isGameOn = allWordItems.isNotEmpty()) }
-            val wordItem = allWordItems.random()
-             allWordItems.remove(wordItem)
-            playedWords.add(wordItem)
-            Log.i("GameVM","${playedWords.size}, ${wordItem.sentence}")
+        Log.i("GameVM", "Played Size = ${playedWords.size}")
+        val word = allWords.random()
+        allWords.remove(word)
+        playedWords.add(word)
 
-            _gameUIState.update {
-                it.copy(
-                    wordItems = allWordItems,
-                    wordItem = wordItem,
-                    scrambledWord = wordItem.sentence.scramble(),
-                    hint = wordItem.items[0].definitions[0].definition,
-                    wordCount = playedWords.size,
-                    isGameOver = playedWords.size == MAX_WORDS + 1,
-                    showSubmit = playedWords.size == MAX_WORDS
-                )
-            }
+        Log.i("GameVM", "${playedWords.size}, ${_gameUIState.value.wordItem?.sentence}")
 
+        _gameUIState.update {
+            it.copy(
+                wordItems = allWords,
+                wordItem = word,
+                scrambledWord = word.sentence.scramble(),
+                hint = word.items[0].definitions[0].definition,
+                wordCount = playedWords.size,
+                isGameOver = playedWords.size == MAX_WORDS + 1,
+                showSubmit = playedWords.size == MAX_WORDS
+            )
         }
     }
+
 
     private fun resetWord() {
         _guessedWord.update { "" }
         _gameUIState.update { it.copy(showHint = false, nextEnabled = false) }
         _hintClicks.update { 0 }
-         getWordItem()
+        getWordItem()
     }
 
     fun updateInput(userInput: String) {

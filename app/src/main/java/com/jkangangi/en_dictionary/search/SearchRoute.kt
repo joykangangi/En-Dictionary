@@ -6,6 +6,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.modality.BuildContext
@@ -14,11 +15,11 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.push
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
-import com.jkangangi.en_dictionary.isDarkTheme
 import com.jkangangi.en_dictionary.settings.AppTheme.DARK_THEME
 import com.jkangangi.en_dictionary.settings.AppTheme.LIGHT_THEME
 import com.jkangangi.en_dictionary.settings.SettingsViewModel
-import com.jkangangi.en_dictionary.settings.fonts.AppFont.SANS_SERIF
+import com.jkangangi.en_dictionary.settings.fonts.AppFont
+import kotlinx.coroutines.launch
 
 class SearchRoute(
     buildContext: BuildContext,
@@ -45,25 +46,29 @@ class SearchRoute(
                 backStack.push(Route.SearchDetail(sentence = dfn.sentence))
             }
         }
-
+        val scope = rememberCoroutineScope()
 
         val onSearchClicked =
             {
                 searchViewModel.doWordSearch()
             }
-        val onUpdateTheme = remember {
-            { isDark: Boolean ->
-                if (isDark)
-                    settingsViewModel.updateTheme(DARK_THEME)
-                else {
-                    settingsViewModel.updateTheme(LIGHT_THEME)
+        val onUpdateTheme: (Boolean) -> Unit = remember {
+            { isDark ->
+                scope.launch {
+                    if (isDark)
+                        settingsViewModel.updateTheme(DARK_THEME)
+                    else {
+                        settingsViewModel.updateTheme(LIGHT_THEME)
+                    }
                 }
             }
         }
 
-        val onUpdateFont = remember {
-            { font: String->
-                settingsViewModel.updateFont(font)
+        val onUpdateFont: (AppFont) -> Unit = remember {
+            { font ->
+                scope.launch {
+                    settingsViewModel.updateFont(font)
+                }
             }
         }
 
@@ -71,7 +76,8 @@ class SearchRoute(
             onDispose { searchViewModel.closeClient() }
         })
 
-        val font by settingsViewModel.currentFont.collectAsState(initial = SANS_SERIF)
+        val isDark by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
+        val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
 
         SearchScreen(
             modifier = modifier.fillMaxWidth(),
@@ -79,11 +85,10 @@ class SearchRoute(
             updateQuery = searchViewModel::updateQuery,
             onSearchClick = onSearchClicked,
             toWordDefinition = toWordClick,
-            isDarkTheme = isDarkTheme(),
+            isDarkTheme = isDark == DARK_THEME,
             updateTheme = onUpdateTheme,
-            currentFont = font.toString(),
+            currentFont = font,
             updateFont = onUpdateFont
-
         )
     }
 }

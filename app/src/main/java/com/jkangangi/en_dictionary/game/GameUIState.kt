@@ -15,7 +15,6 @@ data class GameUIState(
     val score: Int = 0,
     val nextEnabled: Boolean = false,
     val isGameOver: Boolean = false,
-    val isGameOn: Boolean = false,
     val showSubmit: Boolean = false,
     val showHint: Boolean = false,
 )

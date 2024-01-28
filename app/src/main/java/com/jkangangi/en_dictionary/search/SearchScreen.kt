@@ -36,7 +36,8 @@ import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.TextInput
-import com.jkangangi.en_dictionary.settings.fonts.AppFont.SANS_SERIF
+import com.jkangangi.en_dictionary.settings.fonts.AppFont
+import com.jkangangi.en_dictionary.settings.fonts.AppFont.SansSerif
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 
@@ -49,8 +50,8 @@ fun SearchScreen(
     toWordDefinition: (DictionaryEntity) -> Unit,
     isDarkTheme: Boolean,
     updateTheme: (Boolean) -> Unit,
-    currentFont: String,
-    updateFont: (String) -> Unit,
+    currentFont: AppFont,
+    updateFont: (AppFont) -> Unit,
 ) {
     val keyBoardController =  LocalSoftwareKeyboardController.current
     val showSearchStatus = remember {
@@ -132,7 +133,6 @@ fun SearchScreen(
                     ) {
                         Text(
                             text = "Search",
-                            fontFamily = FontFamily.SansSerif,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -208,7 +208,7 @@ private fun SearchScreenPreview() {
             toWordDefinition = { },
             isDarkTheme = false,
             updateTheme = { },
-            currentFont = SANS_SERIF,
+            currentFont = SansSerif,
             updateFont = { }
         )
     }

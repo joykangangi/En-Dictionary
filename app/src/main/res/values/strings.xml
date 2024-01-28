@@ -20,8 +20,8 @@
     <string name="score_count">Score: %d /30</string>
     <string name="game_txt_label">Your Guess…</string>
 
-    <!--> DataStore Theme Constants </-->
-    <string name="light_theme">Light Theme</string>
-    <string name="dark_theme">Dark Theme</string>
-    <string name="theme_system">System Default</string>
+    <!--> DataStore Font Constants </-->
+    <string name="monospace">Monospace</string>
+    <string name="sans_serif">Sans Serif</string>
+    <string name="merri_weather">Merriweather</string>
 </resources>

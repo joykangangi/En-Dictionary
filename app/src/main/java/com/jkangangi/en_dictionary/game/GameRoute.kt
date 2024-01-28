@@ -10,7 +10,6 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.jkangangi.en_dictionary.app.navigation.Route
-import com.jkangangi.en_dictionary.game.rfgame.GameViewModel
 
 class GameRoute(
     buildContext: BuildContext,
@@ -33,7 +32,7 @@ class GameRoute(
 
         val gameState by viewModel.gameUIState.collectAsState()
 
-        Log.i("GameRoute", "IsGameOn = ${gameState.isGameOn}")
+        Log.i("GameRoute", "IsGameOn = ${!gameState.wordItems.isNullOrEmpty()}")
 
 
         if (gameState.isGameOver) {
