@@ -32,12 +32,15 @@ class GameRoute(
 
         val gameState by viewModel.gameUIState.collectAsState()
 
-        Log.i("GameRoute", "IsGameOn = ${!gameState.wordItems.isNullOrEmpty()}")
+        Log.i("GameRoute", "IsGameOn = ${!gameState.wordItems?.isEmpty()!!}")
+        Log.i("GameRoute", "IsGameOn = ${gameState.wordItem?.sentence}")
 
 
         if (gameState.isGameOver) {
             viewModel.resetGame()
         }
+
+
         GameScreen(
             modifier = modifier,
             state = gameState,

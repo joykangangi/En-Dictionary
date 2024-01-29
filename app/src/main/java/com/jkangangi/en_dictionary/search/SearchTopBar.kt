@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.settings.fonts.AppFont
@@ -41,8 +42,6 @@ fun SearchTopBar(
         actions = {
 
             Row(
-                modifier = modifier.weight(0.5f),
-                //horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 content = {
                     FontDropDownMenu(font = font, onFontChange = updateFont)
@@ -63,5 +62,12 @@ fun SearchTopBar(
         },
         modifier = modifier.shadow(elevation = 2.dp)
     )
+
+}
+
+@Preview
+@Composable
+fun PreviewSearchTopBar() {
+    SearchTopBar(isDarkTheme = false, toggleTheme = { }, font = AppFont.Monospace , updateFont = { })
 
 }
