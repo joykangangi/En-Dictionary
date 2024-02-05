@@ -79,6 +79,7 @@ class SearchRoute(
         val isDark by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
         val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
 
+
         SearchScreen(
             modifier = modifier.fillMaxWidth(),
             state = state.value,
@@ -90,5 +91,6 @@ class SearchRoute(
             currentFont = font,
             updateFont = onUpdateFont
         )
+
     }
 }

@@ -15,12 +15,12 @@ plugins {
 
 android {
     namespace = "com.jkangangi.en_dictionary"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig.apply {
         applicationId = namespace
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 

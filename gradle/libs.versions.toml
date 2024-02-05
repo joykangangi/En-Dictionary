@@ -1,29 +1,27 @@
 #This is a Version Catalog File
 [versions]
 appyx = "1.2.0"
-core-ktx = "1.10.0"
+core-ktx = "1.12.0"
 core-appcompat = "1.6.1"
-ksp = "1.8.22-1.0.11"
-datastore = "1.1.0-alpha04"
-json-serializer = "1.5.0"
+ksp = "1.9.20-1.0.14"
+datastore = "1.1.0-beta01"
+json-serializer = "1.5.1"
 immutable = "0.3.5"
-coroutines-core = "1.6.4"
 junit-test = "1.1.5"
-compose-activity = "1.7.0"
+compose-activity = "1.8.2"
 jsoup = "1.16.1"
-hilt-navigation = "1.0.0"
-splash-screen = "1.0.0"
+hilt-navigation = "1.1.0"
+splash-screen = "1.0.1"
 
-compose = "2023.04.00"
-compose-compiler = "1.4.6"
-gradle-plugin = "8.0.0"
-hilt = "2.45"
+compose = "2024.01.00"
+compose-compiler = "1.5.5"
+gradle-plugin = "8.2.2"
+hilt = "2.50"
 junit = "5.9.2"
-kotlin-version = "1.8.20"
+kotlin-version = "1.9.20"
 ktor = "2.3.2"
-lifecycle = "2.6.1"
-okhttp = "5.0.0-alpha.11"
-room = "2.5.1"
+lifecycle = "2.7.0"
+room = "2.6.1"
 
 [libraries] #Group;Name;Version.ref
 # Appyx Navigation
@@ -54,7 +52,6 @@ junit = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" 
 junit-android = {module = "androidx.test.ext:junit", version.ref = "junit-test" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 # Kotlinx
-kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines-core" }
 kotlin-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "immutable"}
 kotlin-serialization-ktor = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "json-serializer" }
@@ -82,4 +79,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-ve
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-version" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
-ksp = { id = "com.google.devtools.ksp", version = "1.8.20-1.0.10" }
+ksp = { id = "com.google.devtools.ksp", version = "1.9.20-1.0.14" }
