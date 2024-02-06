@@ -42,10 +42,14 @@ android {
             properties.load(fileInputStream)
             val apiKey = properties.getProperty("API_KEY")
             buildConfigField(type = "String", name = "API_KEY", value = "\"$apiKey\"")
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
         }
         release {
-            isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
+            //signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -136,4 +140,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.junit.engine)
     androidTestImplementation(libs.junit.android)
+}
+
+hilt {
+    enableAggregatingTask = true
 }

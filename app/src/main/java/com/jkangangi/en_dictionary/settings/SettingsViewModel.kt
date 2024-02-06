@@ -8,9 +8,9 @@ import com.jkangangi.en_dictionary.settings.PreferenceKeys.FONT_KEY
 import com.jkangangi.en_dictionary.settings.PreferenceKeys.THEME_KEY
 import com.jkangangi.en_dictionary.settings.fonts.AppFont
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,37 +44,16 @@ class SettingsViewModel @Inject constructor(
     private val dataStore: DictionaryDataStore
 ) : ViewModel() {
 
-    //    val currentTheme = dataStore.getData(key = THEME_KEY).map { theme ->
-//        theme ?: LIGHT_THEME
-//    }.flowOn(Dispatchers.Default)
-    val currentTheme = dataStore.getData(key = THEME_KEY)
-        .map { theme ->
-            theme ?: LIGHT_THEME
-        }
-        .stateIn( //X not be cached
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2500L),
-            initialValue = LIGHT_THEME
-        )
+    val currentTheme = dataStore.getData(key = THEME_KEY).map { theme ->
+        theme ?: LIGHT_THEME
+    }.flowOn(Dispatchers.Default)
 
-    val currentFont = dataStore.getData(key = FONT_KEY)
-        .map { fontName ->
+    val currentFont = dataStore.getData(key = FONT_KEY).map { fontName ->
         if (fontName != null) {
             AppFont.valueOf(fontName)
         } else
             AppFont.SansSerif
-    }
-        .stateIn( //X not be cached
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(2500L),
-            initialValue = AppFont.SansSerif
-        )
-//    val currentFont = dataStore.getData(key = FONT_KEY).map { fontName ->
-//        if (fontName != null) {
-//            AppFont.valueOf(fontName)
-//        } else
-//            AppFont.SansSerif
-//    }.flowOn(Dispatchers.Default)
+    }.flowOn(Dispatchers.Default)
 
     fun updateTheme(newTheme: String) {
         viewModelScope.launch {

@@ -28,7 +28,7 @@ import javax.inject.Inject
  */
 
 @HiltViewModel
-class GameViewModel @Inject constructor(private val repository: DictionaryRepository) :
+class GameViewModel @Inject constructor(repository: DictionaryRepository) :
     ViewModel() {
         private val _guessedWord = MutableStateFlow("")
         val guessedWord = _guessedWord.asStateFlow()

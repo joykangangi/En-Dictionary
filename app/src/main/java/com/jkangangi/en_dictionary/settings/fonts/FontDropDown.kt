@@ -59,7 +59,7 @@ fun FontDropDownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 content = {
-                    AppFont.values().forEach { fontOption: AppFont ->
+                    AppFont.entries.forEach { fontOption: AppFont ->
                         DropdownMenuItem(
                             text = { Text(text = stringResource(id = fontOption.nameId)) },
                             onClick = {
@@ -91,7 +91,7 @@ fun PreviewFontDropDown() {
 fun PreviewDropDownItems() {
     En_DictionaryTheme {
         Column {
-            AppFont.values().forEach {
+            AppFont.entries.forEach {
                 Text(text = it.name)
                 Text(text = stringResource(id = it.nameId))
             }

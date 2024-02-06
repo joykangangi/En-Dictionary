@@ -15,6 +15,8 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.push
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
+import com.jkangangi.en_dictionary.getFontFamily
+import com.jkangangi.en_dictionary.isDarkTheme
 import com.jkangangi.en_dictionary.settings.AppTheme.DARK_THEME
 import com.jkangangi.en_dictionary.settings.AppTheme.LIGHT_THEME
 import com.jkangangi.en_dictionary.settings.SettingsViewModel
@@ -86,9 +88,9 @@ class SearchRoute(
             updateQuery = searchViewModel::updateQuery,
             onSearchClick = onSearchClicked,
             toWordDefinition = toWordClick,
-            isDarkTheme = isDark == DARK_THEME,
+            isDarkTheme = isDarkTheme(),
             updateTheme = onUpdateTheme,
-            currentFont = font,
+            currentFont = getFontFamily(),
             updateFont = onUpdateFont
         )
 

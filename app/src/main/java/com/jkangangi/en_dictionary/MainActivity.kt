@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.integration.NodeHost
 import com.bumble.appyx.core.integrationpoint.NodeComponentActivity
@@ -26,11 +25,11 @@ class MainActivity : NodeComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val settingsViewModel: SettingsViewModel = hiltViewModel()
+
 
             En_DictionaryTheme(
-                darkTheme = isDarkTheme(settingsViewModel),
-                fontFamily = getFontFamily(settingsViewModel),
+                darkTheme = isDarkTheme(),
+                fontFamily = getFontFamily().fontFamily,
                 content = {
                     NodeHost(
                         integrationPoint = appyxIntegrationPoint,
@@ -43,9 +42,10 @@ class MainActivity : NodeComponentActivity() {
 }
 
 @Composable
-private fun isDarkTheme(settingsViewModel: SettingsViewModel): Boolean {
+ fun isDarkTheme(): Boolean {
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
     val systemTheme = isSystemInDarkTheme()
-    val theme by settingsViewModel.currentTheme.collectAsState(initial = if (systemTheme) DARK_THEME else LIGHT_THEME)
+    val theme by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
     return remember(theme) {
         when (theme) {
             LIGHT_THEME -> false
@@ -56,13 +56,14 @@ private fun isDarkTheme(settingsViewModel: SettingsViewModel): Boolean {
 }
 
 @Composable
-private fun getFontFamily(settingsViewModel: SettingsViewModel): FontFamily {
+fun getFontFamily(): AppFont {
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
     val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
-     return remember(font) {
+    return remember(font) {
         when (font) {
-            AppFont.MerriWeather-> AppFont.MerriWeather.fontFamily
-            AppFont.SansSerif -> AppFont.SansSerif.fontFamily
-            AppFont.Monospace -> AppFont.Monospace.fontFamily
+            AppFont.MerriWeather -> AppFont.MerriWeather
+            AppFont.SansSerif -> AppFont.SansSerif
+            AppFont.Monospace -> AppFont.Monospace
         }
     }
 }
