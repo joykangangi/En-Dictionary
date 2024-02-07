@@ -210,3 +210,12 @@ private fun SearchScreenPreview() {
         )
     }
 }
+
+@Preview
+@Composable
+fun indi() {
+
+    En_DictionaryTheme {
+        CircularProgressIndicator()
+    }
+}

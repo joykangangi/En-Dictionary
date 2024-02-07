@@ -1,11 +1,15 @@
 package com.jkangangi.en_dictionary.app.navigation
 
 import android.util.Log
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Games
@@ -107,24 +111,38 @@ private fun BottomAppBarItem(
     modifier: Modifier = Modifier,
 ) {
 
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val animatedPadding by animateDpAsState(
+        targetValue = if (selected) 0.dp else 8.dp,
+        label = "bottomNav",
+    )
+
+
     Column(
         modifier = modifier
             .padding(5.dp)
-            .clickable { onClick() },
+            .clickable(
+                onClick = onClick,
+                interactionSource = interactionSource,
+                indication = null,
+            ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
+            Spacer(modifier = Modifier.height(animatedPadding))
+
             if (icon != null) {
                 Icon(
                     imageVector = icon,
                     contentDescription = title,
-                    tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
-            if (title != null) {
+            if (title != null && selected) {
                 Text(
                     text = title,
-                    color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -132,7 +150,8 @@ private fun BottomAppBarItem(
     )
 }
 
-@Preview
+
+@Preview(showBackground = true)
 @Composable
 fun PrevBottomNavItems() {
     Row {

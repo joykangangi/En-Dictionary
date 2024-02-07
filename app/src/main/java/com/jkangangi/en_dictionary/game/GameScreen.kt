@@ -31,7 +31,7 @@ fun GameScreen(
             GameTopBar(currentScore = state.score, currentWord = state.wordCount)
         },
         content = { contentPadding ->
-            if (state.wordItems.isNullOrEmpty()) {
+            if (state.wordItems.isNullOrEmpty() || state.wordItems.size < 5) {
                 EmptyListView(stringId = R.string.empty_saves)
 
             } else {

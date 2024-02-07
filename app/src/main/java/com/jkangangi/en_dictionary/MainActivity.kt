@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumble.appyx.core.integration.NodeHost
 import com.bumble.appyx.core.integrationpoint.NodeComponentActivity
@@ -29,7 +30,7 @@ class MainActivity : NodeComponentActivity() {
 
             En_DictionaryTheme(
                 darkTheme = isDarkTheme(),
-                fontFamily = getFontFamily().fontFamily,
+                fontFamily = getFontFamily(),
                 content = {
                     NodeHost(
                         integrationPoint = appyxIntegrationPoint,
@@ -42,7 +43,7 @@ class MainActivity : NodeComponentActivity() {
 }
 
 @Composable
- fun isDarkTheme(): Boolean {
+ private fun isDarkTheme(): Boolean {
     val settingsViewModel: SettingsViewModel = hiltViewModel()
     val systemTheme = isSystemInDarkTheme()
     val theme by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
@@ -56,14 +57,14 @@ class MainActivity : NodeComponentActivity() {
 }
 
 @Composable
-fun getFontFamily(): AppFont {
+private fun getFontFamily(): FontFamily {
     val settingsViewModel: SettingsViewModel = hiltViewModel()
     val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
     return remember(font) {
         when (font) {
-            AppFont.MerriWeather -> AppFont.MerriWeather
-            AppFont.SansSerif -> AppFont.SansSerif
-            AppFont.Monospace -> AppFont.Monospace
+            AppFont.MerriWeather -> AppFont.MerriWeather.fontFamily
+            AppFont.SansSerif -> AppFont.SansSerif.fontFamily
+            AppFont.Monospace -> AppFont.Monospace.fontFamily
         }
     }
 }
