@@ -24,4 +24,5 @@
     <string name="monospace">Monospace</string>
     <string name="sans_serif">Sans Serif</string>
     <string name="merri_weather">Merriweather</string>
+    <string name="font_name"> Choose Font</string>
 </resources>
