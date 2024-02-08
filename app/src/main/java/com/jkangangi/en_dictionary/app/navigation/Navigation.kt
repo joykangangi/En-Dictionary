@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -38,7 +37,6 @@ class Navigation(
     navModel = backStack,
 ) {
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun View(modifier: Modifier) {
 
@@ -89,15 +87,15 @@ class Navigation(
 sealed class Route(val icon: ImageVector? = null, val title: String? = null) : Parcelable {
 
     @Parcelize
-    object Search : Route(icon = Icons.Default.Search, title = "Search")
+    data object Search : Route(icon = Icons.Default.Search, title = "Search")
 
     @Parcelize
     data class SearchDetail(val sentence: String) : Route(title = "SearchDetail")
 
     @Parcelize
-    object Play : Route(icon = Icons.Default.Bookmark, title = "Play")
+    data object Play : Route(icon = Icons.Default.Bookmark, title = "Play")
 
     @Parcelize
-    object History : Route(icon = Icons.Default.History, title = "History")
+    data object History : Route(icon = Icons.Default.History, title = "History")
 
 }
