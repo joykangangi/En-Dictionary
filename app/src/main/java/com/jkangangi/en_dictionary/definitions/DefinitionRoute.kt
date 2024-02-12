@@ -3,9 +3,11 @@ package com.jkangangi.en_dictionary.definitions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+
 
 
 @Composable
@@ -20,9 +22,16 @@ fun DefinitionView(
     })
 
     val dictionary = viewModel.dictionary.collectAsState()
+    val hasSoundReady by viewModel.isSoundReady.collectAsState()
+
+
+
     val context = LocalContext.current
     val onSpeakerClicked = {
-        viewModel.onSpeakerClick(context, dictionary = dictionary.value)
+        if (!hasSoundReady) {
+            viewModel.onSpeakerClick(context, dictionary = dictionary.value)
+
+        }
     }
 
 

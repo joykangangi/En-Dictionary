@@ -86,7 +86,7 @@ fun PhoneticsSection(
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, apiLevel = 33)
 @Composable
 fun PreviewPhoneticsSection() {
     En_DictionaryTheme {

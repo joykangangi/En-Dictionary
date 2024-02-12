@@ -41,11 +41,12 @@ fun FontBottomSheet(
         content = {
             Column(
                 modifier = modifier.padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
                 content = {
                     Text(
                         text = stringResource(id = R.string.font_name),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(12.dp)
                     )
 
                     AppFont.entries.forEach { fontOption ->
@@ -62,7 +63,7 @@ fun FontBottomSheet(
                                 RadioButton(
                                     selected = fontOption == font,
                                     onClick = { onFontChange(fontOption) },
-                                    modifier = Modifier.padding(8.dp)
+                                    modifier = Modifier.padding(5.dp)
                                 )
 
                                 Text(text = stringResource(id = fontOption.nameId))

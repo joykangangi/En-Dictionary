@@ -10,8 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+private const val playIcon = 1
+private const val pauseIcon = 2
+private const val loadingIcon = 3
 @Composable
-fun SpeakerIcon(modifier: Modifier = Modifier, onSpeakerClick:() -> Unit) {
+fun SpeakerIcon(
+    modifier: Modifier = Modifier,
+    onSpeakerClick:() -> Unit,
+    //isSoundReady: Boolean,
+    ) {
 
     val speakerIcon =  Icons.Default.PlayCircle
     IconButton(

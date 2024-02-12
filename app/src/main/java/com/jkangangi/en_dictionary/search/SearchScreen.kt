@@ -56,7 +56,7 @@ fun SearchScreen(
     currentFont: AppFont,
     updateFont: (AppFont) -> Unit,
 ) {
-    val keyBoardController =  LocalSoftwareKeyboardController.current
+    val keyBoardController = LocalSoftwareKeyboardController.current
     val showSearchStatus = remember {
         mutableStateOf(false)
     }
@@ -82,16 +82,19 @@ fun SearchScreen(
                 content = {
 
                     Row(
-                        modifier = modifier.padding(top = 6.dp),
+                        modifier = modifier.padding(top = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "search")
+
                         Text(
                             text = "Search for a word or a phrase",
-                            fontFamily = FontFamily.SansSerif,
                             style = MaterialTheme.typography.bodyLarge
                         )
+
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "search")
                     }
+
+                    Spacer(modifier = modifier.height(5.dp))
 
                     //BeforeTarget
                     TextInput(
@@ -124,7 +127,7 @@ fun SearchScreen(
                         isValid = state.afterError
                     )
 
-                    Spacer(modifier = modifier)
+                    Spacer(modifier = modifier.height(5.dp))
 
                     Button(
                         modifier = modifier,
@@ -209,7 +212,7 @@ private fun SearchResult(
 }
 
 
-@Preview
+@Preview(apiLevel = 33, showBackground = true)
 @Composable
 private fun SearchScreenPreview() {
     En_DictionaryTheme {

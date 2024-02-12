@@ -96,6 +96,7 @@ dependencies {
     implementation(platform(libs.compose))
     implementation(libs.compose.activity)
     implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
 
     debugImplementation(libs.compose.ui.tooling)

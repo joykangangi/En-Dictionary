@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,7 +22,7 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
 import com.jkangangi.en_dictionary.app.data.remote.dto.Textual
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun DefinitionScreen(
     modifier: Modifier = Modifier,
@@ -57,8 +56,8 @@ fun DefinitionScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
+
+@Preview(apiLevel = 33)
 @Composable
 fun WordScreenPreview() {
     En_DictionaryTheme {

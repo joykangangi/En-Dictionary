@@ -10,11 +10,14 @@ import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
@@ -42,28 +45,33 @@ class DefinitionsViewModel @Inject constructor(repository: DictionaryRepository)
         this.sentence.update { phrase }
     }
 
+    val isSoundReady = MutableStateFlow(false)
     private val mediaPlayer = MediaPlayer()
     /**
      * Handle sound clicks for a word and words
      */
     fun onSpeakerClick(context: Context, dictionary: DictionaryEntity?) {
-        val audioURL = dictionary?.let { getAudioLink(word = it) }
-        mediaPlayer.setAudioAttributes(
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build()
-        )
-        try {
-            mediaPlayer.setDataSource(context, Uri.parse(audioURL))
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener { mPlayer ->
-                mPlayer.start()
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                val audioURL = dictionary?.let { getAudioLink(word = it) }
+                mediaPlayer.setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build()
+                )
+                try {
+                    mediaPlayer.setDataSource(context, Uri.parse(audioURL))
+                    mediaPlayer.prepareAsync()
+                    mediaPlayer.setOnPreparedListener { mPlayer ->
+                        mPlayer.start()
+                    }
+                    isSoundReady.update { true }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
     }
-
 
 
     private fun getAudioLink(word: DictionaryEntity): String {
