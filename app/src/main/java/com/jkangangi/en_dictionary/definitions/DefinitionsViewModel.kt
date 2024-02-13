@@ -45,13 +45,15 @@ class DefinitionsViewModel @Inject constructor(repository: DictionaryRepository)
         this.sentence.update { phrase }
     }
 
-    val isSoundReady = MutableStateFlow(false)
+    val soundState = MutableStateFlow(SoundState())
+
     private val mediaPlayer = MediaPlayer()
     /**
      * Handle sound clicks for a word and words
      */
     fun onSpeakerClick(context: Context, dictionary: DictionaryEntity?) {
         viewModelScope.launch {
+            soundState.update { it.copy(load = true) }
             withContext(Dispatchers.Default) {
                 val audioURL = dictionary?.let { getAudioLink(word = it) }
                 mediaPlayer.setAudioAttributes(
@@ -64,8 +66,8 @@ class DefinitionsViewModel @Inject constructor(repository: DictionaryRepository)
                     mediaPlayer.prepareAsync()
                     mediaPlayer.setOnPreparedListener { mPlayer ->
                         mPlayer.start()
+                        soundState.update { it.copy(pause = true) }
                     }
-                    isSoundReady.update { true }
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
