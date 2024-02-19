@@ -35,7 +35,8 @@ fun DefinitionView(
         dictionary = dictionary.value,
         modifier = modifier,
         onSpeakerClick = onSpeakerClicked,
-        onBack = onBack
+        onBack = onBack,
+        soundState2 = viewModel.soundState.collectAsState().value
     )
 }
 

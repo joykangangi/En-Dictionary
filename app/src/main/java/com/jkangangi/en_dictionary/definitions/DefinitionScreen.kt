@@ -29,6 +29,7 @@ fun DefinitionScreen(
     dictionary: DictionaryEntity,
     onSpeakerClick: () -> Unit,
     onBack: () -> Unit,
+    soundState2: SoundState3,
 ) {
 
     Scaffold(
@@ -44,7 +45,8 @@ fun DefinitionScreen(
                 content = {
                     PhoneticsSection(
                         dictionary = dictionary,
-                        onSpeakerClick = onSpeakerClick
+                        onSpeakerClick = onSpeakerClick,
+                        soundState2 = soundState2,
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     DefinitionSection(
@@ -95,7 +97,8 @@ fun WordScreenPreview() {
                 modifier = Modifier.padding(it),
                 onBack = { },
                 onSpeakerClick = { },
-                dictionary = word
+                dictionary = word,
+                soundState2 = SoundState3(SoundState2.Playing)
             )
         }
 

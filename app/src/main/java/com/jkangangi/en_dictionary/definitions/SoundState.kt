@@ -22,6 +22,8 @@ data class SoundState(
     val pause: Boolean = false
     )
 
+data class SoundState3(val state2: SoundState2 = SoundState2.Playing)
+
 enum class SoundState2(val state: Int, val icon: @Composable () -> Unit) {
     Playing(
         state = 1,
@@ -53,7 +55,7 @@ enum class SoundState2(val state: Int, val icon: @Composable () -> Unit) {
 @Composable
 private fun SetIcon(imageVector: ImageVector) {
     Icon(
-        modifier = Modifier.size(70.dp),
+        modifier = Modifier.size(40.dp),
         imageVector = imageVector,
         tint = MaterialTheme.colorScheme.primary,
         contentDescription = null
