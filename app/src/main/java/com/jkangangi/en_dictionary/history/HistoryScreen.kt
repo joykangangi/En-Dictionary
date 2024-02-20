@@ -1,6 +1,8 @@
 package com.jkangangi.en_dictionary.history
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -46,7 +48,10 @@ fun HistoryScreen(
         },
         content = { contentPadding ->
             if (isEmpty) {
-                EmptyListView(stringId = R.string.empty_history)
+                EmptyListView(
+                    modifier = modifier.fillMaxSize(),
+                    stringId = R.string.empty_history
+                )
             } else {
                 // List of search history items
                 LazyColumn(
@@ -58,12 +63,14 @@ fun HistoryScreen(
                                 dictionary = dictionary,
                                 onDeleteWord = deleteWord,
                                 onWordClick = onWordClick,
-                                modifier = modifier.animateItemPlacement()
+                                modifier = modifier.animateItemPlacement(
+                                    animationSpec = tween(durationMillis = 1000)
+                                )
                             )
                         }
                     })
             }
-        },
+        }
     )
 }
 
@@ -72,7 +79,10 @@ fun HistoryScreen(
 @Composable
 fun PreviewHistory() {
     HistoryScreen(
-        dictionaryItems = persistentListOf(DictionaryEntity(sentence = "Magic"),DictionaryEntity(sentence = "Invalidate")),
+        dictionaryItems = persistentListOf(
+            DictionaryEntity(sentence = "Magic"),
+            DictionaryEntity(sentence = "Invalidate")
+        ),
         deleteWord = { },
         onClearHistory = { },
         onWordClick = { }

@@ -1,7 +1,6 @@
 package com.jkangangi.en_dictionary.app.widgets
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,11 +11,11 @@ import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun EmptyListView(
-    modifier: Modifier = Modifier,
     stringId: Int,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Text(

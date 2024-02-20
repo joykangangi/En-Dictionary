@@ -2,12 +2,12 @@ package com.jkangangi.en_dictionary.game
 
 import androidx.compose.runtime.Stable
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentSetOf
 
 @Stable
 data class GameUIState(
-    val wordItems: ImmutableList<DictionaryEntity>? = persistentListOf(),
+    val wordItems: ImmutableSet<DictionaryEntity>? = persistentSetOf(),
     val wordItem: DictionaryEntity? = null,
     val scrambledWord: String = "",
     val hint: String = "",

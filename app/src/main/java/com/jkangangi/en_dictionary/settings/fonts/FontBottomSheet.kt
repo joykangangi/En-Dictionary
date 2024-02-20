@@ -69,7 +69,7 @@ fun FontBottomSheet(
                                 Text(text = stringResource(id = fontOption.nameId))
                             }
                         )
-                        Spacer(modifier = Modifier.height(8.dp)) //avoid sticking to phones bottom menu
+                        Spacer(modifier = Modifier.height(10.dp)) //avoid sticking to phones bottom menu
                     }
                 }
             )

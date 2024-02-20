@@ -13,7 +13,7 @@ jsoup = "1.16.1"
 hilt-navigation = "1.1.0"
 splash-screen = "1.0.1"
 
-compose = "2024.01.00"
+compose = "2024.02.00"
 compose-compiler = "1.5.5"
 gradle-plugin = "8.2.2"
 hilt = "2.50"
@@ -40,6 +40,8 @@ compose-material-icons = { group = "androidx.compose.material", name = "material
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+
 # Datastore
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 # Hilt

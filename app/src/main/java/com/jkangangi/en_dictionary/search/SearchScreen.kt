@@ -2,6 +2,8 @@ package com.jkangangi.en_dictionary.search
 
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -159,7 +161,13 @@ fun SearchScreen(
                         )
                     }
 
-                    AnimatedVisibility(visible = sheetState.isVisible) {
+                    AnimatedVisibility(
+                        visible = sheetState.isVisible,
+                        enter = slideInVertically(
+                            initialOffsetY = { it / 2 }
+                        ),
+                        exit = slideOutVertically(targetOffsetY = { it })
+                    ) {
                         FontBottomSheet(
                             sheetState = sheetState,
                             onDismissSheet = { scope.launch { sheetState.hide() } },

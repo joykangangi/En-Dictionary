@@ -1,7 +1,7 @@
 package com.jkangangi.en_dictionary.game
 
-import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -32,12 +32,20 @@ class GameRoute(
 
         val gameState by viewModel.gameUIState.collectAsState()
 
-        Log.i("GameRoute", "IsGameOn = ${!gameState.wordItems?.isEmpty()!!}")
-        Log.i("GameRoute", "IsGameOn = ${gameState.wordItem?.sentence}")
-
 
         if (gameState.isGameOver) {
             viewModel.resetGame()
+        }
+        val gameSize = gameState.wordItems?.size
+
+        if (gameSize != null) {
+            LaunchedEffect(
+                key1 = gameSize > 5,
+                block = {
+                    if (gameSize > 5) {
+                        viewModel.getWordItem()
+                    }
+                })
         }
 
 
@@ -48,7 +56,7 @@ class GameRoute(
             onGuessChanged = viewModel::updateInput,
             onNextClicked = viewModel::onNextClicked,
             onSkipClicked = viewModel::onSkipClicked,
-            onHintClicked = viewModel::onHintClicked
+            onHintClicked = viewModel::onHintClicked,
         )
 
 

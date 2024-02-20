@@ -46,7 +46,7 @@ fun En_DictionaryTheme(
     val typography = getTypography(fontFamily)
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colorScheme.switch(),
         typography = typography,
         content = content
     )

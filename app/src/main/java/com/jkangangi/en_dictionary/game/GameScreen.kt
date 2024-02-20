@@ -1,8 +1,14 @@
 package com.jkangangi.en_dictionary.game
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,13 +36,25 @@ fun GameScreen(
         },
         content = { contentPadding ->
             if (state.wordItems.isNullOrEmpty() || state.wordItems.size < 5) {
-                EmptyListView(stringId = R.string.empty_saves)
-
+                Column(
+                    modifier = modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    content = {
+                        EmptyListView(stringId = R.string.empty_saves)
+                        Text(
+                            text = "Current Word Count: ${state.wordItems?.size}",
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                color = MaterialTheme.colorScheme.onBackground.copy(
+                                    alpha = 0.5f
+                                )
+                            )
+                        )
+                    }
+                )
             } else {
                 GameLayout(
-                    modifier = modifier
-                        .padding(contentPadding),
-                    // .verticalScroll(rememberScrollState()),
+                    modifier = modifier.padding(contentPadding),
                     guess = guess,
                     onGuessChanged = onGuessChanged,
                     onNextClicked = onNextClicked,
@@ -45,22 +63,24 @@ fun GameScreen(
                     onHintClicked = onHintClicked
                 )
             }
-        })
+        }
+    )
+
 }
 
 
-@Preview
+@Preview(apiLevel = 33)
 @Composable
 fun PreviewSavedWords() {
     En_DictionaryTheme {
         GameScreen(
             modifier = Modifier,
-            state = GameUIState(scrambledWord = "asftkreab", hint = "meal eaten in the early morning."),
-            guess = "" ,
-            onGuessChanged = { } ,
-            onNextClicked = {  },
+            state = GameUIState(),
+            guess = "",
+            onGuessChanged = { },
+            onNextClicked = { },
             onSkipClicked = { },
-            onHintClicked = { }
+            onHintClicked = { },
         )
     }
 }

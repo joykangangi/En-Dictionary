@@ -38,7 +38,7 @@ fun SearchTopBar(
         actions = {
 
             IconButton(
-                modifier = Modifier.animateContentSize(),
+                modifier = Modifier,
                 onClick = onFontClick,
                 content = {
                     Icon(
