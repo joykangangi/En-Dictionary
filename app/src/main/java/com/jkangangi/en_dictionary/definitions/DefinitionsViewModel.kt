@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
@@ -11,7 +12,6 @@ import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -46,36 +46,39 @@ class DefinitionsViewModel @Inject constructor(repository: DictionaryRepository)
         this.sentence.update { phrase }
     }
 
-    val soundState = MutableStateFlow(SoundState3())
 
-    private val mediaPlayer:MediaPlayer = MediaPlayer()
+    private var mediaPlayer: MediaPlayer? = null
 
     /**
-     * Handle sound clicks for a word and words
+     * Handle sound clicks for a word and phrases
      */
     fun onSpeakerClick(context: Context, dictionary: DictionaryEntity?) {
-        viewModelScope.launch {
-            //soundState.update { it.copy(state2 = SoundState2.Loading) }
-            soundState.value = SoundState3(state2 = SoundState2.Loading)
-            withContext(Dispatchers.Default) {
-                val audioURL = dictionary?.let { getAudioLink(word = it) }
-                mediaPlayer.setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-                try {
-                    mediaPlayer.setDataSource(context, Uri.parse(audioURL))
-                    mediaPlayer.prepareAsync()
-                    mediaPlayer.setOnPreparedListener { mPlayer ->
-                        mPlayer.start()
-                        soundState.value = SoundState3(state2 = SoundState2.Pause)
-                        stopPlaying()
-                    }
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer()
+        }
+        mediaPlayer?.let { player ->
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    val audioURL = dictionary?.let { getAudioLink(word = it) }
 
-                } catch (e: IOException) {
-                    e.printStackTrace()
+                    player.reset() //Reset MediaPlayer to idle state
+
+                    player.setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+
+                    try {
+                        player.setDataSource(context, Uri.parse(audioURL))
+                        player.prepareAsync()
+                        player.setOnPreparedListener { mPlayer ->
+                            mPlayer.start()
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
                 }
             }
         }
@@ -91,16 +94,9 @@ class DefinitionsViewModel @Inject constructor(repository: DictionaryRepository)
         return AUDIO_BASE_URL + audioFile
     }
 
-    private fun stopPlaying() {
-        viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-                delay(4000)
-                if (mediaPlayer.isPlaying) {
-                    mediaPlayer.stop()
-                    soundState.value = SoundState3(state2 = SoundState2.Playing)
-                }
-            }
-        }
+    fun clearSoundResources() {
+        Log.i("DefinitionVM", "ClearedSoundResources")
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
-
 }

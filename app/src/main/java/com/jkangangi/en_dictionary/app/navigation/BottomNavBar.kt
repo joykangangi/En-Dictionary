@@ -113,8 +113,8 @@ private fun BottomAppBarItem(
 
 
     val interactionSource = remember { MutableInteractionSource() }
-    val animatedPadding by animateDpAsState(
-        targetValue = if (selected) 0.dp else 8.dp,
+    val animatedHeight by animateDpAsState(
+        targetValue = if (selected) 0.dp else 10.dp,
         label = "bottomNav",
     )
 
@@ -130,7 +130,7 @@ private fun BottomAppBarItem(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            Spacer(modifier = Modifier.height(animatedPadding))
+            Spacer(modifier = Modifier.height(animatedHeight))
 
             if (icon != null) {
                 Icon(

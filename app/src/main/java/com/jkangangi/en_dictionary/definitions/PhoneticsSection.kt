@@ -36,7 +36,6 @@ import com.jkangangi.en_dictionary.app.widgets.SpeakerIcon
 fun PhoneticsSection(
     dictionary: DictionaryEntity?,
     onSpeakerClick: () -> Unit,
-    soundState2: SoundState3,
     modifier: Modifier = Modifier,
 ) {
     val entries = dictionary?.pronunciations?.getOrNull(0)?.entries
@@ -78,7 +77,7 @@ fun PhoneticsSection(
                         }
                     )
                     if (isSpeakerOn == true) {
-                        SpeakerIcon(onSpeakerClick = onSpeakerClick, soundState2 = soundState2 )
+                        SpeakerIcon(onSpeakerClick = onSpeakerClick)
                     }
                 }
 
@@ -105,7 +104,8 @@ fun PreviewPhoneticsSection() {
                     )
                 )
             ),
-            onSpeakerClick = { }, soundState2 = SoundState3(SoundState2.Playing))
+            onSpeakerClick = { }
+        )
     }
 
 }

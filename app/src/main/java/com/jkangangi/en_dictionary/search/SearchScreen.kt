@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -78,23 +80,28 @@ fun SearchScreen(
                     .padding(contentPadding)
                     .padding(start = 12.dp, end = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(3.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 content = {
 
                     Row(
                         modifier = modifier.padding(top = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                        content = {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "search",
+                                modifier = Modifier.size(40.dp)
+                            )
+                            Text(
+                                text = "Search for a word or a phrase",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    )
 
-                        Text(
-                            text = "Search for a word or a phrase",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "search")
-                    }
-
-                    Spacer(modifier = modifier.height(5.dp))
+                    Spacer(modifier = modifier.height(8.dp))
 
                     //BeforeTarget
                     TextInput(
@@ -127,7 +134,7 @@ fun SearchScreen(
                         isValid = state.afterError
                     )
 
-                    Spacer(modifier = modifier.height(5.dp))
+                    Spacer(modifier = modifier.height(8.dp))
 
                     Button(
                         modifier = modifier,
@@ -198,7 +205,6 @@ private fun SearchResult(
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
                         modifier = modifier,
-                        fontFamily = FontFamily.SansSerif,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }

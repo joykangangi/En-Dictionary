@@ -1,12 +1,12 @@
 package com.jkangangi.en_dictionary.definitions
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-
 
 
 @Composable
@@ -20,14 +20,18 @@ fun DefinitionView(
         viewModel.getDictionary(sentence)
     })
 
+    DisposableEffect(key1 = Unit, effect = {
+        onDispose {
+            viewModel.clearSoundResources()
+        }
+    })
+
     val dictionary = viewModel.dictionary.collectAsState()
-
-
 
 
     val context = LocalContext.current.applicationContext
     val onSpeakerClicked = {
-            viewModel.onSpeakerClick(context, dictionary = dictionary.value)
+        viewModel.onSpeakerClick(context, dictionary = dictionary.value)
     }
 
 
@@ -36,7 +40,6 @@ fun DefinitionView(
         modifier = modifier,
         onSpeakerClick = onSpeakerClicked,
         onBack = onBack,
-        soundState2 = viewModel.soundState.collectAsState().value
     )
 }
 

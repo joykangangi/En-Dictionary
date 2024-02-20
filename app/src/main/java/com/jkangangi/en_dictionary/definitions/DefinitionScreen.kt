@@ -25,11 +25,10 @@ import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 @Composable
 fun DefinitionScreen(
-    modifier: Modifier = Modifier,
     dictionary: DictionaryEntity,
     onSpeakerClick: () -> Unit,
     onBack: () -> Unit,
-    soundState2: SoundState3,
+    modifier: Modifier = Modifier,
 ) {
 
     Scaffold(
@@ -46,7 +45,6 @@ fun DefinitionScreen(
                     PhoneticsSection(
                         dictionary = dictionary,
                         onSpeakerClick = onSpeakerClick,
-                        soundState2 = soundState2,
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     DefinitionSection(
@@ -98,7 +96,6 @@ fun WordScreenPreview() {
                 onBack = { },
                 onSpeakerClick = { },
                 dictionary = word,
-                soundState2 = SoundState3(SoundState2.Playing)
             )
         }
 
