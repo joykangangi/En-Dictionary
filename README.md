@@ -10,22 +10,22 @@ English Dictionary App. Search phrases or a word
       <td>Dark Theme</td>
   </tr> 
   <tr>
-   <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/11444e2b-0721-4e75-9287-e0a9b0cc7266.png" alt = "mainlight"></td>
-   <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/14b1baa9-05e6-441e-ae21-d4006d19e27a.png" alt = "maindark"></td>
+   <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/a79fbe22-b790-4e99-99f3-ad5dc1fb2f56" alt = "mainlight"></td>
+   <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/14b1baa9-05e6-441e-ae21-d4006d19e27a" alt = "maindark"></td>
 
   </tr> 
   <tr>
-      <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/ae125b54-6e6c-4d82-a9a4-ab65decb88d1.png" alt = "wordlight"></td>
-      <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/4d994be6-ab08-432c-a7af-ea4daf06c559.png" alt = "worddark"></td>
+      <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/ae125b54-6e6c-4d82-a9a4-ab65decb88d1" alt = "wordlight"></td>
+      <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/4d994be6-ab08-432c-a7af-ea4daf06c559" alt = "worddark"></td>
 
   </tr>
   <tr>
-      <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/eb981b48-d093-4e6e-8da3-5b78f1fd0c24.png" alt = "phraselight"></td>
-      <td><img src="https://github.com/joykangangi/MyResume/assets/64706463/7472538b-4317-4272-819a-95ffbbb9eb5f.png" alt ="gamedark"></td>
+      <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/eb981b48-d093-4e6e-8da3-5b78f1fd0c24" alt = "phraselight"></td>
+      <td><img src="https://github.com/joykangangi/MyResume/assets/64706463/7472538b-4317-4272-819a-95ffbbb9eb5f" alt ="gamedark"></td>
   </tr>
   <tr>
-      <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/d21ea281-f0ef-43eb-82b5-c129e6c95954.png" alt = "fontlight"></td>
-      <td><img src="https://github.com/joykangangi/MyResume/assets/64706463/959ea212-20ae-4e82-9240-daff4b988fbb.png" alt ="historydark"></td>
+      <td><img src = "https://github.com/joykangangi/MyResume/assets/64706463/d21ea281-f0ef-43eb-82b5-c129e6c95954" alt = "fontlight"></td>
+      <td><img src="https://github.com/joykangangi/MyResume/assets/64706463/959ea212-20ae-4e82-9240-daff4b988fbb" alt ="historydark"></td>
   </tr>
 
 </table>
