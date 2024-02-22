@@ -40,12 +40,13 @@ class GameViewModel @Inject constructor(repository: DictionaryRepository) :
         flow = repository.getAllHistory(),
         flow2 = _gameUIState,
         transform = { allHistoryItems, state ->
+            val filteredItems = allHistoryItems.filter { it.sentence.isWord() }.toPersistentSet()
             if (allItems.isEmpty()) {
-                allItems.addAll(allHistoryItems)
+                allItems.addAll(filteredItems)
             }
 
             GameUIState(
-                wordItems = allHistoryItems.filter { it.sentence.isWord() }.toPersistentSet(),
+                wordItems = filteredItems,
                 wordItem = state.wordItem,
                 scrambledWord = state.scrambledWord,
                 hint = state.hint,
