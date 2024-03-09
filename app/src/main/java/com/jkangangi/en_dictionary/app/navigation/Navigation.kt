@@ -17,6 +17,7 @@ import com.bumble.appyx.core.node.ParentNode
 import com.bumble.appyx.core.node.node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.pop
+import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackFader
 import com.jkangangi.en_dictionary.definitions.DefinitionView
 import com.jkangangi.en_dictionary.game.GameRoute
 import com.jkangangi.en_dictionary.history.HistoryRoute
@@ -47,7 +48,7 @@ class Navigation(
         ) {
             Children(
                 navModel = backStack,
-                //transitionHandler = rememberBackstackSlider(),
+                transitionHandler = rememberBackstackFader(),
                 modifier = modifier.padding(it),
             )
         }
