@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.activeElement
-import com.bumble.appyx.navmodel.backstack.operation.singleTop
+import com.bumble.appyx.navmodel.backstack.operation.push
 
 private val bottomNavScreens = listOf(
     Route.Search,
@@ -72,7 +72,7 @@ fun BottomNavigator(
 
     val onItemClick = remember {
         { screen: Route ->
-            backStackNavigator.singleTop(screen)
+            backStackNavigator.push(screen)
             currentRoute.value = screen
         }
     }

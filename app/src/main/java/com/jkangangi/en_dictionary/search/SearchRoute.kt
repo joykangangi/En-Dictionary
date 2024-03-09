@@ -41,11 +41,12 @@ class SearchRoute(
 
         val state = searchViewModel.searchState.collectAsState()
 
-        val toWordClick = remember {
+        val toWordClick =
             { dfn: DictionaryEntity ->
                 backStack.push(Route.SearchDetail(sentence = dfn.sentence))
             }
-        }
+
+
         val scope = rememberCoroutineScope()
 
         val onSearchClicked =
@@ -73,7 +74,9 @@ class SearchRoute(
         }
 
         DisposableEffect(key1 = Unit, effect = {
-            onDispose { searchViewModel.closeClient() }
+            onDispose {
+                searchViewModel.closeClient()
+            }
         })
 
         val isDark by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)

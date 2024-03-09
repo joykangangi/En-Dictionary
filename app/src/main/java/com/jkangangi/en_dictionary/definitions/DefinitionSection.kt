@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.Item
 import com.jkangangi.en_dictionary.app.data.remote.dto.Phrase
-import com.jkangangi.en_dictionary.app.util.isWord
 
 /** Differences:
  *
@@ -30,7 +29,6 @@ fun DefinitionSection(
     dictionary: DictionaryEntity,
     modifier: Modifier = Modifier,
 ) {
-    val isWord = dictionary.sentence.isWord()
 
     Column(
         modifier = modifier
@@ -38,16 +36,9 @@ fun DefinitionSection(
             .padding(horizontal = 6.dp),
         content = {
             dictionary.items.forEach { item ->
-                if (isWord) {
-                    WordDefinition(item = item)
-                    Thesaurus(item = item)
-                    Spacer(modifier = Modifier.height(4.dp))
-                } else {
-                    item.phrases?.let { phrases ->
-                        PhraseDefinition(phrases = phrases)
-                        Spacer(modifier = Modifier.height(4.dp))
-                    }
-                }
+                WordDefinition(item = item)
+                Thesaurus(item = item)
+                item.phrases?.let { PhraseDefinition(phrases = it) }
             }
         },
     )
@@ -56,13 +47,15 @@ fun DefinitionSection(
 @Composable
 private fun WordDefinition(
     modifier: Modifier = Modifier,
-    item: Item,
+    item: Item?,
 ) {
     Column(
         modifier = modifier,
         content = {
-            DefinitionHeader(headerTxt = item.partOfSpeech)
-            DefinitionBody(wordDefinitions = item.definitions)
+            if (item != null) {
+                DefinitionHeader(headerTxt = item.partOfSpeech)
+                DefinitionBody(wordDefinitions = item.definitions)
+            }
         }
     )
 }

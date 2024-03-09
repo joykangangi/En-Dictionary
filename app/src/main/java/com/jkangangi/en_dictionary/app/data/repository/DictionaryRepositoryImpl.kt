@@ -4,6 +4,7 @@ import android.util.Log
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
+import com.jkangangi.en_dictionary.app.data.remote.dto.trimRequest
 import com.jkangangi.en_dictionary.app.data.remote.toDictionaryEntity
 import com.jkangangi.en_dictionary.app.data.service.DictionaryService
 import com.jkangangi.en_dictionary.app.util.NetworkResult
@@ -32,14 +33,13 @@ class DictionaryRepositoryImpl @Inject constructor(
     override fun postSearch(request: RequestDTO): Flow<NetworkResult<DictionaryEntity>> = flow {
         emit(NetworkResult.Loading())
 
-        val sentence = "${request.textBeforeSelection.trim().lowercase()} ${request.selection.trim().lowercase()} ${request.textAfterSelection.trim().lowercase()}"
-
-
+        var sentence = ""
         /**
          * API -> Database
          */
         try {
-            val remoteData = dictionaryService.postSearchRequest(search = request)
+            val remoteData = dictionaryService.postSearchRequest(search = request.trimRequest())
+            sentence = remoteData.sentence
             if (remoteData.items.isNotEmpty()) {
                 val entity = remoteData.toDictionaryEntity() //db has no duplicate, insert latest
                 dao.deleteDictionaryItems(persistentListOf(entity.sentence))

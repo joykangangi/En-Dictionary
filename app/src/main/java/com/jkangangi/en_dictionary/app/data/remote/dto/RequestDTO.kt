@@ -13,3 +13,11 @@ data class RequestDTO(
     @SerialName("textBeforeSelection")
     val textBeforeSelection: String = ""
 )
+
+fun RequestDTO.trimRequest(): RequestDTO {
+    return RequestDTO(
+        selection = this.selection.trim().lowercase(),
+        textAfterSelection = this.textAfterSelection.trim().lowercase(),
+        textBeforeSelection = this.textBeforeSelection.trim().lowercase()
+    )
+}

@@ -56,7 +56,7 @@ fun En_DictionaryTheme(
 private fun animateColor(targetValue: Color): Color {
     return animateColorAsState(
         targetValue = targetValue,
-        animationSpec = tween(durationMillis = 1500),
+        animationSpec = tween(durationMillis = 500),
         label = "theme"
     ).value
     

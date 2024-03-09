@@ -196,7 +196,11 @@ private fun SearchResult(
             when {
                 state.isLoading -> CircularProgressIndicator()
 
-                state.serverError?.isNotEmpty() == true && state.wordItem == null -> {
+                state.wordItem != null -> {
+                    toWordDefinition(state.wordItem)
+                }
+
+                state.serverError?.isNotEmpty() == true -> {
                     Text(
                         text = state.serverError,
                         color = MaterialTheme.colorScheme.error,
@@ -207,7 +211,7 @@ private fun SearchResult(
                     )
                 }
 
-                state.serverError == null && state.wordItem == null -> {
+                else -> {
                     Text(
                         text = "Word not found, check spelling",
                         color = MaterialTheme.colorScheme.error,
@@ -215,10 +219,6 @@ private fun SearchResult(
                         modifier = modifier,
                         style = MaterialTheme.typography.bodyMedium,
                     )
-                }
-
-                state.wordItem != null -> {
-                    toWordDefinition(state.wordItem)
                 }
             }
         }

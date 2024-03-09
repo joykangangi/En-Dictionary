@@ -26,7 +26,7 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 
-const val TIME_OUT = 15_000L
+const val TIME_OUT = 25_000L
 
 //impl of api
 class DictionaryServiceImpl @Inject constructor() : DictionaryService {
