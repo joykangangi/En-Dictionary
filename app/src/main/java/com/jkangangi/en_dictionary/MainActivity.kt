@@ -8,7 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontFamily
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumble.appyx.core.integration.NodeHost
 import com.bumble.appyx.core.integrationpoint.NodeComponentActivity
 import com.jkangangi.en_dictionary.app.navigation.Navigation
@@ -17,9 +17,8 @@ import com.jkangangi.en_dictionary.settings.AppTheme.DARK_THEME
 import com.jkangangi.en_dictionary.settings.AppTheme.LIGHT_THEME
 import com.jkangangi.en_dictionary.settings.SettingsViewModel
 import com.jkangangi.en_dictionary.settings.fonts.AppFont
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class MainActivity : NodeComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +33,11 @@ class MainActivity : NodeComponentActivity() {
                 content = {
                     NodeHost(
                         integrationPoint = appyxIntegrationPoint,
-                        factory = { context -> Navigation(rootBuildContext = context) },
+                        factory = { context ->
+                            Navigation(
+                                rootBuildContext = context
+                            )
+                        },
                     )
                 }
             )
@@ -43,8 +46,8 @@ class MainActivity : NodeComponentActivity() {
 }
 
 @Composable
- private fun isDarkTheme(): Boolean {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+private fun isDarkTheme(): Boolean {
+    val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)
     val systemTheme = isSystemInDarkTheme()
     val theme by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
     return remember(theme) {
@@ -58,7 +61,7 @@ class MainActivity : NodeComponentActivity() {
 
 @Composable
 private fun getFontFamily(): FontFamily {
-    val settingsViewModel: SettingsViewModel = hiltViewModel()
+    val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)
     val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
     return remember(font) {
         when (font) {

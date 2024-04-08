@@ -3,18 +3,14 @@ package com.jkangangi.en_dictionary.history
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class HistoryViewModel @Inject constructor(private val repository: DictionaryRepository) :
-    ViewModel() {
+class HistoryViewModel (private val repository: DictionaryRepository) : ViewModel() {
 
     val allHistoryItems = repository.getAllHistory()
         .map { entities -> entities.toPersistentList() }

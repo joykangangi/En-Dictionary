@@ -6,13 +6,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 
 
 @Composable
 fun DefinitionView(
     modifier: Modifier,
-    viewModel: DefinitionsViewModel = hiltViewModel(),
+    viewModel: DefinitionsViewModel = viewModel(factory = DictionaryViewModelFactory),
     onBack: () -> Unit,
     sentence: String,
 ) {

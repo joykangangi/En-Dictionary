@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Color
 internal val lightColorScheme = lightColorScheme(
     primary = Color(0xFF38086F),
     onPrimary = Color(0xFFFFFFFF),
-    background = Color(0xFFFFFBFF),
-    onBackground = Color(0xFF1C1B1F),
+    background = Color(0xFFE7E5EB),
+    onBackground = Color(0xFF000000),
     surface = Color(0xFFF7F3F7),
     error = Color(0xFFBA1A1A),
 )

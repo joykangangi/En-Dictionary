@@ -9,7 +9,5 @@ interface DictionaryService {
 
     suspend fun postSearchRequest(search: RequestDTO): DictionaryDTO
 
-    fun closeClient()
-
 }
 

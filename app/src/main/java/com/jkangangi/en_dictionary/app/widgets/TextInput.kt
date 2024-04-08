@@ -1,9 +1,9 @@
 package com.jkangangi.en_dictionary.app.widgets
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,15 +18,14 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import com.jkangangi.en_dictionary.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextInput(
-    modifier: Modifier = Modifier,
     input: String,
     onInputChange: (String) -> Unit,
     txtLabel: String,
-    isRequired: Boolean = false,
     onClearInput: () -> Unit,
+    modifier: Modifier = Modifier,
+    isRequired: Boolean = false,
     isValid: Boolean = false,
 ) {
 
@@ -40,14 +39,20 @@ fun TextInput(
     }
 
     Column(
+        modifier = modifier,
         content = {
             OutlinedTextField(
-                modifier = modifier,
+                modifier = Modifier.fillMaxWidth(),
                 value = input,
                 onValueChange = onInputChange,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium,
-                label = { Text(text = transformedLabel, style = MaterialTheme.typography.bodySmall) },
+                label = {
+                    Text(
+                        text = transformedLabel,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                },
                 trailingIcon = {
                     if (input.isNotEmpty())
                         IconButton(onClick = onClearInput) {
@@ -62,7 +67,7 @@ fun TextInput(
             if (!isValid) Text(
                 text = stringResource(id = R.string.inputError),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
         }
     )

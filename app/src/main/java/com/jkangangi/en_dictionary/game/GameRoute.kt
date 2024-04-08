@@ -5,11 +5,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.jkangangi.en_dictionary.app.navigation.Route
+import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 
 class GameRoute(
     buildContext: BuildContext,
@@ -27,7 +28,7 @@ class GameRoute(
     @Composable
     fun GameScreenView(
         modifier: Modifier,
-        viewModel: GameViewModel = hiltViewModel()
+        viewModel: GameViewModel = viewModel(factory = DictionaryViewModelFactory)
     ) {
 
         val gameState by viewModel.gameUIState.collectAsState()

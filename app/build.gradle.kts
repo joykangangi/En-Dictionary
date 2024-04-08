@@ -5,9 +5,7 @@ import java.util.Properties
 
 plugins {
     id(libs.plugins.android.application.get().pluginId)
-    id(libs.plugins.dagger.hilt.get().pluginId)
     id(libs.plugins.kotlin.android.get().pluginId)
-    id(libs.plugins.kotlin.kapt.get().pluginId)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
@@ -113,11 +111,6 @@ dependencies {
     // preferences datastore
     implementation(libs.datastore)
 
-    // hilt
-    implementation(libs.hilt.android)
-    implementation(libs.hilt.compose)
-    kapt(libs.hilt.compiler)
-
     //Jsoup
     implementation(libs.jsoup)
 
@@ -141,8 +134,4 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.junit.engine)
     androidTestImplementation(libs.junit.android)
-}
-
-hilt {
-    enableAggregatingTask = true
 }

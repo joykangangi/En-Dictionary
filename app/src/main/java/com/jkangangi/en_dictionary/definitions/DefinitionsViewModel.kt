@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,13 +19,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
-import javax.inject.Inject
 
 
 private const val AUDIO_BASE_URL = "https://download.xfd.plus/xfed/audio/"
 
-@HiltViewModel
-class DefinitionsViewModel @Inject constructor(repository: DictionaryRepository) : ViewModel() {
+
+class DefinitionsViewModel (repository: DictionaryRepository) : ViewModel() {
 
     private val sentence = MutableStateFlow("")
 

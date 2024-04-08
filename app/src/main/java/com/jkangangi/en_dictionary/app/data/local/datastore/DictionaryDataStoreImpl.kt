@@ -9,10 +9,9 @@ import androidx.datastore.preferences.core.emptyPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 
-class DictionaryDataStoreImpl @Inject constructor(
+class DictionaryDataStoreImpl (
     private val dataStore: DataStore<Preferences>
 ) : DictionaryDataStore {
     private val tag = this::class.java.simpleName

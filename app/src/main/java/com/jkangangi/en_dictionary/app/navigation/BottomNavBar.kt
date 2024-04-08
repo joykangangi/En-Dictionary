@@ -130,7 +130,7 @@ private fun BottomAppBarItem(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            Spacer(modifier = Modifier.height(animatedHeight))
+            Spacer(modifier = Modifier.height(if (selected) 0.dp else 20.dp))
 
             if (icon != null) {
                 Icon(

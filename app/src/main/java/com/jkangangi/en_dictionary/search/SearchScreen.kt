@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.TextInput
@@ -50,15 +49,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    modifier: Modifier,
     state: SearchScreenState,
     updateQuery: (RequestDTO) -> Unit,
     onSearchClick: () -> Unit,
-    toWordDefinition: (DictionaryEntity) -> Unit,
     isDarkTheme: Boolean,
     updateTheme: (Boolean) -> Unit,
     currentFont: AppFont,
     updateFont: (AppFont) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val keyBoardController = LocalSoftwareKeyboardController.current
     val showSearchStatus = remember {
@@ -66,6 +64,7 @@ fun SearchScreen(
     }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+
 
     Scaffold(
         modifier = modifier,
@@ -78,7 +77,7 @@ fun SearchScreen(
         },
         content = { contentPadding ->
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .padding(contentPadding)
                     .padding(start = 12.dp, end = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -86,7 +85,7 @@ fun SearchScreen(
                 content = {
 
                     Row(
-                        modifier = modifier.padding(top = 8.dp),
+                        modifier = Modifier.padding(top = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(5.dp),
                         content = {
@@ -103,11 +102,10 @@ fun SearchScreen(
                         }
                     )
 
-                    Spacer(modifier = modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     //BeforeTarget
                     TextInput(
-                        modifier = modifier,
                         input = state.requests.textBeforeSelection,
                         onInputChange = { updateQuery(state.requests.copy(textBeforeSelection = it)) },
                         txtLabel = stringResource(id = R.string.string_b4),
@@ -117,7 +115,6 @@ fun SearchScreen(
 
                     //target
                     TextInput(
-                        modifier = modifier,
                         input = state.requests.selection,
                         onInputChange = { updateQuery(state.requests.copy(selection = it)) },
                         txtLabel = stringResource(id = R.string.target),
@@ -128,7 +125,6 @@ fun SearchScreen(
 
                     //afterTarget
                     TextInput(
-                        modifier = modifier,
                         input = state.requests.textAfterSelection,
                         onInputChange = { updateQuery(state.requests.copy(textAfterSelection = it)) },
                         txtLabel = stringResource(id = R.string.string_after),
@@ -136,28 +132,26 @@ fun SearchScreen(
                         isValid = state.afterError
                     )
 
-                    Spacer(modifier = modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Button(
-                        modifier = modifier,
+                        modifier = Modifier.height(32.dp),
                         enabled = (state.beforeError && state.targetError && state.afterError),
                         onClick = {
                             keyBoardController?.hide()
                             onSearchClick()
                             showSearchStatus.value = true
-                        }
+                        },
                     ) {
                         Text(
                             text = "Search",
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
-                    Spacer(modifier = modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     AnimatedVisibility(visible = showSearchStatus.value) {
                         SearchResult(
                             state = state,
-                            modifier = modifier,
-                            toWordDefinition = toWordDefinition
                         )
                     }
 
@@ -181,12 +175,10 @@ fun SearchScreen(
     )
 }
 
-
 @Composable
 private fun SearchResult(
     state: SearchScreenState,
-    modifier: Modifier,
-    toWordDefinition: (DictionaryEntity) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     Box(
@@ -196,16 +188,12 @@ private fun SearchResult(
             when {
                 state.isLoading -> CircularProgressIndicator()
 
-                state.wordItem != null -> {
-                    toWordDefinition(state.wordItem)
-                }
-
                 state.serverError?.isNotEmpty() == true -> {
                     Text(
                         text = state.serverError,
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
-                        modifier = modifier,
+                        modifier = Modifier.fillMaxWidth(),
                         fontFamily = FontFamily.SansSerif,
                         style = MaterialTheme.typography.bodyMedium,
                     )
@@ -216,7 +204,7 @@ private fun SearchResult(
                         text = "Word not found, check spelling",
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
-                        modifier = modifier,
+                        modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
@@ -231,11 +219,9 @@ private fun SearchResult(
 private fun SearchScreenPreview() {
     En_DictionaryTheme {
         SearchScreen(
-            modifier = Modifier.fillMaxWidth(),
             state = SearchScreenState(),
             updateQuery = { },
             onSearchClick = { },
-            toWordDefinition = { },
             isDarkTheme = false,
             updateTheme = { },
             currentFont = SansSerif,

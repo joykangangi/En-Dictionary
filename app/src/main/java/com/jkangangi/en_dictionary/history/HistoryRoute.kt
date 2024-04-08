@@ -6,13 +6,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.push
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
+import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 
 class HistoryRoute(
     buildContext: BuildContext,
@@ -28,7 +29,7 @@ class HistoryRoute(
     @Composable
     fun HistoryScreenView(
         modifier: Modifier,
-        viewModel: HistoryViewModel = hiltViewModel()
+        viewModel: HistoryViewModel = viewModel(factory = DictionaryViewModelFactory)
     ) {
 
         val state by viewModel.allHistoryItems.collectAsState()

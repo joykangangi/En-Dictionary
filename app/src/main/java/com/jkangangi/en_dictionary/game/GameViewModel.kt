@@ -10,7 +10,6 @@ import com.jkangangi.en_dictionary.game.GameConstants.HINT_DECREASE
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,15 +18,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * The app will use searched words (cached in db).
  *
  */
 
-@HiltViewModel
-class GameViewModel @Inject constructor(repository: DictionaryRepository) :
+class GameViewModel (repository: DictionaryRepository) :
     ViewModel() {
     private val _guessedWord = MutableStateFlow("")
     val guessedWord = _guessedWord.asStateFlow()

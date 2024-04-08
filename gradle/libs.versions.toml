@@ -10,13 +10,11 @@ immutable = "0.3.5"
 junit-test = "1.1.5"
 compose-activity = "1.8.2"
 jsoup = "1.16.1"
-hilt-navigation = "1.1.0"
 splash-screen = "1.0.1"
 
 compose = "2024.02.00"
 compose-compiler = "1.5.5"
 gradle-plugin = "8.2.2"
-hilt = "2.50"
 junit = "5.9.2"
 kotlin-version = "1.9.20"
 ktor = "2.3.2"
@@ -44,10 +42,7 @@ compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 
 # Datastore
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
-# Hilt
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-hilt-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation" }
+
 #Jsoup
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 # JUnit
@@ -77,9 +72,7 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 [plugins] #Id;Version.ref
 android-application = { id = "com.android.application", version.ref = "gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "gradle-plugin" }
-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-version" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-version" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
