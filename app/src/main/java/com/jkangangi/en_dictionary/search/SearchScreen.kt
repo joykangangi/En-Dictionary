@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.TextInput
 import com.jkangangi.en_dictionary.settings.fonts.AppFont
@@ -50,12 +49,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchScreen(
     state: SearchScreenState,
-    updateQuery: (RequestDTO) -> Unit,
+    updateQuery: (SearchInputEvents) -> Unit,
     onSearchClick: () -> Unit,
     isDarkTheme: Boolean,
     updateTheme: (Boolean) -> Unit,
     currentFont: AppFont,
     updateFont: (AppFont) -> Unit,
+    textBeforeSelection: String,
+    selection: String,
+    textAfterSelection: String,
     modifier: Modifier = Modifier,
 ) {
     val keyBoardController = LocalSoftwareKeyboardController.current
@@ -106,36 +108,36 @@ fun SearchScreen(
 
                     //BeforeTarget
                     TextInput(
-                        input = state.requests.textBeforeSelection,
-                        onInputChange = { updateQuery(state.requests.copy(textBeforeSelection = it)) },
+                        input = textBeforeSelection,
+                        onInputChange = { updateQuery(SearchInputEvents.UpdateBeforeSelection(it)) },
                         txtLabel = stringResource(id = R.string.string_b4),
-                        onClearInput = { updateQuery(state.requests.copy(textBeforeSelection = "")) },
+                        onClearInput = { updateQuery(SearchInputEvents.UpdateBeforeSelection(beforeInput = "")) },
                         isValid = state.beforeError
                     )
 
                     //target
                     TextInput(
-                        input = state.requests.selection,
-                        onInputChange = { updateQuery(state.requests.copy(selection = it)) },
+                        input = selection,
+                        onInputChange = { updateQuery(SearchInputEvents.UpdateTarget(it)) },
                         txtLabel = stringResource(id = R.string.target),
                         isRequired = true,
-                        onClearInput = { updateQuery(state.requests.copy(selection = "")) },
+                        onClearInput = { updateQuery(SearchInputEvents.UpdateTarget(targetInput = "")) },
                         isValid = state.targetError
                     )
 
                     //afterTarget
                     TextInput(
-                        input = state.requests.textAfterSelection,
-                        onInputChange = { updateQuery(state.requests.copy(textAfterSelection = it)) },
+                        input = textAfterSelection,
+                        onInputChange = { updateQuery(SearchInputEvents.UpdateAfterSelection(it)) },
                         txtLabel = stringResource(id = R.string.string_after),
-                        onClearInput = { updateQuery(state.requests.copy(textAfterSelection = "")) },
+                        onClearInput = { updateQuery(SearchInputEvents.UpdateAfterSelection(afterInput = "")) },
                         isValid = state.afterError
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Button(
-                        modifier = Modifier.height(32.dp),
+                        modifier = Modifier.height(48.dp),
                         enabled = (state.beforeError && state.targetError && state.afterError),
                         onClick = {
                             keyBoardController?.hide()
@@ -225,7 +227,10 @@ private fun SearchScreenPreview() {
             isDarkTheme = false,
             updateTheme = { },
             currentFont = SansSerif,
-            updateFont = { }
+            updateFont = { },
+            textBeforeSelection = "",
+            selection = "",
+            textAfterSelection = ""
         )
     }
 }

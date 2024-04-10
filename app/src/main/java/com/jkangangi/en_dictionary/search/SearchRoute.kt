@@ -38,12 +38,12 @@ class SearchRoute(
         settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
     ) {
 
-        val state = searchViewModel.searchState.collectAsState()
+        val state by searchViewModel.searchState.collectAsState()
 
 
 
-        LaunchedEffect(key1 = state.value.wordItem) {
-            val wordItem = state.value.wordItem
+        LaunchedEffect(key1 = state.wordItem) {
+            val wordItem = state.wordItem
             if (wordItem != null) {
                 searchViewModel.clearState()
                 backStack.push(Route.SearchDetail(sentence = wordItem.sentence))
@@ -74,17 +74,20 @@ class SearchRoute(
 
         val isDark by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
         val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
-
+        val inputState = searchViewModel.inputState
 
         SearchScreen(
             modifier = modifier,
-            state = state.value,
-            updateQuery = searchViewModel::updateQuery,
+            state = state,
+            updateQuery = searchViewModel::updateInputEvents,
             onSearchClick = searchViewModel::doWordSearch,
             isDarkTheme = isDark == DARK_THEME,
             updateTheme = onUpdateTheme,
             currentFont = font,
-            updateFont = onUpdateFont
+            updateFont = onUpdateFont,
+            textBeforeSelection =inputState.beforeSelection,
+            selection = inputState.selection,
+            textAfterSelection = inputState.afterSelection
         )
 
     }
