@@ -1,7 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -12,6 +11,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.push
+import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.navigation.Route
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 import com.jkangangi.en_dictionary.settings.AppTheme.DARK_THEME
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class SearchRoute(
     buildContext: BuildContext,
-    private val backStack: BackStack<Route>, //navController
+    private val backStack: BackStack<Route>,
 ) : Node(buildContext = buildContext) {
 
     @Composable
@@ -38,17 +38,17 @@ class SearchRoute(
         settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
     ) {
 
-        val state by searchViewModel.searchState.collectAsState()
+        val inputState = searchViewModel.inputState
+        val inputErrorState by searchViewModel.inputErrorState.collectAsState()
+        val networkState by searchViewModel.resultUiState.collectAsState()
 
 
 
-        LaunchedEffect(key1 = state.wordItem) {
-            val wordItem = state.wordItem
-            if (wordItem != null) {
-                searchViewModel.clearState()
-                backStack.push(Route.SearchDetail(sentence = wordItem.sentence))
-            }
+        val toWordClick: (DictionaryEntity) -> Unit = {
+            searchViewModel.clearState()
+            backStack.push(Route.SearchDetail(sentence = it.sentence))
         }
+
 
         val scope = rememberCoroutineScope()
 
@@ -74,20 +74,22 @@ class SearchRoute(
 
         val isDark by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
         val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
-        val inputState = searchViewModel.inputState
+
 
         SearchScreen(
             modifier = modifier,
-            state = state,
+            errorState = inputErrorState,
             updateQuery = searchViewModel::updateInputEvents,
-            onSearchClick = searchViewModel::doWordSearch,
+            onSearchClick = searchViewModel::getSearchResults,
             isDarkTheme = isDark == DARK_THEME,
             updateTheme = onUpdateTheme,
             currentFont = font,
             updateFont = onUpdateFont,
-            textBeforeSelection =inputState.beforeSelection,
+            textBeforeSelection = inputState.beforeSelection,
             selection = inputState.selection,
-            textAfterSelection = inputState.afterSelection
+            textAfterSelection = inputState.afterSelection,
+            networkState = networkState,
+            toWordClick = toWordClick
         )
 
     }

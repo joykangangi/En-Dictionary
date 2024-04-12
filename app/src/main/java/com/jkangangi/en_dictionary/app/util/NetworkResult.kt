@@ -1,15 +1,9 @@
 package com.jkangangi.en_dictionary.app.util
 
+sealed interface NetworkResult<out T> {
+    data class Success<T>(val data: T?) : NetworkResult<T>
+    data class Failure<T>(val throwable: Throwable) : NetworkResult<T>
 
-sealed class NetworkResult<Data>(val data: Data? = null, val message: String? = null) {
-    class Loading<Data>(data: Data? = null): NetworkResult<Data>(data = data)
-    class Success<Data>(data: Data? ): NetworkResult<Data>(data = data)
-    class Error<Data>(data: Data? = null, message: String): NetworkResult<Data>(message = message, data = data)
+    data object EmptyBody: NetworkResult<Nothing>
 
 }
-
-//sealed interface NetworkResult<out Data, out Error> {
-//    data class Success<out Data>(val data: Data): NetworkResult<Data, Error>
-//   data class Error<out Data>(val message: String, val data: Data? = null): NetworkResult<Data, Error>
-// Todo -> change results type
-//}

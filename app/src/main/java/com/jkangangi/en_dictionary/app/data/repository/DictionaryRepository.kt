@@ -6,7 +6,7 @@ import com.jkangangi.en_dictionary.app.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
 
 interface DictionaryRepository {
-    fun postSearch(request: RequestDTO): Flow<NetworkResult<DictionaryEntity>>
+    suspend fun postSearch(request: RequestDTO): NetworkResult<DictionaryEntity>
 
     fun getAllHistory(): Flow<List<DictionaryEntity>>
 
