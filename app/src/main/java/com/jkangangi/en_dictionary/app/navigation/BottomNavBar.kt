@@ -1,7 +1,7 @@
 package com.jkangangi.en_dictionary.app.navigation
 
 import android.util.Log
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.activeElement
@@ -49,12 +51,13 @@ fun BottomNavigator(
     val navItems by remember { mutableStateOf(bottomNavScreens) }
     val backStack by backStackNavigator.elements.collectAsState()
 
-    val currentRoute = rememberSaveable {
+    val currentRoute = rememberSaveable(backStack.activeElement) {
         mutableStateOf(backStack.activeElement)
     }
+    //val c = rememberUpdatedState(newValue = backStack.activeElement)
 
-    val showBottomBar = remember(backStackNavigator.activeElement) {
-        when (backStackNavigator.activeElement) {
+    val showBottomBar = remember(currentRoute) {
+        when (currentRoute.value) {
             Route.History, Route.Play, Route.Search -> true
             else -> false
         }
@@ -62,7 +65,9 @@ fun BottomNavigator(
 
     Log.i(
         "Navigation",
-        "A.E = ${backStack.activeElement?.title}, C.R = ${currentRoute.value?.title}"
+        "A.E = ${backStack.activeElement?.title}," +
+                " C.R = ${currentRoute.value?.title}," +
+                "B.N = ${backStackNavigator.activeElement?.title}"
     )
     val selected: (screen: Route) -> Boolean = remember {
         { screen ->
@@ -113,10 +118,11 @@ private fun BottomAppBarItem(
 
 
     val interactionSource = remember { MutableInteractionSource() }
-    val animatedHeight by animateDpAsState(
-        targetValue = if (selected) 0.dp else 10.dp,
-        label = "bottomNav",
-    )
+
+    val fontSize =  MaterialTheme.typography.bodySmall.fontSize.value
+    val animatedFont by animateFloatAsState(
+        targetValue = if (selected) fontSize else 0f,
+        label = "bottomNav")
 
 
     Column(
@@ -139,11 +145,12 @@ private fun BottomAppBarItem(
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-            if (title != null && selected) {
+            if (title != null) {
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodySmall,
+                    fontSize = TextUnit(animatedFont, TextUnitType.Sp)
                 )
             }
         }

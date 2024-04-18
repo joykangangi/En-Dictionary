@@ -39,9 +39,9 @@ class GameRoute(
         }
         val gameSize = gameState.wordItems?.size
 
-        if (gameSize != null) {
+        if (gameSize != null && gameState.wordCount == 0) {
             LaunchedEffect(
-                key1 = gameSize > 5,
+                key1 = gameSize,
                 block = {
                     if (gameSize > 5) {
                         viewModel.getWordItem()

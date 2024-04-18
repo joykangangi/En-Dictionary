@@ -12,7 +12,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 /**
@@ -26,6 +25,7 @@ class DictionaryRepositoryImpl(
     private val dictionaryService: DictionaryService,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : DictionaryRepository {
+
     override suspend fun postSearch(request: RequestDTO): NetworkResult<DictionaryEntity> {
         return withContext(ioDispatcher) {
             val sentence: String
@@ -33,13 +33,12 @@ class DictionaryRepositoryImpl(
              * API -> Database
              */
             try {
-                val remoteData = dictionaryService.postSearchRequest(search = request.trimRequest())
-                sentence = remoteData.sentence
-                if (remoteData.items.isNotEmpty()) {
-                    val entity =
-                        remoteData.toDictionaryEntity() //db has no duplicate, insert latest
-                    dao.deleteDictionaryItems(persistentListOf(entity.sentence))
-                    dao.insertDictionaryItem(entity)
+                val newEntity = dictionaryService.postSearchRequest(search = request.trimRequest()).toDictionaryEntity()
+                sentence = newEntity.sentence
+                if (newEntity.items.isNotEmpty()) {
+                     //db has no duplicate, insert latest
+                    dao.deleteDictionaryItems(persistentListOf(newEntity.sentence))
+                    dao.insertDictionaryItem(newEntity)
                 }
 
             } catch (e: Throwable) {
@@ -56,6 +55,7 @@ class DictionaryRepositoryImpl(
              */
             val newWord = dao.getDictionaryItem(sentence = sentence)
             if (newWord != null && newWord.items.isNotEmpty()) {
+                Log.i(this@DictionaryRepositoryImpl::class.java.name, "sentence = $sentence")
                 NetworkResult.Success(data = newWord)
             } else {
                 NetworkResult.EmptyBody
@@ -64,19 +64,15 @@ class DictionaryRepositoryImpl(
     }
 
     override fun getAllHistory(): Flow<List<DictionaryEntity>> {
-        return dao.getAllDefinitions().flowOn(ioDispatcher)
+        return dao.getAllDefinitions()
     }
 
     override suspend fun deleteDictionaryItems(sentences: List<String>) {
-        withContext(ioDispatcher) {
             dao.deleteDictionaryItems(sentences)
-        }
     }
 
     override suspend fun getDictionaryItem(sentence: String): DictionaryEntity? {
-        return withContext(ioDispatcher) {
-            dao.getDictionaryItem(sentence)
-        }
+        return dao.getDictionaryItem(sentence)
     }
 
 }

@@ -23,14 +23,14 @@ class SettingsViewModel (
 
     val currentTheme = dataStore.getData(key = THEME_KEY).map { theme ->
         theme ?: LIGHT_THEME
-    }.flowOn(Dispatchers.Default)
+    }.flowOn(Dispatchers.IO)
 
     val currentFont = dataStore.getData(key = FONT_KEY).map { fontName ->
         if (fontName != null) {
             AppFont.valueOf(fontName)
         } else
             AppFont.SansSerif
-    }.flowOn(Dispatchers.Default)
+    }.flowOn(Dispatchers.IO)
 
     fun updateTheme(newTheme: String) {
         viewModelScope.launch {

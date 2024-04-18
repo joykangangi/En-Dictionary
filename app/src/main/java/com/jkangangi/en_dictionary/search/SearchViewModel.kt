@@ -1,6 +1,6 @@
 package com.jkangangi.en_dictionary.search
 
-import androidx.compose.runtime.Stable
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,69 +11,60 @@ import com.jkangangi.en_dictionary.app.data.remote.dto.RequestDTO
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import io.ktor.client.plugins.RedirectResponseException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
 import java.net.UnknownServiceException
 
-//private const val DELAY_TIME = 500L
 /**
  * Target string MUST have an input, before and after texts are optional
  *
  * states:
- * 1. TextFields-[SearchTextState] -> inputStates
+ * 1. TextFields-[] -> inputStates
  * 2. TextFieldsErrors-[SearchInputErrorState] -> inputErrorState
- * 2. NetworkResult - [SearchResultUiState] -> resultUiState
- * 3.
+ * 3. NetworkResult - [SearchResultUiState] -> resultUiState
  */
 
-@Stable
-interface SearchTextState {
-    val beforeSelection: String
-    val selection: String
-    val afterSelection: String
-}
-
-private class MutableSearchTextState : SearchTextState {
-    override var beforeSelection: String by mutableStateOf("")
-    override var selection: String by mutableStateOf("")
-    override var afterSelection: String by mutableStateOf("")
-}
 
 class SearchViewModel(private val repository: DictionaryRepository) : ViewModel() {
-    private var regex: Regex? = null
+    private val regex = Regex("^[a-zA-Z' ]+\$")
+    var beforeSelection: String by mutableStateOf("")
+        private set
 
-    init {
-        viewModelScope.launch {
-            regex = Regex("^[a-zA-Z' ]+\$")
-        }
-    }
+    var selection: String by mutableStateOf("")
+        private set
 
-    private val _inputState = MutableSearchTextState()
-    val inputState: SearchTextState = _inputState
+    var afterSelection: String by mutableStateOf("")
+        private set
 
-    private val _resultUiState = MutableStateFlow<SearchResultUiState>(SearchResultUiState.Empty)
+    private val _resultUiState = MutableStateFlow<SearchResultUiState>(SearchResultUiState.Idle)
     val resultUiState = _resultUiState.asStateFlow()
 
+    private var debounceJob: Job? = null
 
     private fun updateBeforeTextInput(input: String) {
-        _inputState.beforeSelection = input
+        beforeSelection = input
     }
 
     private fun updateTargetInput(input: String) {
-        _inputState.selection = input
+        selection = input
     }
 
     private fun updateAfterTextInput(input: String) {
-        _inputState.afterSelection = input
+        afterSelection = input
     }
 
 
@@ -95,9 +86,9 @@ class SearchViewModel(private val repository: DictionaryRepository) : ViewModel(
 
     //errorStates
     val inputErrorState: StateFlow<SearchInputErrorState> = combine(
-        flow = snapshotFlow { _inputState.beforeSelection },
-        flow2 = snapshotFlow { _inputState.selection },
-        flow3 = snapshotFlow { _inputState.afterSelection },
+        flow = snapshotFlow { beforeSelection },
+        flow2 = snapshotFlow { selection },
+        flow3 = snapshotFlow { afterSelection },
         transform = { beforeSelection, selection, afterSelection ->
             SearchInputErrorState(
                 beforeError = validateInput(beforeSelection),
@@ -116,30 +107,38 @@ class SearchViewModel(private val repository: DictionaryRepository) : ViewModel(
         updateBeforeTextInput("")
         updateTargetInput("")
         updateAfterTextInput("")
+        _resultUiState.update { SearchResultUiState.Idle }
     }
 
 
     private fun validateInput(input: String): Boolean {
         return if (input.isNotEmpty()) {
             val requiredLength = input.length < 129
-            regex?.matches(input) == true && input != "'" && requiredLength
+            regex.matches(input) && input != "'" && requiredLength
         } else {
             true //optional fields can be empty
         }
     }
 
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getSearchResults() {
         _resultUiState.update { SearchResultUiState.Loading }
         val queries = RequestDTO(
-            textBeforeSelection = _inputState.beforeSelection,
-            selection = _inputState.selection,
-            textAfterSelection = _inputState.afterSelection
+            textBeforeSelection = beforeSelection,
+            selection = selection,
+            textAfterSelection = afterSelection
         )
 
-        viewModelScope.launch {
+        debounceJob?.cancel()
+        debounceJob = viewModelScope.launch {
+            delay(1500)
             flowOf(queries)
-                .map { request -> repository.postSearch(request) }
+                .filter {
+                    inputErrorState.value.afterError && inputErrorState.value.targetError && inputErrorState.value.beforeError
+                }
+                .distinctUntilChanged()
+                .mapLatest { request -> repository.postSearch(request) }
                 .collect { result ->
                     _resultUiState.update {
                         when (result) {
@@ -149,7 +148,7 @@ class SearchViewModel(private val repository: DictionaryRepository) : ViewModel(
                                         wordItem = result.data
                                     )
                                 } else {
-                                    SearchResultUiState.Empty
+                                    SearchResultUiState.Idle
                                 }
                             }
 
@@ -171,10 +170,5 @@ class SearchViewModel(private val repository: DictionaryRepository) : ViewModel(
                     }
                 }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        regex = null
     }
 }

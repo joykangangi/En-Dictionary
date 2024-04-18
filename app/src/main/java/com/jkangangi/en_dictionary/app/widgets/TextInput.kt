@@ -23,6 +23,7 @@ fun TextInput(
     input: String,
     onInputChange: (String) -> Unit,
     txtLabel: String,
+    txtPlaceholder: String,
     onClearInput: () -> Unit,
     modifier: Modifier = Modifier,
     isRequired: Boolean = false,
@@ -30,7 +31,7 @@ fun TextInput(
 ) {
 
     val optionalColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-    val optional = if (isRequired) "" else " (optional)"
+    val optional = if (isRequired) "" else stringResource(id = R.string.optional)
     val transformedLabel = buildAnnotatedString {
         append(txtLabel)
         withStyle(style = SpanStyle(color = optionalColor, fontStyle = FontStyle.Italic)) {
@@ -47,6 +48,9 @@ fun TextInput(
                 onValueChange = onInputChange,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium,
+                placeholder = {
+                    Text(text = txtPlaceholder)
+                },
                 label = {
                     Text(
                         text = transformedLabel,

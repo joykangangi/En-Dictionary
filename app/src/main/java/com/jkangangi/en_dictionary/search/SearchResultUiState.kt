@@ -7,5 +7,5 @@ sealed interface SearchResultUiState {
     data object EmptyBody: SearchResultUiState
     data object Loading: SearchResultUiState
     data class Error(val serverError: String): SearchResultUiState
-    data object Empty: SearchResultUiState
+    data object Idle: SearchResultUiState
 }

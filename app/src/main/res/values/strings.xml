@@ -11,9 +11,7 @@
     <string name="empty_saves">Search at least 6 words to play</string>
     <string name="sort_abc">A-Z</string>
     <string name="go_back">Go back</string>
-    <string name="string_b4">Text Before Target</string>
-    <string name="string_after">Text After Target</string>
-    <string name="target">Target</string>
+
     <string name="inputError">Text can contain only letters and \'</string>
     <string name="game_instructions">Unscramble the word using all the letters.</string>
     <string name="word_count">%d of 6 words</string>
@@ -25,4 +23,27 @@
     <string name="sans_serif">Sans Serif</string>
     <string name="merri_weather">Merriweather</string>
     <string name="font_name"> Choose Font</string>
+
+    <!--> Network Error Results </-->
+    <string name="network_redirect">Redirecting to a different page. Please wait.</string>
+
+    <!--> Search Screen </-->
+    <string name="search_btn">Search</string>
+    <string name="adv_search_btn">Advanced Search</string>
+    <string name="simple_search_btn">Simple Search</string>
+    <string name="single_search_detail">Search word or idiom</string>
+    <string name="adv_search_detail">Search word or idiom within a sentence</string>
+    <string name="optional"> (optional)</string>
+    <string name="target">Word or idiom</string>
+    <string name="single_placeholder">e.g. blossom <i>or</i> put up with</string>
+    <string name="adv_placeholder">Sentence: She can\'t <i>put up with</i> nonsense</string>
+    <string name="b4_placeholder">She can\'t</string>
+    <string name="target_placeholder">put up with</string>
+    <string name="after_placeholder">nonsense</string>
+    <string name="string_b4">Text Before Target</string>
+    <string name="string_after">Text After Target</string>
+
+
+    <!--> Game Screen </-->
+    <string name="skip_btn">Skip</string>
 </resources>

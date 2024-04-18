@@ -38,7 +38,7 @@ class SearchRoute(
         settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
     ) {
 
-        val inputState = searchViewModel.inputState
+
         val inputErrorState by searchViewModel.inputErrorState.collectAsState()
         val networkState by searchViewModel.resultUiState.collectAsState()
 
@@ -85,9 +85,9 @@ class SearchRoute(
             updateTheme = onUpdateTheme,
             currentFont = font,
             updateFont = onUpdateFont,
-            textBeforeSelection = inputState.beforeSelection,
-            selection = inputState.selection,
-            textAfterSelection = inputState.afterSelection,
+            textBeforeSelection = searchViewModel.beforeSelection,
+            selection = searchViewModel.selection,
+            textAfterSelection = searchViewModel.afterSelection,
             networkState = networkState,
             toWordClick = toWordClick
         )
