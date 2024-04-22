@@ -35,7 +35,7 @@ fun GameScreen(
             GameTopBar(currentScore = state.score, currentWord = state.wordCount)
         },
         content = { contentPadding ->
-            if (state.wordItems.isNullOrEmpty() || state.wordItems.size < 5) {
+            if (state.wordItemsSize < 5) {
                 Column(
                     modifier = modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -43,7 +43,7 @@ fun GameScreen(
                     content = {
                         EmptyListView(stringId = R.string.empty_saves)
                         Text(
-                            text = "Current Word Count: ${state.wordItems?.size}",
+                            text = "Current Word Count: ${state.wordItemsSize}",
                             style = MaterialTheme.typography.headlineSmall.copy(
                                 color = MaterialTheme.colorScheme.onBackground.copy(
                                     alpha = 0.5f

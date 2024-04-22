@@ -29,10 +29,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.util.HtmlParser
@@ -88,16 +93,6 @@ private fun GameCard(
         { keyboard?.hide() }
     }
 
-
-    val brushColors = Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.secondary,
-            MaterialTheme.colorScheme.onSurface
-        )
-    )
-    val txtStyle = MaterialTheme.typography.bodyMedium
-
     ElevatedCard(
         content = {
             Column(
@@ -105,14 +100,18 @@ private fun GameCard(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
-                    Text(
-                        text = scrambledWord,
-                        style = txtStyle.merge(TextStyle(brush = brushColors)),
-                    )
+
                     Text(
                         text = stringResource(id = R.string.game_instructions),
                         style = MaterialTheme.typography.bodyMedium
                     )
+
+                    ScrambledWord(
+                        scrambledWord = scrambledWord,
+                        guessedLetterCount = guess.length,
+                        fullLetterCount = scrambledWord.length
+                    )
+
 
                     OutlinedTextField(
                         value = guess,
@@ -135,54 +134,110 @@ private fun GameCard(
 }
 
 @Composable
+private fun ScrambledWord(
+    scrambledWord: String,
+    guessedLetterCount: Int,
+    fullLetterCount: Int,
+    modifier: Modifier = Modifier
+) {
+
+    val brushColors = Brush.linearGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.onSurface,
+            MaterialTheme.colorScheme.secondary,
+        )
+    )
+    val txtStyle = MaterialTheme.typography.bodyMedium
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+        content = {
+            Text(
+                text = scrambledWord,
+                style = txtStyle.merge(TextStyle(brush = brushColors))
+                    .plus(MaterialTheme.typography.bodyLarge),
+                fontWeight = FontWeight.Bold
+            )
+            Box(
+                modifier = Modifier,
+                content = {
+                    Text(
+                        text = stringResource(
+                            id = R.string.letter_count,
+                            guessedLetterCount,
+                            fullLetterCount
+                        ),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            )
+
+        }
+    )
+}
+
+@Composable
 private fun HintSection(
     hint: String,
     onHintClicked: () -> Unit,
     showHint: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val styledMeaning = buildAnnotatedString {
+        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
+            append(stringResource(id = R.string.meaning))
+        }
+        withStyle(style = SpanStyle(fontSize = 16.sp)) {
+            append(HtmlParser.htmlToString(hint))
+        }
+    }
 
     Column(
-        verticalArrangement = Arrangement.SpaceEvenly,
-        content = {
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                content = {
-                    Icon(
-                        imageVector = Icons.Default.Lightbulb,
-                        contentDescription = null,
-                        modifier = Modifier.size(35.dp),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            content = {
+                Icon(
+                    imageVector = Icons.Default.Lightbulb,
+                    contentDescription = null,
+                    modifier = Modifier.size(35.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                )
 
-                    TextButton(
-                        onClick = onHintClicked,
-                        content = {
-                            Text(text = "Show Hint", style = MaterialTheme.typography.bodyMedium)
-                        }
-                    )
-                },
-            )
-
-            AnimatedVisibility(visible = showHint) {
-                Box(
-                    modifier = modifier.padding(6.dp),
-                    contentAlignment = Alignment.Center,
+                TextButton(
+                    onClick = onHintClicked,
                     content = {
-                        Column(
-                            content = {
-                                Text(
-                                    text = "Meaning: ${HtmlParser.htmlToString(hint)}",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
+                        Text(
+                            text = stringResource(id = R.string.show_hint),
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 )
-            }
+            },
+        )
+
+        AnimatedVisibility(visible = showHint) {
+            Box(
+                modifier = modifier.padding(6.dp),
+                contentAlignment = Alignment.Center,
+                content = {
+                    Column(
+                        content = {
+                            Text(
+                                text = styledMeaning,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    )
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
@@ -213,7 +268,10 @@ private fun ButtonSection(
                 modifier = modifier.weight(.1f),
                 enabled = btnEnabled,
                 content = {
-                    Text(text = if (isFinalWord) "Finish" else "Next")
+                    Text(
+                        text = if (isFinalWord) stringResource(id = R.string.finish)
+                        else stringResource(id = R.string.next)
+                    )
                 }
             )
         }

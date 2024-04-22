@@ -12,11 +12,8 @@
     <string name="sort_abc">A-Z</string>
     <string name="go_back">Go back</string>
 
-    <string name="inputError">Text can contain only letters and \'</string>
-    <string name="game_instructions">Unscramble the word using all the letters.</string>
-    <string name="word_count">%d of 6 words</string>
-    <string name="score_count">Score: %d /30</string>
-    <string name="game_txt_label">Your Guess…</string>
+
+
 
     <!--> DataStore Font Constants </-->
     <string name="monospace">Monospace</string>
@@ -36,14 +33,25 @@
     <string name="optional"> (optional)</string>
     <string name="target">Word or idiom</string>
     <string name="single_placeholder">e.g. blossom <i>or</i> put up with</string>
-    <string name="adv_placeholder">Sentence: She can\'t <i>put up with</i> nonsense</string>
+    <string name="adv_placeholder">e.g. Sentence: She can\'t <i>put up with</i> noise</string>
     <string name="b4_placeholder">She can\'t</string>
     <string name="target_placeholder">put up with</string>
-    <string name="after_placeholder">nonsense</string>
+    <string name="inputError">Text can contain only letters and \'</string>
+    <string name="after_placeholder">noise</string>
     <string name="string_b4">Text Before Target</string>
     <string name="string_after">Text After Target</string>
 
 
     <!--> Game Screen </-->
     <string name="skip_btn">Skip</string>
+    <string name="meaning">Meaning:</string>
+    <string name="show_hint">Show Hint</string>
+    <string name="finish">Finish</string>
+    <string name="next">Next</string>
+    <string name="game_instructions">Unscramble the word using all the letters.</string>
+    <string name="word_count">%d of 6 words</string>
+    <string name="score_count">Score: %d /30</string>
+    <string name="letter_count">Letters: %d / %d</string>
+    <string name="game_txt_label">Your Guess…</string>
+
 </resources>

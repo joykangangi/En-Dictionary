@@ -37,9 +37,9 @@ class GameRoute(
         if (gameState.isGameOver) {
             viewModel.resetGame()
         }
-        val gameSize = gameState.wordItems?.size
+        val gameSize = gameState.wordItemsSize
 
-        if (gameSize != null && gameState.wordCount == 0) {
+        if (gameState.wordCount == 0) {
             LaunchedEffect(
                 key1 = gameSize,
                 block = {
@@ -53,7 +53,7 @@ class GameRoute(
         GameScreen(
             modifier = modifier,
             state = gameState,
-            guess = viewModel.guessedWord.collectAsState().value,
+            guess = viewModel.guessedWord.value,
             onGuessChanged = viewModel::updateInput,
             onNextClicked = viewModel::onNextClicked,
             onSkipClicked = viewModel::onSkipClicked,

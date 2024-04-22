@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,10 +51,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    errorState: SearchInputErrorState,
-    networkState: SearchResultUiState,
-    updateQuery: (SearchInputEvents) -> Unit,
-    onSearchClick: () -> Unit,
     isDarkTheme: Boolean,
     updateTheme: (Boolean) -> Unit,
     currentFont: AppFont,
@@ -62,6 +58,10 @@ fun SearchScreen(
     textBeforeSelection: String,
     selection: String,
     textAfterSelection: String,
+    errorState: SearchInputErrorState,
+    networkState: SearchResultUiState,
+    updateQuery: (SearchInputEvents) -> Unit,
+    onSearchClick: () -> Unit,
     toWordClick: (DictionaryEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -170,7 +170,6 @@ fun SimpleSearchView(
                 input = selection,
                 onInputChange = {
                     updateQuery(SearchInputEvents.UpdateTarget(it))
-                    onSearchClick()
                 },
                 txtLabel = stringResource(id = R.string.target),
                 txtPlaceholder = stringResource(id = R.string.single_placeholder),
@@ -184,7 +183,7 @@ fun SimpleSearchView(
 
             SearchButtons(
                 onSearchClick = onSearchClick,
-                validInput = isSelectionValid,
+                enabled = isSelectionValid,
                 showAdvancedSearch = showAdvancedSearch
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -254,7 +253,7 @@ fun AdvancedSearchView(
 
             SearchButtons(
                 onSearchClick = onSearchClick,
-                validInput = errorState.targetError && errorState.beforeError && errorState.afterError,
+                enabled = errorState.targetError && errorState.beforeError && errorState.afterError,
                 showAdvancedSearch = showAdvancedSearch
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -302,7 +301,7 @@ fun SearchDetailsText(
 private fun SearchButtons(
     onSearchClick: () -> Unit,
     modifier: Modifier = Modifier,
-    validInput: Boolean,
+    enabled: Boolean,
     showAdvancedSearch: MutableState<Boolean>,
 ) {
     Row(
@@ -323,7 +322,7 @@ private fun SearchButtons(
                 modifier = Modifier.weight(0.4f),
                 onBtnClicked = onSearchClick,
                 buttonTextId = R.string.search_btn,
-                isEnabled = validInput
+                isEnabled = enabled
             )
         }
     )
@@ -336,7 +335,7 @@ private fun SearchResult(
     toWordClick: (DictionaryEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // val scope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     Box(
         contentAlignment = Alignment.Center,
@@ -354,16 +353,11 @@ private fun SearchResult(
                 }
 
                 is SearchResultUiState.Success -> {
-
-                    SearchResultItem(
-                        wordItem = state.wordItem,
-                        toWordClick = toWordClick
-                    )
-//                    SideEffect {
-//                        scope.launch {
-//                            toWordClick(state.wordItem)
-//                        }
-//                    }
+                    SideEffect {
+                        scope.launch {
+                            toWordClick(state.wordItem)
+                        }
+                    }
                 }
 
                 is SearchResultUiState.Loading -> CircularProgressIndicator()
@@ -377,27 +371,6 @@ private fun SearchResult(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-            }
-        }
-    )
-}
-
-//Card item with a successful result item
-@Composable
-private fun SearchResultItem(
-    wordItem: DictionaryEntity,
-    toWordClick: (DictionaryEntity) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ElevatedCard(
-        modifier = modifier,
-        onClick = { toWordClick(wordItem) },
-        content = {
-            Box(modifier = Modifier.padding(8.dp)) {
-                Text(
-                    text = wordItem.target,
-                    modifier = Modifier.padding(8.dp)
-                )
             }
         }
     )

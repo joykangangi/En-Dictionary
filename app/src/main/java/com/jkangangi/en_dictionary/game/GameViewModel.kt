@@ -1,5 +1,10 @@
 package com.jkangangi.en_dictionary.game
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
@@ -13,37 +18,49 @@ import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * The app will use searched words (cached in db).
+ * The app will use searched words (cached in db) to play.
  *
  */
 
-class GameViewModel (repository: DictionaryRepository) :
-    ViewModel() {
-    private val _guessedWord = MutableStateFlow("")
-    val guessedWord = _guessedWord.asStateFlow()
+class GameViewModel (private val repository: DictionaryRepository) : ViewModel() {
+    private val _guessedWord = mutableStateOf("")
+    val guessedWord: State<String> = _guessedWord
 
-    private val _hintClicks = MutableStateFlow(0)
+    //private val _hintClicks = mutableIntStateOf(0)
+    private var _hintClicked by mutableStateOf(false)
     private val _gameUIState = MutableStateFlow(GameUIState())
     private val allItems = mutableSetOf<DictionaryEntity>()
 
+    private fun getAllHistoryItems() = repository.getAllHistory().map { items ->
+        items.filter { it.sentence.isWord() }
+    }
+
+    init {
+        viewModelScope.launch {
+            getAllHistoryItems().collect {
+                if (allItems.isEmpty()) {
+                    allItems.addAll(it)
+                }
+            }
+        }
+    }
+
     val gameUIState = combine(
-        flow = repository.getAllHistory(),
+        flow = getAllHistoryItems(),
         flow2 = _gameUIState,
         transform = { allHistoryItems, state ->
-            val filteredItems = allHistoryItems.filter { it.sentence.isWord() }.toPersistentSet()
-            if (allItems.isEmpty()) {
-                allItems.addAll(filteredItems)
-            }
 
             GameUIState(
-                wordItems = filteredItems,
+                wordItemsSize = allHistoryItems.size,
                 wordItem = state.wordItem,
                 scrambledWord = state.scrambledWord,
                 hint = state.hint,
@@ -66,7 +83,7 @@ class GameViewModel (repository: DictionaryRepository) :
 
      fun getWordItem() {
         viewModelScope.launch {
-            val wordItem = allItems.random()
+            val wordItem = allItems.
             allItems.remove(wordItem)
             playedWords.add(wordItem)
 
@@ -85,14 +102,14 @@ class GameViewModel (repository: DictionaryRepository) :
 
 
     private fun resetWord() {
-        _guessedWord.update { "" }
+        _guessedWord.value = ""
         _gameUIState.update { it.copy(showHint = false, nextEnabled = false) }
-        _hintClicks.update { 0 }
+        _hintClicked = false
         getWordItem()
     }
 
     fun updateInput(userInput: String) {
-        _guessedWord.update { userInput }
+        _guessedWord.value = userInput
         _gameUIState.update { it.copy(nextEnabled = _guessedWord.value.length == _gameUIState.value.wordItem?.sentence?.length) }
 
     }
@@ -113,11 +130,14 @@ class GameViewModel (repository: DictionaryRepository) :
     }
 
     fun onHintClicked() {
-        _hintClicks.update { it + 1 }
-        _gameUIState.update { it.copy(showHint = !_gameUIState.value.showHint) }
-        if (_hintClicks.value == 1) {
+        if (!_hintClicked) {
             _gameUIState.update { it.copy(score = _gameUIState.value.score - HINT_DECREASE) }
+            _hintClicked = true
         }
+
+        _gameUIState.update { it.copy(showHint = !_gameUIState.value.showHint) }
+
+
     }
 
     fun resetGame() {
