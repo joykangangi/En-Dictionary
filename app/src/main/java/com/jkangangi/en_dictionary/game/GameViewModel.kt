@@ -1,8 +1,8 @@
 package com.jkangangi.en_dictionary.game
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -15,12 +15,9 @@ import com.jkangangi.en_dictionary.game.GameConstants.HINT_DECREASE
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
-import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -31,36 +28,38 @@ import kotlinx.coroutines.launch
  *
  */
 
-class GameViewModel (private val repository: DictionaryRepository) : ViewModel() {
+class GameViewModel(private val repository: DictionaryRepository) : ViewModel() {
     private val _guessedWord = mutableStateOf("")
     val guessedWord: State<String> = _guessedWord
 
-    //private val _hintClicks = mutableIntStateOf(0)
     private var _hintClicked by mutableStateOf(false)
     private val _gameUIState = MutableStateFlow(GameUIState())
-    private val allItems = mutableSetOf<DictionaryEntity>()
+    private val wordItems = mutableSetOf<DictionaryEntity>()
 
-    private fun getAllHistoryItems() = repository.getAllHistory().map { items ->
+    private fun getAllWordItems() = repository.getAllHistory().map { items ->
         items.filter { it.sentence.isWord() }
     }
 
     init {
         viewModelScope.launch {
-            getAllHistoryItems().collect {
-                if (allItems.isEmpty()) {
-                    allItems.addAll(it)
+            getAllWordItems().collect {
+                if (wordItems.isEmpty()) {
+                    wordItems.addAll(it)
                 }
             }
         }
     }
 
     val gameUIState = combine(
-        flow = getAllHistoryItems(),
+        flow = getAllWordItems(),
         flow2 = _gameUIState,
-        transform = { allHistoryItems, state ->
+        transform = { allWordItems, state ->
+            if (wordItems.isEmpty()) {
+                    wordItems.addAll(allWordItems)
+                }
 
             GameUIState(
-                wordItemsSize = allHistoryItems.size,
+                wordItemsSize = allWordItems.size,
                 wordItem = state.wordItem,
                 scrambledWord = state.scrambledWord,
                 hint = state.hint,
@@ -81,11 +80,13 @@ class GameViewModel (private val repository: DictionaryRepository) : ViewModel()
     private val playedWords = mutableSetOf<DictionaryEntity>()
 
 
-     fun getWordItem() {
+    fun getWordItem() {
         viewModelScope.launch {
-            val wordItem = allItems.
-            allItems.remove(wordItem)
+
+            val wordItem = wordItems.random()
+            wordItems.remove(wordItem)
             playedWords.add(wordItem)
+            Log.i("GVM","${wordItems.size}, ${playedWords.size}")
 
             _gameUIState.update {
                 it.copy(

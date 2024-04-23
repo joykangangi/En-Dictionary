@@ -8,8 +8,10 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -151,7 +153,7 @@ fun SearchScreen(
 
 //Simple Search View
 @Composable
-fun SimpleSearchView(
+private fun SimpleSearchView(
     selection: String,
     isSelectionValid: Boolean,
     updateQuery: (SearchInputEvents) -> Unit,
@@ -196,7 +198,7 @@ fun SimpleSearchView(
 // Advanced Search View
 
 @Composable
-fun AdvancedSearchView(
+private fun AdvancedSearchView(
     textBeforeSelection: String,
     selection: String,
     textAfterSelection: String,
@@ -307,11 +309,12 @@ private fun SearchButtons(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .height(IntrinsicSize.Min)
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         content = {
             CustomOutlinedButton(
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.fillMaxHeight().weight(0.4f),
                 onBtnClicked = {
                     showAdvancedSearch.value = !showAdvancedSearch.value
                 },
@@ -319,7 +322,7 @@ private fun SearchButtons(
             )
 
             CustomFilledButton(
-                modifier = Modifier.weight(0.4f),
+                modifier = Modifier.fillMaxHeight().weight(0.4f),
                 onBtnClicked = onSearchClick,
                 buttonTextId = R.string.search_btn,
                 isEnabled = enabled

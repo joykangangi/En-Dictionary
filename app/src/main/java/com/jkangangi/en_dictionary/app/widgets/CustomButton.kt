@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.app.widgets
 
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -9,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun CustomFilledButton(
@@ -20,7 +18,7 @@ fun CustomFilledButton(
 ) {
     val keyBoardController = LocalSoftwareKeyboardController.current
     Button(
-        modifier = modifier.height(48.dp),
+        modifier = modifier,
         enabled = isEnabled,
         onClick = {
             keyBoardController?.hide()
@@ -43,7 +41,7 @@ fun CustomOutlinedButton(
     modifier: Modifier = Modifier,
 ) {
     OutlinedButton(
-        modifier = modifier.height(48.dp),
+        modifier = modifier,
         onClick = onBtnClicked,
         content = {
             Text(text = stringResource(id = buttonTextId))

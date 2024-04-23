@@ -2,12 +2,16 @@ package com.jkangangi.en_dictionary.app.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -42,8 +46,28 @@ fun En_DictionaryTheme(
     val typography = getTypography(fontFamily)
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colorScheme.animateColor(),
         typography = typography,
         content = content
     )
 }
+
+@Composable
+private fun animateColor(targetValue: Color): Color {
+    return animateColorAsState(
+        targetValue = targetValue,
+        animationSpec = tween(durationMillis = 300),
+        label = "theme"
+    ).value
+
+}
+
+@Composable
+fun ColorScheme.animateColor() = copy(
+    primary = animateColor(targetValue = primary),
+    onPrimary = animateColor(targetValue = onPrimary),
+    error = animateColor(targetValue = error),
+    background = animateColor(targetValue = background),
+    onBackground = animateColor(targetValue = onBackground),
+    surface = animateColor(targetValue = surface)
+)
