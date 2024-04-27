@@ -11,8 +11,6 @@ data class GameUIState(
     val hint: String = "",
     val wordCount: Int = 0,
     val score: Int = 0,
-    val nextEnabled: Boolean = false,
-    val isGameOver: Boolean = false,
-    val showSubmit: Boolean = false,
+    val btnEnabled: Boolean = false,
     val showHint: Boolean = false,
 )

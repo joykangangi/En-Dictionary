@@ -43,7 +43,6 @@ class SearchRoute(
         val networkState by searchViewModel.resultUiState.collectAsState()
 
 
-
         val toWordClick: (DictionaryEntity) -> Unit = {
             searchViewModel.clearState()
             backStack.push(Route.SearchDetail(sentence = it.sentence))
@@ -72,9 +71,8 @@ class SearchRoute(
             }
         }
 
-        val isDark by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
-        val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
-
+        val isDark by settingsViewModel.currentTheme.collectAsState()
+        val font by settingsViewModel.currentFont.collectAsState()
 
         SearchScreen(
             modifier = modifier,
@@ -91,6 +89,7 @@ class SearchRoute(
             networkState = networkState,
             toWordClick = toWordClick
         )
+
 
     }
 }

@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -41,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.util.HtmlParser
+import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
 
 
 @Composable
@@ -70,8 +69,8 @@ fun GameLayout(
             ButtonSection(
                 onSkipClicked = onSkipClicked,
                 onNextClicked = onNextClicked,
-                btnEnabled = state.nextEnabled,
-                isFinalWord = state.showSubmit
+                btnEnabled = state.btnEnabled,
+                isFinalWord = state.wordCount == MAX_WORDS
             )
         }
     )
@@ -252,20 +251,20 @@ private fun ButtonSection(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceAround,
         content = {
             OutlinedButton(
                 onClick = onSkipClicked,
-                modifier = modifier.weight(.1f),
+                modifier = Modifier.weight(0.4f),
                 content = {
-                    Text(text = "Skip")
+                    Text(text = stringResource(id = R.string.skip_btn))
                 }
             )
-            Spacer(modifier = modifier.width(4.dp))
+            //Spacer(modifier = Modifier.width(4.dp))
 
             Button(
                 onClick = onNextClicked,
-                modifier = modifier.weight(.1f),
+                modifier = Modifier.weight(0.4f),
                 enabled = btnEnabled,
                 content = {
                     Text(

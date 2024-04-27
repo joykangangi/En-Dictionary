@@ -49,7 +49,7 @@ class MainActivity : NodeComponentActivity() {
 private fun isDarkTheme(): Boolean {
     val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)
     val systemTheme = isSystemInDarkTheme()
-    val theme by settingsViewModel.currentTheme.collectAsState(initial = LIGHT_THEME)
+    val theme by settingsViewModel.currentTheme.collectAsState()
     return remember(theme) {
         when (theme) {
             LIGHT_THEME -> false
@@ -62,7 +62,7 @@ private fun isDarkTheme(): Boolean {
 @Composable
 private fun getFontFamily(): FontFamily {
     val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)
-    val font by settingsViewModel.currentFont.collectAsState(initial = AppFont.SansSerif)
+    val font by settingsViewModel.currentFont.collectAsState()
     return remember(font) {
         when (font) {
             AppFont.MerriWeather -> AppFont.MerriWeather.fontFamily

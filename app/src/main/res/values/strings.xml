@@ -12,8 +12,10 @@
     <string name="sort_abc">A-Z</string>
     <string name="go_back">Go back</string>
 
-
-
+    <!-->Bottom Nav </-->
+    <string name="history">History</string>
+    <string name="search_detail">Search Detail</string>
+    <string name="play">Play</string>
 
     <!--> DataStore Font Constants </-->
     <string name="monospace">Monospace</string>

@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.activeElement
 import com.bumble.appyx.navmodel.backstack.operation.push
+import com.jkangangi.en_dictionary.R
 
 private val bottomNavScreens = listOf(
     Route.Search,
@@ -56,19 +58,15 @@ fun BottomNavigator(
     }
     //val c = rememberUpdatedState(newValue = backStack.activeElement)
 
-    val showBottomBar = remember(currentRoute) {
-        when (currentRoute.value) {
-            Route.History, Route.Play, Route.Search -> true
-            else -> false
-        }
-    }
+    val showBottomBar = bottomNavScreens.contains(currentRoute.value)
 
     Log.i(
         "Navigation",
-        "A.E = ${backStack.activeElement?.title}," +
-                " C.R = ${currentRoute.value?.title}," +
-                "B.N = ${backStackNavigator.activeElement?.title}"
+        "A.E = ${backStack.activeElement?.titleId}," +
+                " C.R = ${currentRoute.value?.titleId}," +
+                "B.N = ${backStackNavigator.activeElement?.titleId}"
     )
+
     val selected: (screen: Route) -> Boolean = remember {
         { screen ->
             screen == currentRoute.value
@@ -94,7 +92,7 @@ fun BottomNavigator(
                     content = {
                         navItems.forEach { screen ->
                             BottomAppBarItem(
-                                title = screen.title,
+                                titleId = screen.titleId,
                                 icon = screen.icon,
                                 selected = selected(screen),
                                 onClick = { onItemClick(screen) },
@@ -109,7 +107,7 @@ fun BottomNavigator(
 
 @Composable
 private fun BottomAppBarItem(
-    title: String?,
+    titleId: Int?,
     icon: ImageVector?,
     selected: Boolean,
     onClick: () -> Unit,
@@ -141,13 +139,13 @@ private fun BottomAppBarItem(
             if (icon != null) {
                 Icon(
                     imageVector = icon,
-                    contentDescription = title,
+                    contentDescription = titleId?.let { stringResource(id = it) },
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-            if (title != null) {
+            if (titleId != null) {
                 Text(
-                    text = title,
+                    text = stringResource(id = titleId),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodySmall,
                     fontSize = TextUnit(animatedFont, TextUnitType.Sp)
@@ -163,19 +161,19 @@ private fun BottomAppBarItem(
 fun PrevBottomNavItems() {
     Row {
         BottomAppBarItem(
-            title = "Search",
+            titleId = R.string.search_btn,
             icon = Icons.Default.Search,
             selected = true,
             onClick = { }
         )
         BottomAppBarItem(
-            title = "Play",
+            titleId = R.string.play,
             icon = Icons.Default.Games,
             selected = false,
             onClick = { }
         )
         BottomAppBarItem(
-            title = "History",
+            titleId = R.string.history,
             icon = Icons.Default.History,
             selected = false,
             onClick = { }

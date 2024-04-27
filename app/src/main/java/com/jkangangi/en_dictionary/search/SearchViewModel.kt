@@ -12,13 +12,11 @@ import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.NetworkResult
 import io.ktor.client.plugins.RedirectResponseException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -49,9 +47,7 @@ class SearchViewModel(private val repository: DictionaryRepository) : ViewModel(
         private set
 
     private val _resultUiState = MutableStateFlow<SearchResultUiState>(SearchResultUiState.Idle)
-
-    //val resultUiState = _resultUiState.asStateFlow()
-    var job: Job? = null
+    val resultUiState = _resultUiState.asStateFlow()
 
     private fun updateBeforeTextInput(input: String) {
         beforeSelection = input
@@ -119,54 +115,54 @@ class SearchViewModel(private val repository: DictionaryRepository) : ViewModel(
     }
 
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val resultUiState: StateFlow<SearchResultUiState> = combine(
-        flow = snapshotFlow { beforeSelection },
-        flow2 = snapshotFlow { selection },
-        flow3 = snapshotFlow { afterSelection },
-        transform = { beforeSelection, selection, afterSelection ->
-            RequestDTO(
-                textBeforeSelection = beforeSelection,
-                selection = selection,
-                textAfterSelection = afterSelection
-            )
-
-        }
-    ).debounce(1000)
-        .mapLatest { repository.postSearch(request = it) }
-        .mapLatest { result ->
-            when (result) {
-                is NetworkResult.Success -> {
-                    if (result.data != null) {
-                        SearchResultUiState.Success(
-                            wordItem = result.data
-                        )
-                    } else {
-                        SearchResultUiState.Idle
-                    }
-                }
-
-                is NetworkResult.Failure -> {
-                    val serverError = when (result.throwable) {
-                        is RedirectResponseException -> "Redirecting to a different page. Please wait."
-                        is UnknownHostException -> "Unable to connect to the server. Check your internet connection"
-                        is UnknownServiceException -> "An unexpected server error. Please try again later."
-                        else -> "An error occurred. Please try again later."
-                    }
-                    SearchResultUiState.Error(serverError = serverError)
-
-                }
-
-                is NetworkResult.EmptyBody -> {
-                    SearchResultUiState.EmptyBody
-                }
-            }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = SearchResultUiState.Idle
-        )
+//    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+//    val resultUiState: StateFlow<SearchResultUiState> = combine(
+//        flow = snapshotFlow { beforeSelection },
+//        flow2 = snapshotFlow { selection },
+//        flow3 = snapshotFlow { afterSelection },
+//        transform = { beforeSelection, selection, afterSelection ->
+//            RequestDTO(
+//                textBeforeSelection = beforeSelection,
+//                selection = selection,
+//                textAfterSelection = afterSelection
+//            )
+//
+//        }
+//    ).debounce(1000)
+//        .mapLatest { repository.postSearch(request = it) }
+//        .mapLatest { result ->
+//            when (result) {
+//                is NetworkResult.Success -> {
+//                    if (result.data != null) {
+//                        SearchResultUiState.Success(
+//                            wordItem = result.data
+//                        )
+//                    } else {
+//                        SearchResultUiState.Idle
+//                    }
+//                }
+//
+//                is NetworkResult.Failure -> {
+//                    val serverError = when (result.throwable) {
+//                        is RedirectResponseException -> "Redirecting to a different page. Please wait."
+//                        is UnknownHostException -> "Unable to connect to the server. Check your internet connection"
+//                        is UnknownServiceException -> "An unexpected server error. Please try again later."
+//                        else -> "An error occurred. Please try again later."
+//                    }
+//                    SearchResultUiState.Error(serverError = serverError)
+//
+//                }
+//
+//                is NetworkResult.EmptyBody -> {
+//                    SearchResultUiState.EmptyBody
+//                }
+//            }
+//        }
+//        .stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5_000L),
+//            initialValue = SearchResultUiState.Idle
+//        )
 
 
     @OptIn(ExperimentalCoroutinesApi::class)

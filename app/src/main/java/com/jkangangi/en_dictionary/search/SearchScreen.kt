@@ -271,7 +271,7 @@ private fun AdvancedSearchView(
  */
 //Shown at the top of [SearchScreen]
 @Composable
-fun SearchDetailsText(
+private fun SearchDetailsText(
     detailsTextId: Int,
     modifier: Modifier = Modifier,
 ) {

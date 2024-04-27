@@ -18,6 +18,7 @@ import com.bumble.appyx.core.node.node
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackFader
+import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.definitions.DefinitionView
 import com.jkangangi.en_dictionary.game.GameRoute
 import com.jkangangi.en_dictionary.history.HistoryRoute
@@ -73,7 +74,6 @@ class Navigation(
 
             is Route.Play -> GameRoute(
                 buildContext = buildContext,
-                backStack = backStack,
             )
 
             is Route.History -> HistoryRoute(
@@ -84,18 +84,18 @@ class Navigation(
     }
 }
 
-sealed class Route(val icon: ImageVector? = null, val title: String? = null) : Parcelable {
+sealed class Route(val icon: ImageVector? = null, val titleId: Int? = null) : Parcelable {
 
     @Parcelize
-    data object Search : Route(icon = Icons.Default.Search, title = "Search")
+    data object Search : Route(icon = Icons.Default.Search, titleId = R.string.search_btn)
 
     @Parcelize
-    data class SearchDetail(val sentence: String) : Route(title = "SearchDetail")
+    data class SearchDetail(val sentence: String) : Route(titleId = R.string.search_detail)
 
     @Parcelize
-    data object Play : Route(icon = Icons.Default.Bookmark, title = "Play")
+    data object Play : Route(icon = Icons.Default.Bookmark, titleId = R.string.play)
 
     @Parcelize
-    data object History : Route(icon = Icons.Default.History, title = "History")
+    data object History : Route(icon = Icons.Default.History, titleId = R.string.history)
 
 }

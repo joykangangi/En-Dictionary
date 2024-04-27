@@ -11,9 +11,9 @@ import com.jkangangi.en_dictionary.settings.AppTheme.LIGHT_THEME
 import com.jkangangi.en_dictionary.settings.PreferenceKeys.FONT_KEY
 import com.jkangangi.en_dictionary.settings.PreferenceKeys.THEME_KEY
 import com.jkangangi.en_dictionary.settings.fonts.AppFont
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
@@ -23,14 +23,22 @@ class SettingsViewModel (
 
     val currentTheme = dataStore.getData(key = THEME_KEY).map { theme ->
         theme ?: LIGHT_THEME
-    }.flowOn(Dispatchers.IO)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = LIGHT_THEME
+    )
 
     val currentFont = dataStore.getData(key = FONT_KEY).map { fontName ->
         if (fontName != null) {
             AppFont.valueOf(fontName)
         } else
             AppFont.SansSerif
-    }.flowOn(Dispatchers.IO)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = AppFont.SansSerif
+    )
 
     fun updateTheme(newTheme: String) {
         viewModelScope.launch {

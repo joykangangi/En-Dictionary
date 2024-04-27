@@ -8,13 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
-import com.bumble.appyx.navmodel.backstack.BackStack
-import com.jkangangi.en_dictionary.app.navigation.Route
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 
 class GameRoute(
     buildContext: BuildContext,
-    private val backStack: BackStack<Route>
 ) : Node(buildContext = buildContext) {
 
     @Composable
@@ -34,20 +31,15 @@ class GameRoute(
         val gameState by viewModel.gameUIState.collectAsState()
 
 
-        if (gameState.isGameOver) {
-            viewModel.resetGame()
-        }
-        val gameSize = gameState.wordItemsSize
+        LaunchedEffect(
+            key1 = gameState.wordCount == 0,
+            block = {
+                if (gameState.wordCount == 0 && gameState.wordItemsSize > 5) {
+                    viewModel.getWordItem()
+                }
+            }
+        )
 
-        if (gameState.wordCount == 0) {
-            LaunchedEffect(
-                key1 = gameSize,
-                block = {
-                    if (gameSize > 5) {
-                        viewModel.getWordItem()
-                    }
-                })
-        }
 
 
         GameScreen(

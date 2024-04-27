@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.game
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +33,8 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     private var _hintClicked by mutableStateOf(false)
     private val _gameUIState = MutableStateFlow(GameUIState())
-    private val wordItems = mutableSetOf<DictionaryEntity>()
+    private val allWordItems = mutableSetOf<DictionaryEntity>()
+    private val playedWords = mutableSetOf<DictionaryEntity>()
 
     private fun getAllWordItems() = repository.getAllHistory().map { items ->
         items.filter { it.sentence.isWord() }
@@ -43,9 +43,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     init {
         viewModelScope.launch {
             getAllWordItems().collect {
-                if (wordItems.isEmpty()) {
-                    wordItems.addAll(it)
-                }
+                allWordItems.addAll(it)
             }
         }
     }
@@ -53,20 +51,19 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     val gameUIState = combine(
         flow = getAllWordItems(),
         flow2 = _gameUIState,
-        transform = { allWordItems, state ->
-            if (wordItems.isEmpty()) {
-                    wordItems.addAll(allWordItems)
-                }
+        transform = { wordItems, state ->
+
+            if (allWordItems.isEmpty()) {
+                allWordItems.addAll(wordItems)
+            }
 
             GameUIState(
-                wordItemsSize = allWordItems.size,
+                wordItemsSize = wordItems.size,
                 wordItem = state.wordItem,
                 scrambledWord = state.scrambledWord,
                 hint = state.hint,
                 wordCount = state.wordCount,
-                isGameOver = state.isGameOver,
-                showSubmit = state.showSubmit,
-                nextEnabled = state.nextEnabled,
+                btnEnabled = state.btnEnabled,
                 score = state.score,
                 showHint = state.showHint
             )
@@ -77,25 +74,19 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         initialValue = GameUIState()
     )
 
-    private val playedWords = mutableSetOf<DictionaryEntity>()
-
-
     fun getWordItem() {
         viewModelScope.launch {
 
-            val wordItem = wordItems.random()
-            wordItems.remove(wordItem)
+            val wordItem = allWordItems.random()
+            allWordItems.remove(wordItem)
             playedWords.add(wordItem)
-            Log.i("GVM","${wordItems.size}, ${playedWords.size}")
 
             _gameUIState.update {
                 it.copy(
                     wordItem = wordItem,
                     scrambledWord = wordItem.sentence.scramble(),
                     hint = wordItem.items[0].definitions[0].definition,
-                    wordCount = playedWords.size,
-                    isGameOver = playedWords.size == MAX_WORDS + 1,
-                    showSubmit = playedWords.size == MAX_WORDS
+                    wordCount = playedWords.size
                 )
             }
         }
@@ -104,30 +95,40 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     private fun resetWord() {
         _guessedWord.value = ""
-        _gameUIState.update { it.copy(showHint = false, nextEnabled = false) }
+        _gameUIState.update { it.copy(showHint = false, btnEnabled = false) }
         _hintClicked = false
         getWordItem()
     }
 
     fun updateInput(userInput: String) {
         _guessedWord.value = userInput
-        _gameUIState.update { it.copy(nextEnabled = _guessedWord.value.length == _gameUIState.value.wordItem?.sentence?.length) }
+        _gameUIState.update { it.copy(btnEnabled = _guessedWord.value.length == _gameUIState.value.wordItem?.sentence?.length) }
 
     }
 
     fun onNextClicked() {
+        viewModelScope.launch {
+            val isCorrectGuess = _guessedWord.value.trim() == _gameUIState.value.wordItem?.sentence
+            val newScore = if (isCorrectGuess) _gameUIState.value.score + SCORE_INCREASE else _gameUIState.value.score - SCORE_INCREASE
 
-        if (_guessedWord.value.trim() == _gameUIState.value.wordItem?.sentence) {
-            _gameUIState.update { it.copy(score = _gameUIState.value.score + SCORE_INCREASE) }
-        } else {
-            _gameUIState.update { it.copy(score = _gameUIState.value.score - SCORE_INCREASE) }
+            _gameUIState.update { it.copy(score = newScore) }
+
+            if (playedWords.size == MAX_WORDS) {
+                resetGame()
+            } else {
+                resetWord()
+            }
+
         }
-        resetWord()
     }
 
     fun onSkipClicked() {
         _gameUIState.update { it.copy(score = _gameUIState.value.score - SKIP_DECREASE) }
-        resetWord()
+        if (playedWords.size == MAX_WORDS) {
+            resetGame()
+        } else {
+            resetWord()
+        }
     }
 
     fun onHintClicked() {
@@ -141,10 +142,9 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     }
 
-    fun resetGame() {
+    private fun resetGame() {
         playedWords.removeAll(playedWords)
         _gameUIState.update { GameUIState() }
-        getWordItem()
     }
 
 }
