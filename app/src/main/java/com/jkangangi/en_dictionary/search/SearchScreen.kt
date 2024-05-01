@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.LocalLibrary
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -75,7 +75,6 @@ fun SearchScreen(
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -89,11 +88,11 @@ fun SearchScreen(
             Column(
                 modifier = Modifier
                     .padding(contentPadding)
-                    .padding(start = 12.dp, end = 12.dp),
+                    .padding(start = 16.dp, end = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.SpaceAround,
                 content = {
-                    
+
                     AnimatedContent(
                         targetState = showAdvancedSearch.value,
                         label = "SearchField"
@@ -163,9 +162,10 @@ private fun SimpleSearchView(
 ) {
     Column(
         modifier = modifier,
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             SearchDetailsText(detailsTextId = R.string.single_search_detail)
-            Spacer(modifier = Modifier.height(8.dp))
 
             //target
             TextInput(
@@ -210,6 +210,8 @@ private fun AdvancedSearchView(
 ) {
     Column(
         modifier = modifier,
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             SearchDetailsText(detailsTextId = R.string.adv_search_detail)
             Text(
@@ -262,9 +264,7 @@ private fun AdvancedSearchView(
 
         }
     )
-
 }
-
 
 /**
  * Shared Components between Single and Advanced Search Views
@@ -275,18 +275,16 @@ private fun SearchDetailsText(
     detailsTextId: Int,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    Column(
         modifier = modifier.padding(top = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         content = {
             Icon(
-                imageVector = Icons.Default.Search,
+               imageVector = Icons.Default.LocalLibrary,
                 contentDescription = stringResource(id = R.string.search_btn),
                 modifier = Modifier
                     .size(40.dp),
-                   // .weight(0.4f),
-                tint = MaterialTheme.colorScheme.primary
             )
 
             Text(
@@ -294,6 +292,8 @@ private fun SearchDetailsText(
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
         }
     )
 }
@@ -311,10 +311,10 @@ private fun SearchButtons(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
         content = {
             CustomOutlinedButton(
-                modifier = Modifier.fillMaxHeight().weight(0.4f),
+                modifier = Modifier.fillMaxHeight(),
                 onBtnClicked = {
                     showAdvancedSearch.value = !showAdvancedSearch.value
                 },
@@ -322,7 +322,8 @@ private fun SearchButtons(
             )
 
             CustomFilledButton(
-                modifier = Modifier.fillMaxHeight().weight(0.4f),
+                modifier = Modifier
+                    .fillMaxHeight(),
                 onBtnClicked = onSearchClick,
                 buttonTextId = R.string.search_btn,
                 isEnabled = enabled

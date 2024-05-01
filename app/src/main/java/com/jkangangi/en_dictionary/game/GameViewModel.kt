@@ -40,14 +40,6 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         items.filter { it.sentence.isWord() }
     }
 
-    init {
-        viewModelScope.launch {
-            getAllWordItems().collect {
-                allWordItems.addAll(it)
-            }
-        }
-    }
-
     val gameUIState = combine(
         flow = getAllWordItems(),
         flow2 = _gameUIState,
@@ -108,7 +100,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     fun onNextClicked() {
         viewModelScope.launch {
-            val isCorrectGuess = _guessedWord.value.trim() == _gameUIState.value.wordItem?.sentence
+            val isCorrectGuess = _guessedWord.value.trim().equals(_gameUIState.value.wordItem?.sentence,ignoreCase = true)
             val newScore = if (isCorrectGuess) _gameUIState.value.score + SCORE_INCREASE else _gameUIState.value.score - SCORE_INCREASE
 
             _gameUIState.update { it.copy(score = newScore) }

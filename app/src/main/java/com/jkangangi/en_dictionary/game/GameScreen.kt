@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
@@ -29,15 +28,14 @@ fun GameScreen(
 ) {
 
     Scaffold(
-        modifier = modifier
-            .shadow(elevation = 3.dp),
+        modifier = modifier,
         topBar = {
             GameTopBar(currentScore = state.score, currentWord = state.wordCount)
         },
         content = { contentPadding ->
-            if (state.wordItemsSize < 5) {
+            if (state.wordItemsSize < GameConstants.MAX_WORDS -1) {
                 Column(
-                    modifier = modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     content = {
@@ -54,7 +52,9 @@ fun GameScreen(
                 )
             } else {
                 GameLayout(
-                    modifier = modifier.padding(contentPadding),
+                    modifier = Modifier
+                        .padding(contentPadding)
+                        .padding(start = 16.dp, end = 16.dp),
                     guess = guess,
                     onGuessChanged = onGuessChanged,
                     onNextClicked = onNextClicked,

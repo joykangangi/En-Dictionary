@@ -184,6 +184,7 @@ private fun HintSection(
     onHintClicked: () -> Unit,
     showHint: Boolean,
     modifier: Modifier = Modifier,
+    rowModifier: Modifier = Modifier,
 ) {
     val styledMeaning = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
@@ -195,10 +196,11 @@ private fun HintSection(
     }
 
     Column(
-        verticalArrangement = Arrangement.SpaceEvenly
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = modifier,
     ) {
         Row(
-            modifier = modifier.fillMaxWidth(),
+            modifier = rowModifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             content = {
                 Icon(
@@ -251,11 +253,11 @@ private fun ButtonSection(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.SpaceBetween,
         content = {
             OutlinedButton(
                 onClick = onSkipClicked,
-                modifier = Modifier.weight(0.4f),
+               // modifier = Modifier.weight(0.4f),
                 content = {
                     Text(text = stringResource(id = R.string.skip_btn))
                 }
@@ -264,7 +266,7 @@ private fun ButtonSection(
 
             Button(
                 onClick = onNextClicked,
-                modifier = Modifier.weight(0.4f),
+                //modifier = Modifier.weight(0.4f),
                 enabled = btnEnabled,
                 content = {
                     Text(

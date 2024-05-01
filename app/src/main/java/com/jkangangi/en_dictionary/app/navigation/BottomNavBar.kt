@@ -1,23 +1,16 @@
 package com.jkangangi.en_dictionary.app.navigation
 
 import android.util.Log
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Games
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Games
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,18 +18,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
-import androidx.compose.ui.unit.dp
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.activeElement
 import com.bumble.appyx.navmodel.backstack.operation.push
 import com.jkangangi.en_dictionary.R
+import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 private val bottomNavScreens = listOf(
     Route.Search,
@@ -47,8 +36,8 @@ private val bottomNavScreens = listOf(
 
 @Composable
 fun BottomNavigator(
-    modifier: Modifier = Modifier,
     backStackNavigator: BackStack<Route>,
+    modifier: Modifier = Modifier,
 ) {
     val navItems by remember { mutableStateOf(bottomNavScreens) }
     val backStack by backStackNavigator.elements.collectAsState()
@@ -80,103 +69,88 @@ fun BottomNavigator(
         }
     }
 
+    val navBarItemColors = NavigationBarItemColors(
+        selectedIconColor = MaterialTheme.colorScheme.onBackground,
+        selectedTextColor = MaterialTheme.colorScheme.onBackground,
+        selectedIndicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+        unselectedIconColor = MaterialTheme.colorScheme.onBackground,
+        unselectedTextColor = MaterialTheme.colorScheme.onBackground,
+        disabledIconColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+        disabledTextColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+    )
+
     if (showBottomBar) {
         BottomAppBar(
             modifier = modifier,
             content = {
-                Row(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    content = {
-                        navItems.forEach { screen ->
-                            BottomAppBarItem(
-                                titleId = screen.titleId,
-                                icon = screen.icon,
-                                selected = selected(screen),
-                                onClick = { onItemClick(screen) },
-                            )
+                navItems.forEach { screen ->
+                    NavigationBarItem(
+                        colors = navBarItemColors,
+                        selected = selected(screen),
+                        onClick = { onItemClick(screen) },
+                        label = {
+                            if (screen.titleId != null) {
+                                Text(text = stringResource(id = screen.titleId))
+                            }
+                        },
+                        icon = {
+                            if (screen.selectedIcon != null && screen.unselectedIcon != null) {
+                                val icon =
+                                    if (selected(screen)) screen.selectedIcon else screen.unselectedIcon
+                                val contentDescription =
+                                    screen.titleId?.let { stringResource(id = it) }
+
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = contentDescription
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         )
     }
-}
-
-@Composable
-private fun BottomAppBarItem(
-    titleId: Int?,
-    icon: ImageVector?,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-
-
-    val interactionSource = remember { MutableInteractionSource() }
-
-    val fontSize =  MaterialTheme.typography.bodySmall.fontSize.value
-    val animatedFont by animateFloatAsState(
-        targetValue = if (selected) fontSize else 0f,
-        label = "bottomNav")
-
-
-    Column(
-        modifier = modifier
-            .padding(5.dp)
-            .clickable(
-                onClick = onClick,
-                interactionSource = interactionSource,
-                indication = null,
-            ),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        content = {
-            Spacer(modifier = Modifier.height(if (selected) 0.dp else 20.dp))
-
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = titleId?.let { stringResource(id = it) },
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-            if (titleId != null) {
-                Text(
-                    text = stringResource(id = titleId),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontSize = TextUnit(animatedFont, TextUnitType.Sp)
-                )
-            }
-        }
-    )
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun PrevBottomNavItems() {
-    Row {
-        BottomAppBarItem(
-            titleId = R.string.search_btn,
-            icon = Icons.Default.Search,
-            selected = true,
-            onClick = { }
-        )
-        BottomAppBarItem(
-            titleId = R.string.play,
-            icon = Icons.Default.Games,
-            selected = false,
-            onClick = { }
-        )
-        BottomAppBarItem(
-            titleId = R.string.history,
-            icon = Icons.Default.History,
-            selected = false,
-            onClick = { }
-        )
+    En_DictionaryTheme {
+
+        Row {
+            NavigationBarItem(
+                selected = true,
+                onClick = { },
+                label = {
+                    Text(text = stringResource(id = R.string.search_btn))
+
+                },
+                icon = {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                }
+            )
+            NavigationBarItem(
+                selected = false,
+                onClick = { },
+                label = {
+                    Text(text = stringResource(id = R.string.play))
+                },
+                icon = {
+                    Icon(imageVector = Icons.Outlined.Games, contentDescription = null)
+                }
+            )
+            NavigationBarItem(
+                selected = false,
+                onClick = { },
+                label = {
+                    Text(text = stringResource(id = R.string.history))
+                },
+                icon = {
+                    Icon(imageVector = Icons.Outlined.History, contentDescription = null)
+                }
+            )
+        }
     }
 }

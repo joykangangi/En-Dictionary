@@ -3,9 +3,12 @@ package com.jkangangi.en_dictionary.app.navigation
 import android.os.Parcelable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Games
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Games
+import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -84,18 +87,34 @@ class Navigation(
     }
 }
 
-sealed class Route(val icon: ImageVector? = null, val titleId: Int? = null) : Parcelable {
+sealed class Route(
+    val selectedIcon: ImageVector? = null,
+    val unselectedIcon: ImageVector? = null,
+    val titleId: Int? = null,
+    ) : Parcelable {
 
     @Parcelize
-    data object Search : Route(icon = Icons.Default.Search, titleId = R.string.search_btn)
+    data object Search : Route(
+        selectedIcon = Icons.Default.Search,
+        unselectedIcon = Icons.Outlined.Search,
+        titleId = R.string.search_btn
+    )
 
     @Parcelize
     data class SearchDetail(val sentence: String) : Route(titleId = R.string.search_detail)
 
     @Parcelize
-    data object Play : Route(icon = Icons.Default.Bookmark, titleId = R.string.play)
+    data object Play : Route(
+        selectedIcon = Icons.Default.Games,
+        unselectedIcon = Icons.Outlined.Games,
+        titleId = R.string.play
+    )
 
     @Parcelize
-    data object History : Route(icon = Icons.Default.History, titleId = R.string.history)
+    data object History : Route(
+        selectedIcon = Icons.Default.History,
+        unselectedIcon = Icons.Outlined.History,
+        titleId = R.string.history
+    )
 
 }

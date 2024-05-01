@@ -5,4 +5,5 @@ object GameConstants {
     const val SKIP_DECREASE = 4
     const val HINT_DECREASE = 3
     const val MAX_WORDS = 6
+    const val MAX_SCORE = 30
 }

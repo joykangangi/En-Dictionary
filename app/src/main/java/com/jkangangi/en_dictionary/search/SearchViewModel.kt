@@ -34,9 +34,9 @@ import java.net.UnknownServiceException
  * 3. NetworkResult - [SearchResultUiState] -> resultUiState
  */
 
-
 class SearchViewModel(private val repository: DictionaryRepository) : ViewModel() {
     private val regex = Regex("^[a-zA-Z' ]+\$")
+
     var beforeSelection: String by mutableStateOf("")
         private set
 

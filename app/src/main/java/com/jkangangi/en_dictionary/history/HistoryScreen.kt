@@ -35,10 +35,11 @@ fun HistoryScreen(
     val isEmpty = dictionaryItems.isEmpty()
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { },
-                modifier = modifier.padding(10.dp),
+                modifier = Modifier.padding(10.dp),
                 actions = {
                     Button(onClick = onClearHistory, enabled = !isEmpty) {
                         Text(stringResource(id = R.string.clear_history))
@@ -49,21 +50,21 @@ fun HistoryScreen(
         content = { contentPadding ->
             if (isEmpty) {
                 EmptyListView(
-                    modifier = modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     stringId = R.string.empty_history
-                )
+                     )
             } else {
                 // List of search history items
                 LazyColumn(
                     contentPadding = contentPadding,
-                    modifier = modifier.padding(8.dp),
+                    modifier = Modifier.padding(16.dp),
                     content = {
                         items(dictionaryItems) { dictionary ->
                             HistoryItemCard(
                                 dictionary = dictionary,
                                 onDeleteWord = deleteWord,
                                 onWordClick = onWordClick,
-                                modifier = modifier.animateItemPlacement(
+                                modifier = Modifier.animateItemPlacement(
                                     animationSpec = tween(durationMillis = 1000)
                                 )
                             )

@@ -13,10 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,6 +33,8 @@ fun SearchTopBar(
             Text(
                 text = stringResource(id = R.string.home_text),
                 style = MaterialTheme.typography.titleMedium,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
             )
         },
         actions = {
@@ -44,7 +46,6 @@ fun SearchTopBar(
                     Icon(
                         imageVector = Icons.Default.FontDownload,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             )
@@ -56,12 +57,11 @@ fun SearchTopBar(
                     Icon(
                         imageVector = if (isDarkTheme) Icons.Default.WbSunny else Icons.Default.DarkMode,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             )
         },
-        modifier = modifier.shadow(elevation = 2.dp)
+        modifier = modifier
     )
 
 }

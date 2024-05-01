@@ -44,27 +44,32 @@ fun En_DictionaryTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
+
     val typography = getTypography(fontFamily)
 
+
     MaterialTheme(
-        colorScheme = colorScheme.animateColorScheme(),
+        colorScheme = colorScheme,
         typography = typography,
         content = content
     )
+
 }
 
-private val animationSpec: AnimationSpec<Color> = tween(durationMillis = 1000)
+private val animationSpec: AnimationSpec<Color> = tween(
+    durationMillis = 250
+)
 
 @Composable
 private fun ColorScheme.animateColorScheme(): ColorScheme {
 
     return copy(
-    primary = animateColor(targetValue = primary),
-    onPrimary = animateColor(targetValue = onPrimary),
-    error = animateColor(targetValue = error),
-    background = animateColor(targetValue = background),
-    onBackground = animateColor(targetValue = onBackground),
-    surface = animateColor(targetValue = surface)
+        primary = animateColor(targetValue = primary),
+        onPrimary = animateColor(targetValue = onPrimary),
+        error = animateColor(targetValue = error),
+        background = animateColor(targetValue = background),
+        onBackground = animateColor(targetValue = onBackground),
+        surface = animateColor(targetValue = surface)
     )
 }
 

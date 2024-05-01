@@ -30,8 +30,8 @@
     <string name="search_btn">Search</string>
     <string name="adv_search_btn">Advanced Search</string>
     <string name="simple_search_btn">Simple Search</string>
-    <string name="single_search_detail">Search word or idiom</string>
-    <string name="adv_search_detail">Search word or idiom within a sentence</string>
+    <string name="single_search_detail">Search a word or idiom</string>
+    <string name="adv_search_detail">Search a word or idiom within a sentence</string>
     <string name="optional"> (optional)</string>
     <string name="target">Word or idiom</string>
     <string name="single_placeholder">e.g. blossom <i>or</i> put up with</string>
@@ -51,8 +51,8 @@
     <string name="finish">Finish</string>
     <string name="next">Next</string>
     <string name="game_instructions">Unscramble the word using all the letters.</string>
-    <string name="word_count">%d of 6 words</string>
-    <string name="score_count">Score: %d /30</string>
+    <string name="word_count">%d of %d words</string>
+    <string name="score_count">Score: %d /%d</string>
     <string name="letter_count">Letters: %d / %d</string>
     <string name="game_txt_label">Your Guess…</string>
 
