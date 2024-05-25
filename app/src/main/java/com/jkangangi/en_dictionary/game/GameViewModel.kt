@@ -89,6 +89,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         _guessedWord.value = ""
         _gameUIState.update { it.copy(showHint = false, btnEnabled = false) }
         _hintClicked = false
+        _gameUIState.update { it.copy(totalTime = 60_000L) }
         getWordItem()
     }
 

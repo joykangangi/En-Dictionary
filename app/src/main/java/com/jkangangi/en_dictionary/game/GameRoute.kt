@@ -50,6 +50,7 @@ class GameRoute(
             onNextClicked = viewModel::onNextClicked,
             onSkipClicked = viewModel::onSkipClicked,
             onHintClicked = viewModel::onHintClicked,
+            onTimeUp = viewModel::onNextClicked
         )
 
 

@@ -13,4 +13,5 @@ data class GameUIState(
     val score: Int = 0,
     val btnEnabled: Boolean = false,
     val showHint: Boolean = false,
+    val totalTime: Long = 60000L
 )
