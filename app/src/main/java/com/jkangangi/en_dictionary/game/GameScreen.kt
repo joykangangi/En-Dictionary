@@ -25,7 +25,6 @@ fun GameScreen(
     onNextClicked: () -> Unit,
     onSkipClicked: () -> Unit,
     onHintClicked: () -> Unit,
-    onTimeUp: () -> Unit,
 ) {
 
     Scaffold(
@@ -62,7 +61,6 @@ fun GameScreen(
                     onSkipClicked = onSkipClicked,
                     state = state,
                     onHintClicked = onHintClicked,
-                    onTimeUp = onTimeUp
                 )
             }
         }
@@ -83,7 +81,6 @@ fun PreviewSavedWords() {
             onNextClicked = { },
             onSkipClicked = { },
             onHintClicked = { },
-            onTimeUp = { }
         )
     }
 }

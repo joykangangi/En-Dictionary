@@ -50,7 +50,6 @@ fun GameLayout(
     onNextClicked: () -> Unit,
     onSkipClicked: () -> Unit,
     onHintClicked: () -> Unit,
-    onTimeUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -65,8 +64,7 @@ fun GameLayout(
                 onGuessChanged = onGuessChanged,
                 onHintClicked = onHintClicked,
                 showHint = state.showHint,
-                totalTime = state.totalTime,
-                onTimeUp = onTimeUp
+                timeLeft = state.timeLeft,
             )
 
             ButtonSection(
@@ -88,8 +86,7 @@ private fun GameCard(
     onGuessChanged: (String) -> Unit,
     onHintClicked: () -> Unit,
     showHint: Boolean,
-    totalTime: Long,
-    onTimeUp: () -> Unit,
+    timeLeft: Long,
 ) {
 
     val keyboard = LocalSoftwareKeyboardController.current
@@ -111,8 +108,7 @@ private fun GameCard(
                     )
 
                     GameTimer(
-                        totalTime = totalTime,
-                        onTimeUp = onTimeUp
+                        timeLeft = timeLeft,
                     )
 
                     ScrambledWord(
@@ -302,8 +298,7 @@ fun PrevGameCard() {
             onGuessChanged = { },
             onHintClicked = { },
             showHint = true,
-            totalTime = 60000L,
-            onTimeUp = { }
+            timeLeft = 20_000L,
         )
     }
 }

@@ -39,13 +39,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.CustomFilledButton
 import com.jkangangi.en_dictionary.app.widgets.CustomOutlinedButton
 import com.jkangangi.en_dictionary.app.widgets.TextInput
-import com.jkangangi.en_dictionary.settings.fonts.AppFont
-import com.jkangangi.en_dictionary.settings.fonts.AppFont.SansSerif
+import com.jkangangi.en_dictionary.settings.SettingsEvent
+import com.jkangangi.en_dictionary.settings.SettingsState
 import com.jkangangi.en_dictionary.settings.fonts.FontBottomSheet
 import kotlinx.coroutines.launch
 
@@ -53,19 +52,12 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    isDarkTheme: Boolean,
-    updateTheme: (Boolean) -> Unit,
-    currentFont: AppFont,
-    updateFont: (AppFont) -> Unit,
-    textBeforeSelection: String,
-    selection: String,
-    textAfterSelection: String,
-    errorState: SearchInputErrorState,
-    networkState: SearchResultUiState,
-    updateQuery: (SearchInputEvents) -> Unit,
-    onSearchClick: () -> Unit,
-    toWordClick: (DictionaryEntity) -> Unit,
-    modifier: Modifier = Modifier,
+    settingsState: SettingsState,
+    updateSettings: (SettingsEvent) -> Unit,
+    searchScreenState: SearchScreenState,
+    performEvent: (SearchScreenEvent) -> Unit,
+    toWordClick: (String) -> Unit,
+    modifier: Modifier,
 ) {
 
 
@@ -79,8 +71,8 @@ fun SearchScreen(
         modifier = modifier,
         topBar = {
             SearchTopBar(
-                isDarkTheme = isDarkTheme,
-                toggleTheme = updateTheme,
+                isDarkTheme = settingsState.darkTheme,
+                toggleTheme = { updateSettings(SettingsEvent.UpdateTheme(it)) },
                 onFontClick = { scope.launch { sheetState.show() } }
             )
         },
@@ -99,20 +91,24 @@ fun SearchScreen(
                     ) { isAdvancedSearch ->
                         if (isAdvancedSearch) {
                             AdvancedSearchView(
-                                textBeforeSelection = textBeforeSelection,
-                                selection = selection,
-                                textAfterSelection = textAfterSelection,
-                                errorState = errorState,
-                                updateQuery = updateQuery,
-                                onSearchClick = onSearchClick,
+                                inputState = searchScreenState.inputState,
+                                errorState = searchScreenState.errorState,
+                                updateQuery = {
+                                    performEvent(SearchScreenEvent.UpdateQueries(it))
+                                },
+                                onSearchClick = { SearchScreenEvent.DoSearch },
                                 showAdvancedSearch = showAdvancedSearch
                             )
                         } else {
                             SimpleSearchView(
-                                selection = selection,
-                                isSelectionValid = errorState.targetError,
-                                updateQuery = updateQuery,
-                                onSearchClick = onSearchClick,
+                                selection = searchScreenState.inputState.selection.value,
+                                isSelectionValid = searchScreenState.errorState.targetError,
+                                updateQuery = {
+                                    performEvent(SearchScreenEvent.UpdateQueries(it))
+                                },
+                                onSearchClick = {
+                                    performEvent(SearchScreenEvent.DoSearch)
+                                },
                                 showAdvancedSearch = showAdvancedSearch
                             )
                         }
@@ -120,10 +116,10 @@ fun SearchScreen(
 
 
                     AnimatedVisibility(
-                        visible = errorState.targetError && errorState.beforeError && errorState.afterError
+                        visible = searchScreenState.errorState.targetError && searchScreenState.errorState.beforeError && searchScreenState.errorState.afterError
                     ) {
                         SearchResult(
-                            state = networkState,
+                            state = searchScreenState.networkState,
                             toWordClick = toWordClick
                         )
                     }
@@ -139,8 +135,10 @@ fun SearchScreen(
                         FontBottomSheet(
                             sheetState = sheetState,
                             onDismissSheet = { scope.launch { sheetState.hide() } },
-                            font = currentFont,
-                            onFontChange = updateFont
+                            font = settingsState.font,
+                            onFontChange = {
+                                updateSettings(SettingsEvent.UpdateFonts(it))
+                            }
                         )
                     }
                 }
@@ -171,6 +169,9 @@ private fun SimpleSearchView(
             TextInput(
                 input = selection,
                 onInputChange = {
+                    SearchScreenEvent.UpdateQueries(
+                        SearchInputEvents.UpdateTarget(it)
+                    )
                     updateQuery(SearchInputEvents.UpdateTarget(it))
                 },
                 txtLabel = stringResource(id = R.string.target),
@@ -199,9 +200,7 @@ private fun SimpleSearchView(
 
 @Composable
 private fun AdvancedSearchView(
-    textBeforeSelection: String,
-    selection: String,
-    textAfterSelection: String,
+    inputState: SearchInputState,
     errorState: SearchInputErrorState,
     updateQuery: (SearchInputEvents) -> Unit,
     onSearchClick: () -> Unit,
@@ -223,8 +222,10 @@ private fun AdvancedSearchView(
 
             //BeforeTarget
             TextInput(
-                input = textBeforeSelection,
-                onInputChange = { updateQuery(SearchInputEvents.UpdateBeforeSelection(it)) },
+                input = inputState.beforeSelection.value,
+                onInputChange = {
+                    updateQuery(SearchInputEvents.UpdateBeforeSelection(it))
+                },
                 txtLabel = stringResource(id = R.string.string_b4),
                 txtPlaceholder = stringResource(id = R.string.b4_placeholder),
                 onClearInput = { updateQuery(SearchInputEvents.UpdateBeforeSelection(beforeInput = "")) },
@@ -233,7 +234,7 @@ private fun AdvancedSearchView(
 
             //target
             TextInput(
-                input = selection,
+                input = inputState.selection.value,
                 onInputChange = { updateQuery(SearchInputEvents.UpdateTarget(it)) },
                 txtLabel = stringResource(id = R.string.target),
                 txtPlaceholder = stringResource(id = R.string.target_placeholder),
@@ -245,7 +246,7 @@ private fun AdvancedSearchView(
             //afterTarget
             TextInput(
                 modifier = modifier,
-                input = textAfterSelection,
+                input = inputState.afterSelection.value,
                 onInputChange = { updateQuery(SearchInputEvents.UpdateAfterSelection(it)) },
                 txtLabel = stringResource(id = R.string.string_after),
                 txtPlaceholder = stringResource(id = R.string.after_placeholder),
@@ -281,7 +282,7 @@ private fun SearchDetailsText(
         verticalArrangement = Arrangement.Center,
         content = {
             Icon(
-               imageVector = Icons.Default.LocalLibrary,
+                imageVector = Icons.Default.LocalLibrary,
                 contentDescription = stringResource(id = R.string.search_btn),
                 modifier = Modifier
                     .size(40.dp),
@@ -336,7 +337,7 @@ private fun SearchButtons(
 @Composable
 private fun SearchResult(
     state: SearchResultUiState,
-    toWordClick: (DictionaryEntity) -> Unit,
+    toWordClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -359,7 +360,7 @@ private fun SearchResult(
                 is SearchResultUiState.Success -> {
                     SideEffect {
                         scope.launch {
-                            toWordClick(state.wordItem)
+                            toWordClick(state.wordItem.sentence)
                         }
                     }
                 }
@@ -381,23 +382,17 @@ private fun SearchResult(
 }
 
 
-@Preview(apiLevel = 33, showBackground = true)
+@Preview(showBackground = true)
 @Composable
 private fun SearchScreenPreview() {
     En_DictionaryTheme {
         SearchScreen(
-            errorState = SearchInputErrorState(),
-            updateQuery = { },
-            onSearchClick = { },
-            isDarkTheme = false,
-            updateTheme = { },
-            currentFont = SansSerif,
-            updateFont = { },
-            textBeforeSelection = "",
-            selection = "",
-            textAfterSelection = "",
-            networkState = SearchResultUiState.Idle,
-            toWordClick = { }
+            performEvent = { },
+            settingsState = SettingsState(),
+            updateSettings = { },
+            searchScreenState = SearchScreenState(),
+            toWordClick = { },
+            modifier = Modifier
         )
     }
 }

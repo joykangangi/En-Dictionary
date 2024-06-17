@@ -1,9 +1,8 @@
 package com.jkangangi.en_dictionary.search
 
 
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +14,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapLatest
@@ -34,35 +32,72 @@ import java.net.UnknownServiceException
  * 3. NetworkResult - [SearchResultUiState] -> resultUiState
  */
 
+data class SearchScreenState(
+    val inputState: SearchInputState = SearchInputState(),
+    val errorState: SearchInputErrorState = SearchInputErrorState(),
+    val networkState: SearchResultUiState = SearchResultUiState.Idle
+)
+
+data class SearchInputState(
+    val beforeSelection: MutableState<String> = mutableStateOf(""),
+    val selection: MutableState<String> = mutableStateOf(""),
+    val afterSelection: MutableState<String> = mutableStateOf(""),
+)
+
+
 class SearchViewModel(private val repository: DictionaryRepository) : ViewModel() {
     private val regex = Regex("^[a-zA-Z' ]+\$")
 
-    var beforeSelection: String by mutableStateOf("")
-        private set
-
-    var selection: String by mutableStateOf("")
-        private set
-
-    var afterSelection: String by mutableStateOf("")
-        private set
-
     private val _resultUiState = MutableStateFlow<SearchResultUiState>(SearchResultUiState.Idle)
-    val resultUiState = _resultUiState.asStateFlow()
+    private val _searchInputState = SearchInputState()
+    //errorStates
+    private val _inputErrorState: StateFlow<SearchInputErrorState> = combine(
+        flow = snapshotFlow { _searchInputState.beforeSelection.value },
+        flow2 = snapshotFlow { _searchInputState.selection.value },
+        flow3 = snapshotFlow { _searchInputState.afterSelection.value },
+        transform = { beforeSelection, selection, afterSelection ->
+            SearchInputErrorState(
+                beforeError = validateInput(beforeSelection),
+                targetError = validateInput(selection) && (selection.isNotBlank()),
+                afterError = validateInput(afterSelection)
+            )
+        }
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = SearchInputErrorState()
+    )
+
+    val searchScreenState = combine(
+        flow = snapshotFlow { _searchInputState },
+        flow2 = _inputErrorState,
+        flow3 = _resultUiState,
+        transform = { inputState, inputErrorState, networkState ->
+            SearchScreenState(
+                inputState = inputState,
+                errorState = inputErrorState,
+                networkState = networkState
+            )
+        }
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = SearchScreenState()
+    )
 
     private fun updateBeforeTextInput(input: String) {
-        beforeSelection = input
+        _searchInputState.beforeSelection.value = input
     }
 
     private fun updateTargetInput(input: String) {
-        selection = input
+        _searchInputState.selection.value = input
     }
 
     private fun updateAfterTextInput(input: String) {
-        afterSelection = input
+        _searchInputState.afterSelection.value = input
     }
 
-
-    fun updateInputEvents(events: SearchInputEvents) {
+    private fun updateInputEvents(events: SearchInputEvents) {
         when (events) {
             is SearchInputEvents.UpdateBeforeSelection -> {
                 updateBeforeTextInput(events.beforeInput)
@@ -77,24 +112,19 @@ class SearchViewModel(private val repository: DictionaryRepository) : ViewModel(
             }
         }
     }
+    fun performEvent(event: SearchScreenEvent) {
+        when(event) {
+            is SearchScreenEvent.UpdateQueries -> {
+                updateInputEvents(events = event.updateQueries)
+            }
 
-    //errorStates
-    val inputErrorState: StateFlow<SearchInputErrorState> = combine(
-        flow = snapshotFlow { beforeSelection },
-        flow2 = snapshotFlow { selection },
-        flow3 = snapshotFlow { afterSelection },
-        transform = { beforeSelection, selection, afterSelection ->
-            SearchInputErrorState(
-                beforeError = validateInput(beforeSelection),
-                targetError = validateInput(selection) && (selection.isNotBlank()),
-                afterError = validateInput(afterSelection)
-            )
+            SearchScreenEvent.DoSearch -> {
+                getSearchResults()
+            }
         }
-    ).stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
-        initialValue = SearchInputErrorState()
-    )
+    }
+
+
 
     //clear txt fields
     fun clearState() {
@@ -166,12 +196,12 @@ class SearchViewModel(private val repository: DictionaryRepository) : ViewModel(
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getSearchResults() {
+   private fun getSearchResults() {
         _resultUiState.update { SearchResultUiState.Loading }
         val queries = RequestDTO(
-            textBeforeSelection = beforeSelection,
-            selection = selection,
-            textAfterSelection = afterSelection
+            textBeforeSelection = _searchInputState.beforeSelection.value,
+            selection = _searchInputState.selection.value,
+            textAfterSelection = _searchInputState.afterSelection.value
         )
 
         viewModelScope.launch {

@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.game
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -9,50 +10,56 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
-import kotlinx.coroutines.delay
+import com.jkangangi.en_dictionary.game.GameConstants.THOUSAND
+import com.jkangangi.en_dictionary.game.GameConstants.TOTAL_TIME
+
 
 @Composable
 fun GameTimer(
-    totalTime: Long,
-    onTimeUp: () -> Unit,
+    timeLeft: Long,
     modifier: Modifier = Modifier
 ) {
-    var timeLeft by remember {
-        mutableLongStateOf(totalTime)
-    }
+//    var time by remember {
+//        mutableLongStateOf(timeLeft)
+//    }
+    Log.i("GameTimer","$timeLeft")
 
     val progress by remember {
-        derivedStateOf { timeLeft.toFloat() / totalTime }
+        derivedStateOf { timeLeft.toFloat() / TOTAL_TIME}
     }
+//java.lang.IllegalArgumentException:
+// DerivedState(value=<Not calculated>)@9504179 cannot be saved using the
+// current SaveableStateRegistry.
+// The default implementation only supports types which can be stored inside the Bundle.
+// Please consider implementing a custom Saver for this class and pass it to rememberSaveable().
+//
 
-    LaunchedEffect(key1 = timeLeft) {
-        if (timeLeft > 0) {
-            delay(1000)
-            timeLeft -= 1000
-        }else{
-            onTimeUp()
-        }
-    }
-
+//    LaunchedEffect(key1 = time) {
+//        if (time > 0) {
+//            delay(1000)
+//            time -= 1000
+//        }
+//    }
     Column(
-        modifier = modifier.wrapContentSize().padding(16.dp),
+        modifier = modifier
+            .wrapContentSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         content = {
             Text(
-                text = "${(timeLeft / 1000).toInt()} seconds",
-                style = MaterialTheme.typography.bodySmall,
+                text = "${(timeLeft / THOUSAND).toInt()} seconds",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
 
@@ -73,8 +80,7 @@ fun GameTimer(
 private fun GameTimerPreview() {
     En_DictionaryTheme {
         GameTimer(
-            totalTime = 60000L,
-            onTimeUp = { }
+            timeLeft = 56_000L,
         )
 
     }

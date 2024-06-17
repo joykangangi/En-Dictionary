@@ -8,7 +8,7 @@ class DictionaryApplication : Application() {
 
     companion object {
         lateinit var appModule: AppModule
-        //lateinit var dictionaryDataStore: DictionaryDataStore
+        //lateinit var dictionaryDataStore: DictionaryDataStore;lateinit is another way of the di; currently lazy initialization is being used
         //lateinit var service: DictionaryService
     }
 

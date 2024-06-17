@@ -1,7 +1,9 @@
 package com.jkangangi.en_dictionary.game
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -14,6 +16,7 @@ import com.jkangangi.en_dictionary.game.GameConstants.HINT_DECREASE
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -35,6 +38,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     private val _gameUIState = MutableStateFlow(GameUIState())
     private val allWordItems = mutableSetOf<DictionaryEntity>()
     private val playedWords = mutableSetOf<DictionaryEntity>()
+    var time by mutableLongStateOf(_gameUIState.value.timeLeft)
 
     private fun getAllWordItems() = repository.getAllHistory().map { items ->
         items.filter { it.sentence.isWord() }
@@ -81,6 +85,19 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
                     wordCount = playedWords.size
                 )
             }
+            //startTimer()
+        }
+    }
+
+     fun startTimer() {
+        viewModelScope.launch {
+            while (_gameUIState.value.timeLeft > 0) {
+                delay(1000)
+                time -= 1000
+                _gameUIState.update { it.copy(timeLeft = time) }
+                Log.i("game view model","${_gameUIState.value.timeLeft}")
+            }
+            onSkipClicked() //can also be onSkipClicked;
         }
     }
 
@@ -89,7 +106,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         _guessedWord.value = ""
         _gameUIState.update { it.copy(showHint = false, btnEnabled = false) }
         _hintClicked = false
-        _gameUIState.update { it.copy(totalTime = 60_000L) }
+        _gameUIState.update { it.copy(timeLeft = 60_000L) }
         getWordItem()
     }
 
