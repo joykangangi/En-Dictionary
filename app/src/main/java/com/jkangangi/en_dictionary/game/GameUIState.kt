@@ -1,9 +1,11 @@
 package com.jkangangi.en_dictionary.game
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 
 @Stable
+@Immutable
 data class GameUIState(
     val wordItemsSize: Int = 0,
     val wordItem: DictionaryEntity? = null,

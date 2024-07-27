@@ -16,6 +16,7 @@ import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.widgets.EmptyListView
 
+// 5 </> 5 = false
 @Composable
 fun GameScreen(
     modifier: Modifier,

@@ -1,9 +1,7 @@
 package com.jkangangi.en_dictionary.game
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -16,6 +14,8 @@ import com.jkangangi.en_dictionary.game.GameConstants.HINT_DECREASE
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
+import com.jkangangi.en_dictionary.game.GameConstants.THOUSAND
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,10 +38,9 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     private val _gameUIState = MutableStateFlow(GameUIState())
     private val allWordItems = mutableSetOf<DictionaryEntity>()
     private val playedWords = mutableSetOf<DictionaryEntity>()
-    var time by mutableLongStateOf(_gameUIState.value.timeLeft)
 
     private fun getAllWordItems() = repository.getAllHistory().map { items ->
-        items.filter { it.sentence.isWord() }
+        items.filter { it.sentence.isWord() }.toPersistentList()
     }
 
     val gameUIState = combine(
@@ -61,17 +60,17 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
                 wordCount = state.wordCount,
                 btnEnabled = state.btnEnabled,
                 score = state.score,
-                showHint = state.showHint
+                showHint = state.showHint,
+                timeLeft = state.timeLeft
             )
         }
     ).stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2500),
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = GameUIState()
     )
 
     fun getWordItem() {
-        viewModelScope.launch {
 
             val wordItem = allWordItems.random()
             allWordItems.remove(wordItem)
@@ -85,19 +84,18 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
                     wordCount = playedWords.size
                 )
             }
-            //startTimer()
-        }
+            startTimer()
     }
 
-     fun startTimer() {
+     private fun startTimer() {
         viewModelScope.launch {
             while (_gameUIState.value.timeLeft > 0) {
                 delay(1000)
-                time -= 1000
-                _gameUIState.update { it.copy(timeLeft = time) }
-                Log.i("game view model","${_gameUIState.value.timeLeft}")
+                _gameUIState.update { it.copy(timeLeft = _gameUIState.value.timeLeft - THOUSAND) }
             }
-            onSkipClicked() //can also be onSkipClicked;
+            if (_guessedWord.value.isBlank()) {
+                onSkipClicked()
+            }
         }
     }
 

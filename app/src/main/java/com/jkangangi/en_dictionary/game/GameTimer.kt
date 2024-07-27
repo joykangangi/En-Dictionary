@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.game
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,9 +9,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.game.GameConstants.THOUSAND
+import com.jkangangi.en_dictionary.game.GameConstants.THREE_QUARTER
 import com.jkangangi.en_dictionary.game.GameConstants.TOTAL_TIME
 
 
@@ -28,27 +27,11 @@ fun GameTimer(
     timeLeft: Long,
     modifier: Modifier = Modifier
 ) {
-//    var time by remember {
-//        mutableLongStateOf(timeLeft)
-//    }
-    Log.i("GameTimer","$timeLeft")
 
-    val progress by remember {
-        derivedStateOf { timeLeft.toFloat() / TOTAL_TIME}
-    }
-//java.lang.IllegalArgumentException:
-// DerivedState(value=<Not calculated>)@9504179 cannot be saved using the
-// current SaveableStateRegistry.
-// The default implementation only supports types which can be stored inside the Bundle.
-// Please consider implementing a custom Saver for this class and pass it to rememberSaveable().
-//
+    val progress by rememberUpdatedState(newValue = timeLeft.toFloat() / TOTAL_TIME)
 
-//    LaunchedEffect(key1 = time) {
-//        if (time > 0) {
-//            delay(1000)
-//            time -= 1000
-//        }
-//    }
+    val strokeColor = if (timeLeft > THREE_QUARTER) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+
     Column(
         modifier = modifier
             .wrapContentSize()
@@ -65,8 +48,8 @@ fun GameTimer(
 
             CircularProgressIndicator(
                 progress = { progress },
-                modifier = Modifier.size(100.dp),
-                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(70.dp),
+                color = strokeColor,
                 strokeWidth = 6.dp
             )
         }

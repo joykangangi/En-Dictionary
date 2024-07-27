@@ -32,13 +32,11 @@ class GameRoute(
 
 
         LaunchedEffect(
-            key1 = gameState.wordCount,
-            key2 = gameState.timeLeft,
+            key1 = gameState.wordItemsSize > GameConstants.MAX_WORDS -1,
             block = {
                 if (gameState.wordCount == 0 && gameState.wordItemsSize > GameConstants.MAX_WORDS -1) {
                     viewModel.getWordItem()
                 }
-                viewModel.startTimer()
             }
         )
 
