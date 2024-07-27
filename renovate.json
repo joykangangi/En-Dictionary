@@ -1,6 +1,105 @@
+
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:base"
+  ],
+  "schedule": [
+    "every month"
+  ],
+  "timezone": "Africa/Nairobi",
+  "labels": [
+    "dependency-update"
+  ],
+  "prHourlyLimit": 0,
+  "baseBranches": [
+    "main"
+  ],
+  "separateMultipleMajor": true,
+  "dependencyDashboardTitle": "automated dependency updates dashboard",
+  "dependencyDashboard": true,
+  "branchPrefix": "chore/",
+  "additionalBranchPrefix": "update-libs/",
+  "commitMessageAction": "update",
+  "commitMessageExtra": "from {{{currentValue}}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
+  "packageRules": [
+    {
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "groupName": "kotlin dependencies",
+      "matchPackagePatterns": [
+        "org.jetbrains.kotlin:*",
+        "composeOptions"
+      ]
+    },
+    {
+      "groupName": "coroutine dependencies",
+      "matchPackagePatterns": [
+        "org.jetbrains.kotlinx:*"
+      ]
+    },
+    {
+      "groupName": "plugin dependencies",
+      "matchPackagePatterns": [
+        "com.android.library",
+        "com.android.application"
+      ]
+    },
+    {
+      "groupName": "biometrics",
+      "matchPackagePatterns": [
+        "androidx.biometric"
+      ]
+    },
+    {
+      "groupName": "target sdk 34",
+      "matchPackagePatterns": [
+        "cafe.adriel.voyager:voyager-navigator",
+        "cafe.adriel.voyager:voyager-transitions"
+      ]
+    },
+    {
+      "groupName": "ktlint",
+      "matchPackagePatterns": [
+        "org.jlleitschuh.gradle.ktlint"
+      ]
+    },
+    {
+      "groupName": "lifecycle",
+      "matchPackagePatterns": [
+        "androidx.lifecycle:lifecycle-runtime-ktx",
+        "androidx.lifecycle:lifecycle-viewmodel-ktx",
+        "androidx.lifecycle:lifecycle-viewmodel-compose",
+        "androidx.lifecycle:lifecycle-runtime-compose"
+      ]
+    },
+    {
+      "groupName": "test dependencies",
+      "matchPackagePatterns": [
+        "androidx.compose.ui:ui-test-junit4",
+        "androidx.compose.ui:ui-test-manifest",
+        "junit:junit",
+        "androidx.test:core-ktx",
+        "androidx.test.espresso:espresso-core",
+        "org.junit.jupiter:junit-jupiter-api",
+        "org.junit.jupiter:junit-jupiter-engine",
+        "androidx.test.ext:junit"
+      ]
+    }
+  ],
+  "ignoreDeps": [
+    "androidx.emoji2:emoji2",
+    "io.ktor:ktor-client-core",
+    "io.ktor:ktor-client-cio"
   ]
 }
+
