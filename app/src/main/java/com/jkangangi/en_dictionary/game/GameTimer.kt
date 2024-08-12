@@ -17,20 +17,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
-import com.jkangangi.en_dictionary.game.GameConstants.THOUSAND
 import com.jkangangi.en_dictionary.game.GameConstants.THREE_QUARTER
-import com.jkangangi.en_dictionary.game.GameConstants.TOTAL_TIME
+import com.jkangangi.en_dictionary.game.GameConstants.TOTAL_GAME_TIME
 
 
 @Composable
 fun GameTimer(
-    timeLeft: Long,
+    timeLeft: Int,
     modifier: Modifier = Modifier
 ) {
 
-    val progress by rememberUpdatedState(newValue = timeLeft.toFloat() / TOTAL_TIME)
+    val progress by rememberUpdatedState(newValue = timeLeft.toFloat() / TOTAL_GAME_TIME)
 
     val strokeColor = if (timeLeft > THREE_QUARTER) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+
+    val remainingTime by rememberUpdatedState(newValue = formatTimeInMinAndSeconds(timeLeft))
 
     Column(
         modifier = modifier
@@ -40,7 +41,7 @@ fun GameTimer(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         content = {
             Text(
-                text = "${(timeLeft / THOUSAND).toInt()} seconds",
+                text = remainingTime,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -63,7 +64,7 @@ fun GameTimer(
 private fun GameTimerPreview() {
     En_DictionaryTheme {
         GameTimer(
-            timeLeft = 56_000L,
+            timeLeft = 56,
         )
 
     }

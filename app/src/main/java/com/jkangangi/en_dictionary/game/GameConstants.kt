@@ -6,8 +6,7 @@ object GameConstants {
     const val HINT_DECREASE = 3
     const val MAX_WORDS = 6
     const val MAX_SCORE = 30
-    const val TOTAL_TIME = 60_000L //60 seconds
+    const val TOTAL_GAME_TIME = 60 //60 seconds
     const val THOUSAND = 1000
-    const val THREE_QUARTER = (TOTAL_TIME / 3) //20,000
-
+    const val THREE_QUARTER = (TOTAL_GAME_TIME / 3) //20
 }

@@ -86,7 +86,7 @@ private fun GameCard(
     onGuessChanged: (String) -> Unit,
     onHintClicked: () -> Unit,
     showHint: Boolean,
-    timeLeft: Long,
+    timeLeft: Int,
 ) {
 
     val keyboard = LocalSoftwareKeyboardController.current
@@ -298,7 +298,7 @@ fun PrevGameCard() {
             onGuessChanged = { },
             onHintClicked = { },
             showHint = true,
-            timeLeft = 20_000L,
+            timeLeft = 20,
         )
     }
 }

@@ -30,6 +30,8 @@ fun HistoryScreen(
     onClearHistory: () -> Unit,
     deleteWord: (List<String>) -> Unit,
     onWordClick: (DictionaryEntity) -> Unit,
+    searchQuery: String,
+    onTypeQuery: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isEmpty = dictionaryItems.isEmpty()
@@ -55,10 +57,19 @@ fun HistoryScreen(
                      )
             } else {
                 // List of search history items
+
                 LazyColumn(
                     contentPadding = contentPadding,
                     modifier = Modifier.padding(16.dp),
                     content = {
+
+                        item {
+                            SearchBar(
+                                query = searchQuery,
+                                onQueryChanged = onTypeQuery
+                            )
+                        }
+
                         items(dictionaryItems) { dictionary ->
                             HistoryItemCard(
                                 dictionary = dictionary,
@@ -86,6 +97,8 @@ fun PreviewHistory() {
         ),
         deleteWord = { },
         onClearHistory = { },
-        onWordClick = { }
+        onWordClick = { },
+        searchQuery = "",
+        onTypeQuery = { }
     )
 }

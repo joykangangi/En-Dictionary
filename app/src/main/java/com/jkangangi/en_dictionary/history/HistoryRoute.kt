@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.history
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,8 +31,7 @@ class HistoryRoute(
         viewModel: HistoryViewModel = viewModel(factory = DictionaryViewModelFactory)
     ) {
 
-        val state by viewModel.allHistoryItems.collectAsState()
-        Log.i("HistoryRoute","IsEmpty = ${state.isEmpty()}}")
+        val state by viewModel.filteredItems.collectAsState()
 
         val onHistoryCleared = remember {
             {
@@ -53,12 +51,16 @@ class HistoryRoute(
             }
         }
 
+        val searchQuery by remember { viewModel.userQuery }
+
         HistoryScreen(
             dictionaryItems = state,
             onClearHistory = onHistoryCleared,
             deleteWord = deleteDictionaryItem,
             modifier = modifier,
-            onWordClick =  toWordClick
+            onWordClick =  toWordClick,
+            searchQuery = searchQuery,
+            onTypeQuery = viewModel::onQueryTyped
         )
 
     }

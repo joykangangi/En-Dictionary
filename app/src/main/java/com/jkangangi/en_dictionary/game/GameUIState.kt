@@ -3,6 +3,7 @@ package com.jkangangi.en_dictionary.game
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
+import com.jkangangi.en_dictionary.game.GameConstants.TOTAL_GAME_TIME
 
 @Stable
 @Immutable
@@ -15,5 +16,5 @@ data class GameUIState(
     val score: Int = 0,
     val btnEnabled: Boolean = false,
     val showHint: Boolean = false,
-    val timeLeft: Long = 60_000L
+    val timeLeft: Int = TOTAL_GAME_TIME
 )

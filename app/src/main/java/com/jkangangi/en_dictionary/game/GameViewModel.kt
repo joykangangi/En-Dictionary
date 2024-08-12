@@ -14,7 +14,7 @@ import com.jkangangi.en_dictionary.game.GameConstants.HINT_DECREASE
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.GameConstants.SKIP_DECREASE
-import com.jkangangi.en_dictionary.game.GameConstants.THOUSAND
+import com.jkangangi.en_dictionary.game.GameConstants.TOTAL_GAME_TIME
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +66,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         }
     ).stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.WhileSubscribed(2_500),
         initialValue = GameUIState()
     )
 
@@ -91,7 +91,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         viewModelScope.launch {
             while (_gameUIState.value.timeLeft > 0) {
                 delay(1000)
-                _gameUIState.update { it.copy(timeLeft = _gameUIState.value.timeLeft - THOUSAND) }
+                _gameUIState.update { it.copy(timeLeft = _gameUIState.value.timeLeft - 1) }
             }
             if (_guessedWord.value.isBlank()) {
                 onSkipClicked()
@@ -104,7 +104,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         _guessedWord.value = ""
         _gameUIState.update { it.copy(showHint = false, btnEnabled = false) }
         _hintClicked = false
-        _gameUIState.update { it.copy(timeLeft = 60_000L) }
+        _gameUIState.update { it.copy(timeLeft = TOTAL_GAME_TIME) }
         getWordItem()
     }
 
