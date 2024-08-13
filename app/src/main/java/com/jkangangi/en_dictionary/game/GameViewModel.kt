@@ -155,4 +155,14 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         _gameUIState.update { GameUIState() }
     }
 
+    fun selectGameMode(gameMode: GameMode) {
+        when(gameMode){
+            GameMode.Hard -> {
+
+            }
+            GameMode.Medium -> TODO()
+            GameMode.Easy -> TODO()
+        }
+    }
+
 }

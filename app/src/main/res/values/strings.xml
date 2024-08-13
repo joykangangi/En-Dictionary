@@ -55,5 +55,8 @@
     <string name="score_count">Score: %d /%d</string>
     <string name="letter_count">Letters: %d / %d</string>
     <string name="game_txt_label">Your Guess…</string>
+    <string name="hard">Hard</string>
+    <string name="medium">Medium</string>
+    <string name="easy">Easy</string>
 
 </resources>

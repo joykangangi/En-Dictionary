@@ -1,0 +1,88 @@
+package com.jkangangi.en_dictionary.game
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.jkangangi.en_dictionary.R
+
+@Composable
+fun GameIntroScreen(
+    onGameModeClick: (GameMode) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    Scaffold(
+        content = { scaffoldPadding ->
+            Column(
+                modifier = modifier
+                    .padding(scaffoldPadding)
+                    .padding(12.dp)
+                    .background(color = MaterialTheme.colorScheme.primary.copy(0.5f)),
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                content = {
+                    Image(
+                        painter = painterResource(id = R.drawable.game_intro_bg),
+                        contentDescription = stringResource(
+                            id = R.string.game_txt_label
+                        )
+                    )
+
+                    GameLevelCard(gameMode = GameMode.Easy, onGameModeClick = onGameModeClick)
+                    GameLevelCard(gameMode = GameMode.Medium, onGameModeClick = onGameModeClick)
+                    GameLevelCard(gameMode = GameMode.Hard, onGameModeClick = onGameModeClick)
+                }
+
+            )
+        }
+    )
+
+
+}
+
+@Composable
+private fun GameLevelCard(
+    gameMode: GameMode,
+    onGameModeClick: (GameMode) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        onClick = { onGameModeClick(gameMode) },
+        content = {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                content = {
+                    Text(
+                        text = stringResource(id = gameMode.levelId).uppercase(),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Icon(
+                        modifier = Modifier.size(40.dp),
+                        imageVector = gameMode.levelIcon,
+                        contentDescription = gameMode.levelIcon.name
+                    )
+                }
+            )
+        }
+    )
+}
