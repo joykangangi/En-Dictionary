@@ -23,6 +23,7 @@ import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackFader
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.definitions.DefinitionView
+import com.jkangangi.en_dictionary.game.GameMode
 import com.jkangangi.en_dictionary.game.GameRoute
 import com.jkangangi.en_dictionary.history.HistoryRoute
 import com.jkangangi.en_dictionary.search.SearchRoute
@@ -77,6 +78,8 @@ class Navigation(
 
             is Route.Play -> GameRoute(
                 buildContext = buildContext,
+                backStack = backStack,
+                gameMode = navTarget.gameMode
             )
 
             is Route.History -> HistoryRoute(
@@ -104,7 +107,7 @@ sealed class Route(
     data class SearchDetail(val sentence: String) : Route(titleId = R.string.search_detail)
 
     @Parcelize
-    data object Play : Route(
+    data class Play(val gameMode: GameMode? = null) : Route(
         selectedIcon = Icons.Default.Games,
         unselectedIcon = Icons.Outlined.Games,
         titleId = R.string.play

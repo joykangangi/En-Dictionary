@@ -29,7 +29,7 @@ import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 
 private val bottomNavScreens = listOf(
     Route.Search,
-    Route.Play,
+    Route.Play(),
     Route.History
 )
 

@@ -5,9 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 
@@ -31,18 +37,23 @@ fun GameIntroScreen(
         content = { scaffoldPadding ->
             Column(
                 modifier = modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.primary.copy(0.5f))
                     .padding(scaffoldPadding)
                     .padding(12.dp)
-                    .background(color = MaterialTheme.colorScheme.primary.copy(0.5f)),
-                verticalArrangement = Arrangement.SpaceAround,
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
+                    Spacer(modifier = Modifier.height(20.dp))
+
                     Image(
                         painter = painterResource(id = R.drawable.game_intro_bg),
                         contentDescription = stringResource(
                             id = R.string.game_txt_label
                         )
                     )
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     GameLevelCard(gameMode = GameMode.Easy, onGameModeClick = onGameModeClick)
                     GameLevelCard(gameMode = GameMode.Medium, onGameModeClick = onGameModeClick)
@@ -85,4 +96,11 @@ private fun GameLevelCard(
             )
         }
     )
+}
+
+@Preview
+@Composable
+private fun PrevGameIntro() {
+    GameIntroScreen(onGameModeClick = {})
+
 }
