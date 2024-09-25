@@ -1,6 +1,7 @@
 package com.jkangangi.en_dictionary.game
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -41,9 +43,10 @@ import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.util.HtmlParser
 import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
 
+// 5 </> 5 = false
 
 @Composable
-fun GameLayout(
+fun MediumGameLayout(
     state: GameUIState,
     guess: String,
     onGuessChanged: (String) -> Unit,
@@ -103,7 +106,7 @@ private fun GameCard(
                 content = {
 
                     Text(
-                        text = stringResource(id = R.string.game_instructions),
+                        text = stringResource(id = R.string.medium_game_instructions),
                         style = MaterialTheme.typography.bodyMedium
                     )
 
@@ -185,7 +188,7 @@ private fun ScrambledWord(
 }
 
 @Composable
-private fun HintSection(
+fun HintSection(
     hint: String,
     onHintClicked: () -> Unit,
     showHint: Boolean,
@@ -230,16 +233,18 @@ private fun HintSection(
 
         AnimatedVisibility(visible = showHint) {
             Box(
-                modifier = modifier.padding(6.dp),
+                modifier = modifier
+                    .padding(6.dp)
+                    .border(
+                        1.dp,
+                        shape = RoundedCornerShape(12),
+                        color = MaterialTheme.colorScheme.secondary
+                    ),
                 contentAlignment = Alignment.Center,
                 content = {
-                    Column(
-                        content = {
-                            Text(
-                                text = styledMeaning,
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
+                    Text(
+                        text = styledMeaning,
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             )
@@ -248,7 +253,7 @@ private fun HintSection(
 }
 
 @Composable
-private fun ButtonSection(
+fun ButtonSection(
     onSkipClicked: () -> Unit,
     onNextClicked: () -> Unit,
     btnEnabled: Boolean,
@@ -263,7 +268,7 @@ private fun ButtonSection(
         content = {
             OutlinedButton(
                 onClick = onSkipClicked,
-               // modifier = Modifier.weight(0.4f),
+                // modifier = Modifier.weight(0.4f),
                 content = {
                     Text(text = stringResource(id = R.string.skip_btn))
                 }

@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 import com.jkangangi.en_dictionary.game.GameConstants
-import com.jkangangi.en_dictionary.game.GameScreen
 import com.jkangangi.en_dictionary.game.GameViewModel
+import com.jkangangi.en_dictionary.game.MediumGameScreen
 
 
 @Composable
@@ -30,7 +30,7 @@ fun MediumGameView(
         }
     )
 
-    GameScreen(
+    MediumGameScreen(
         modifier = modifier,
         state = gameState,
         guess = viewModel.guessedWord.value,

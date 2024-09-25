@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -47,14 +48,22 @@ fun En_DictionaryTheme(
 
     val typography = getTypography(fontFamily)
 
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = typography,
-        content = content
+    AppDimenUtils(
+        content = {
+            MaterialTheme(
+                colorScheme = colorScheme,
+                typography = typography,
+                content = content
+            )
+        }
     )
 
 }
+
+val MaterialTheme.dimens
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalAppDimens.current
 
 private val animationSpec: AnimationSpec<Color> = tween(
     durationMillis = 250

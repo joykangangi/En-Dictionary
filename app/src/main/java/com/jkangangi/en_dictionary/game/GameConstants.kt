@@ -15,6 +15,8 @@ object GameConstants {
     const val MAX_SCORE = 30
     const val TOTAL_GAME_TIME = 60 //60 seconds
     const val THREE_QUARTER = (TOTAL_GAME_TIME / 3) //20
+    const val SHOW_WORD_ANIM_MILLIS = 500
+    const val MAX_WORD_LENGTH = 14 //to calculate text size and box size
 }
 
 enum class GameMode(

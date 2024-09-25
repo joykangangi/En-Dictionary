@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game
+package com.jkangangi.en_dictionary.game.sharedwidgets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,31 +10,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
+import com.jkangangi.en_dictionary.app.theme.largePadding
+import com.jkangangi.en_dictionary.app.theme.mediumPadding
 import com.jkangangi.en_dictionary.app.widgets.EmptyListView
+import com.jkangangi.en_dictionary.game.GameConstants
+import com.jkangangi.en_dictionary.game.GameTopBar
+import com.jkangangi.en_dictionary.game.GameUIState
 
-// 5 </> 5 = false
 @Composable
-fun GameScreen(
-    modifier: Modifier,
+fun GeneralGameView(
     state: GameUIState,
-    guess: String,
-    onGuessChanged: (String) -> Unit,
-    onNextClicked: () -> Unit,
-    onSkipClicked: () -> Unit,
-    onHintClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+    gameLayout: @Composable (Modifier) -> Unit,
 ) {
-
     Scaffold(
         modifier = modifier,
         topBar = {
             GameTopBar(currentScore = state.score, currentWord = state.wordCount)
         },
-        content = { contentPadding ->
-            if (state.wordItemsSize < GameConstants.MAX_WORDS -1) {
+        content = { scaffoldPadding ->
+            if (state.wordItemsSize < GameConstants.MAX_WORDS - 1) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -52,36 +48,17 @@ fun GameScreen(
                     }
                 )
             } else {
-                GameLayout(
+                Column(
                     modifier = Modifier
-                        .padding(contentPadding)
-                        .padding(start = 16.dp, end = 16.dp),
-                    guess = guess,
-                    onGuessChanged = onGuessChanged,
-                    onNextClicked = onNextClicked,
-                    onSkipClicked = onSkipClicked,
-                    state = state,
-                    onHintClicked = onHintClicked,
+                        .padding(scaffoldPadding)
+                        .padding(start = largePadding(), end = largePadding()),
+                    content = {
+                        gameLayout(Modifier.padding(mediumPadding()))
+                    }
                 )
+
             }
+
         }
     )
-
-}
-
-
-@Preview(apiLevel = 33)
-@Composable
-fun PreviewSavedWords() {
-    En_DictionaryTheme {
-        GameScreen(
-            modifier = Modifier,
-            state = GameUIState(),
-            guess = "",
-            onGuessChanged = { },
-            onNextClicked = { },
-            onSkipClicked = { },
-            onHintClicked = { },
-        )
-    }
 }

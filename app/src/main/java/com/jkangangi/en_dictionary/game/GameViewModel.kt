@@ -66,7 +66,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         }
     ).stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(2_500),
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = GameUIState()
     )
 
@@ -153,16 +153,6 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     private fun resetGame() {
         playedWords.removeAll(playedWords)
         _gameUIState.update { GameUIState() }
-    }
-
-    fun selectGameMode(gameMode: GameMode) {
-        when(gameMode){
-            GameMode.Hard -> {
-
-            }
-            GameMode.Medium -> TODO()
-            GameMode.Easy -> TODO()
-        }
     }
 
 }
