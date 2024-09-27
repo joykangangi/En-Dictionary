@@ -10,6 +10,7 @@ immutable = "0.3.7"
 junit-test = "1.2.1"
 compose-activity = "1.9.1"
 jsoup = "1.16.1"
+compose-navigation = "2.8.1"
 splash-screen = "1.0.1"
 
 compose = "2024.06.00"
@@ -39,6 +40,7 @@ compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
 
 # Datastore
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}

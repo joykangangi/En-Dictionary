@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
 
+
     debugImplementation(libs.compose.ui.tooling)
     androidTestImplementation(platform(libs.compose))
 
@@ -104,6 +105,9 @@ dependencies {
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.viewmodel.compose)
+
+    //Navigation
+    implementation(libs.compose.navigation)
 
     // Appyx Navigation
     implementation(libs.appyx)
