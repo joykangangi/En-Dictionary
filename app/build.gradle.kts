@@ -109,9 +109,6 @@ dependencies {
     //Navigation
     implementation(libs.compose.navigation)
 
-    // Appyx Navigation
-    implementation(libs.appyx)
-
     // preferences datastore
     implementation(libs.datastore)
 

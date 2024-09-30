@@ -9,7 +9,9 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.jkangangi.en_dictionary.R
-import kotlinx.serialization.Serializable
+import com.jkangangi.en_dictionary.game.PlayHomeRoute
+import com.jkangangi.en_dictionary.history.HistoryRoute
+import com.jkangangi.en_dictionary.search.MainSearchRoute
 import kotlin.reflect.KClass
 
 enum class MainAppRoutes(
@@ -23,38 +25,21 @@ enum class MainAppRoutes(
         selectedIcon = Icons.Default.Search,
         unselectedIcon = Icons.Outlined.Search,
         titleId = R.string.search_btn,
-        route = SearchRoute::class
-    ),
-
-    SEARCH_DETAIL(
-        titleId = R.string.search_detail,
-        route = SearchDetail::class
+        route = MainSearchRoute::class
     ),
 
     PLAY(
         selectedIcon = Icons.Default.Games,
         unselectedIcon = Icons.Outlined.Games,
         titleId = R.string.play,
-        route = Play::class
+        route = PlayHomeRoute::class
     ),
 
     HISTORY(
         selectedIcon = Icons.Default.History,
         unselectedIcon = Icons.Outlined.History,
         titleId = R.string.history,
-        route = History::class
+        route = HistoryRoute::class
     )
 
 }
-
-@Serializable
-data object SearchRoute
-
-@Serializable
-data class SearchDetail(val sentence: String)
-
-@Serializable
-data object Play
-
-@Serializable
-data object History

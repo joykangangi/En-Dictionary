@@ -6,62 +6,58 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.bumble.appyx.core.modality.BuildContext
-import com.bumble.appyx.core.node.Node
-import com.bumble.appyx.navmodel.backstack.BackStack
-import com.bumble.appyx.navmodel.backstack.operation.push
-import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
-import com.jkangangi.en_dictionary.app.navigation.Route
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
+import kotlinx.serialization.Serializable
 
-class HistoryRoute(
-    buildContext: BuildContext,
-    private val backStack: BackStack<Route>
-) : Node(buildContext = buildContext) {
+@Serializable
+data object HistoryRoute
 
-    @Composable
-    override fun View(modifier: Modifier) {
-        HistoryScreenView(modifier = modifier)
+fun NavController.navigateToHistory(
+    navOptions: NavOptions? = null,
+) = navigate(HistoryRoute, navOptions)
+
+fun NavGraphBuilder.historyScreen(
+    toWordDfn: (String) -> Unit
+) {
+    composable<HistoryRoute> {
+        HistoryScreen(toWordDfn = toWordDfn)
+    }
+}
+
+@Composable
+internal fun HistoryScreen(
+    toWordDfn: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: HistoryViewModel = viewModel(factory = DictionaryViewModelFactory)
+) {
+
+    val state by viewModel.filteredItems.collectAsState()
+
+    val onHistoryCleared = remember {
+        {
+            viewModel.clearDictionaryItems()
+        }
     }
 
-
-    @Composable
-    fun HistoryScreenView(
-        modifier: Modifier,
-        viewModel: HistoryViewModel = viewModel(factory = DictionaryViewModelFactory)
-    ) {
-
-        val state by viewModel.filteredItems.collectAsState()
-
-        val onHistoryCleared = remember {
-            {
-                viewModel.clearDictionaryItems()
-            }
+    val deleteDictionaryItem = remember {
+        { sentences: List<String> ->
+            viewModel.deleteDictionaryItem(sentences)
         }
-
-        val deleteDictionaryItem = remember {
-            { sentences: List<String> ->
-                viewModel.deleteDictionaryItem(sentences)
-            }
-        }
-
-        val toWordClick = remember {
-            { dfn: DictionaryEntity ->
-                backStack.push(Route.SearchDetail(sentence = dfn.sentence))
-            }
-        }
-
-        val searchQuery by remember { viewModel.userQuery }
-
-        HistoryScreen(
-            dictionaryItems = state,
-            onClearHistory = onHistoryCleared,
-            deleteWord = deleteDictionaryItem,
-            modifier = modifier,
-            onWordClick =  toWordClick,
-            searchQuery = searchQuery,
-            onTypeQuery = viewModel::onQueryTyped
-        )
-
     }
+
+    val searchQuery by remember { viewModel.userQuery }
+
+    HistoryScreen(
+        dictionaryItems = state,
+        onClearHistory = onHistoryCleared,
+        deleteWord = deleteDictionaryItem,
+        modifier = modifier,
+        onWordClick = toWordDfn,
+        searchQuery = searchQuery,
+        onTypeQuery = viewModel::onQueryTyped
+    )
 }

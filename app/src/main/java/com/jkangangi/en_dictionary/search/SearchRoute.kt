@@ -3,52 +3,54 @@ package com.jkangangi.en_dictionary.search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.bumble.appyx.core.modality.BuildContext
-import com.bumble.appyx.core.node.Node
-import com.bumble.appyx.navmodel.backstack.BackStack
-import com.bumble.appyx.navmodel.backstack.operation.push
-import com.jkangangi.en_dictionary.app.navigation.Route
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 import com.jkangangi.en_dictionary.settings.SettingsViewModel
+import kotlinx.serialization.Serializable
 
-class SearchRoute(
-    buildContext: BuildContext,
-    private val backStack: BackStack<Route>,
-) : Node(buildContext = buildContext) {
+@Serializable
+data object MainSearchRoute
 
-    @Composable
-    override fun View(modifier: Modifier) {
+fun NavController.navigateToMainSearch(navOptions: NavOptions) = navigate(route = MainSearchRoute, navOptions = navOptions)
 
-        SearchScreenView(modifier = modifier)
+fun NavGraphBuilder.mainSearchScreen(
+    toWordDetailClick: (String) -> Unit,
+) {
+    composable<MainSearchRoute> {
+        MainSearchScreen(toWordDetailClick = toWordDetailClick)
     }
+}
 
-    @Composable
-    fun SearchScreenView(
-        modifier: Modifier,
-        searchViewModel: SearchViewModel = viewModel(factory = DictionaryViewModelFactory),
-        settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
-    ) {
 
-        val searchScreenState by searchViewModel.searchScreenState.collectAsState()
-        val settingsState by settingsViewModel.settingsState.collectAsState()
+@Composable
+internal fun MainSearchScreen(
+    toWordDetailClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    searchViewModel: SearchViewModel = viewModel(factory = DictionaryViewModelFactory),
+    settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
+) {
 
-        val toWordClick: (String) -> Unit = {
+    val toWordClick: (String) -> Unit = remember {
+        {
             searchViewModel.clearState()
-            backStack.push(Route.SearchDetail(sentence = it))
+            toWordDetailClick(it)
         }
-
-
-        SearchScreen(
-            modifier = modifier,
-            settingsState = settingsState,
-            updateSettings = settingsViewModel::updateSettings,
-            searchScreenState = searchScreenState,
-            performEvent = searchViewModel::performEvent,
-            toWordClick = toWordClick
-        )
-
-
     }
+    val searchScreenState by searchViewModel.searchScreenState.collectAsState()
+    val settingsState by settingsViewModel.settingsState.collectAsState()
+
+    SearchScreen(
+        modifier = modifier,
+        settingsState = settingsState,
+        updateSettings = settingsViewModel::updateSettings,
+        searchScreenState = searchScreenState,
+        performEvent = searchViewModel::performEvent,
+        toWordClick = toWordClick
+    )
 }

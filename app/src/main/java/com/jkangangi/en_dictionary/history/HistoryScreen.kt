@@ -29,7 +29,7 @@ fun HistoryScreen(
     dictionaryItems: ImmutableList<DictionaryEntity>,
     onClearHistory: () -> Unit,
     deleteWord: (List<String>) -> Unit,
-    onWordClick: (DictionaryEntity) -> Unit,
+    onWordClick: (String) -> Unit,
     searchQuery: String,
     onTypeQuery: (String) -> Unit,
     modifier: Modifier = Modifier,

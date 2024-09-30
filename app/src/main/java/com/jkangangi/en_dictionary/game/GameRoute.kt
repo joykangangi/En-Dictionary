@@ -2,51 +2,39 @@ package com.jkangangi.en_dictionary.game
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.bumble.appyx.core.modality.BuildContext
-import com.bumble.appyx.core.node.Node
-import com.bumble.appyx.navmodel.backstack.BackStack
-import com.bumble.appyx.navmodel.backstack.operation.push
-import com.jkangangi.en_dictionary.app.navigation.Route
-import com.jkangangi.en_dictionary.game.easymode.EasyGameView
-import com.jkangangi.en_dictionary.game.hard.HardGameView
-import com.jkangangi.en_dictionary.game.medium.MediumGameView
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
+import kotlinx.serialization.Serializable
 
-class GameRoute(
-    buildContext: BuildContext,
-    private val backStack: BackStack<Route>,
-    private val gameMode: GameMode? = null,
-) : Node(buildContext = buildContext) {
+/**
+ * I could have merged the mode and landing page here..,
+ * but the class will be multipurpose(spaghetti)
+ */
+@Serializable
+data object PlayHomeRoute
 
+fun NavController.navigateToPlay(
+    navOptions: NavOptions
+) = navigate(route = PlayHomeRoute, navOptions)
 
-    @Composable
-    override fun View(
-        modifier: Modifier
-    ) {
-        GameIntroScreen(
-            onGameModeClick = { gameMode ->
-                backStack.push(Route.Play(gameMode))
-            }
-        )
+fun NavGraphBuilder.gameHomeScreen(
+    onGameModeClicked: (GameMode) -> Unit,
+) {
+    composable<PlayHomeRoute> {
 
-        if (gameMode != null) {
-            ResolveGameModeView(gameMode = gameMode)
-        }
+        GameHomeScreen(onGameModeClicked = onGameModeClicked)
     }
+}
 
-    @Composable
-    fun ResolveGameModeView(gameMode: GameMode) {
-
-        when(gameMode) {
-            GameMode.Hard -> {
-                HardGameView()
-            }
-            GameMode.Medium -> {
-                MediumGameView()
-            }
-            GameMode.Easy -> {
-                EasyGameView()
-            }
-        }
-    }
-
+@Composable
+internal fun GameHomeScreen(
+    onGameModeClicked: (GameMode) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    GameIntroScreen(
+        modifier = modifier,
+        onGameModeClick = onGameModeClicked
+    )
 }

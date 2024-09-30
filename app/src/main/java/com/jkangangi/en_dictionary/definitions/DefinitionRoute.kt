@@ -7,16 +7,43 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
+import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
+import kotlinx.serialization.Serializable
 
+
+@Serializable
+data class WordDetailRoute(val sentence: String)
+
+fun NavController.navigateToWordDetail(
+    sentence: String,
+    navOptions: NavOptions? = null,
+    ) = navigate(route = WordDetailRoute(sentence), navOptions)
+
+fun NavGraphBuilder.wordDetailScreen(
+    onBack: () -> Unit,
+) {
+    composable<WordDetailRoute> {
+        val args = it.toRoute<WordDetailRoute>()
+        WordDetailScreen(
+            onBack = onBack,
+            sentence = args.sentence
+        )
+    }
+}
 
 @Composable
-fun DefinitionView(
-    modifier: Modifier,
+internal fun WordDetailScreen(
+    modifier: Modifier = Modifier,
     viewModel: DefinitionsViewModel = viewModel(factory = DictionaryViewModelFactory),
     onBack: () -> Unit,
     sentence: String,
-) {
+){
+
     LaunchedEffect(key1 = Unit, block = {
         viewModel.getDictionary(sentence)
     })
@@ -43,5 +70,3 @@ fun DefinitionView(
         onBack = onBack,
     )
 }
-
-

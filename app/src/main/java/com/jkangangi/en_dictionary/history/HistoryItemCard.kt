@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,20 +21,19 @@ import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryItemCard(
     dictionary: DictionaryEntity,
     onDeleteWord: (List<String>) -> Unit,
     modifier: Modifier = Modifier,
-    onWordClick: (DictionaryEntity) -> Unit,
+    onWordClick: (String) -> Unit,
 ) {
     /*val onDeleteDictionary = remember {
         { onDeleteWord(dictionary) }
     }*/
     ElevatedCard(
         modifier = modifier.padding(8.dp),
-        onClick = { onWordClick(dictionary) },
+        onClick = { onWordClick(dictionary.sentence) },
         content = {
             Row(
                 modifier = Modifier
