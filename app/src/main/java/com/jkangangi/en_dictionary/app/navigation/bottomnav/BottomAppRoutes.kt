@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.app.navigation
+package com.jkangangi.en_dictionary.app.navigation.bottomnav
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Games
@@ -9,12 +9,12 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.game.PlayHomeRoute
+import com.jkangangi.en_dictionary.game.intro.GameIntroRoute
 import com.jkangangi.en_dictionary.history.HistoryRoute
 import com.jkangangi.en_dictionary.search.MainSearchRoute
 import kotlin.reflect.KClass
 
-enum class MainAppRoutes(
+enum class BottomAppRoutes(
     val selectedIcon: ImageVector? = null,
     val unselectedIcon: ImageVector? = null,
     val titleId: Int? = null,
@@ -32,7 +32,7 @@ enum class MainAppRoutes(
         selectedIcon = Icons.Default.Games,
         unselectedIcon = Icons.Outlined.Games,
         titleId = R.string.play,
-        route = PlayHomeRoute::class
+        route = GameIntroRoute::class
     ),
 
     HISTORY(

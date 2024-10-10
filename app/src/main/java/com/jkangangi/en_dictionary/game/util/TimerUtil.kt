@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game
+package com.jkangangi.en_dictionary.game.util
 
 fun formatTimeInMinAndSeconds(totalSeconds: Int): String {
     val minutes = totalSeconds / 60

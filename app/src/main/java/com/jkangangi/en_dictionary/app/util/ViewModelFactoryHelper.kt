@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.jkangangi.en_dictionary.DictionaryApplication
 import com.jkangangi.en_dictionary.definitions.DefinitionsViewModel
-import com.jkangangi.en_dictionary.game.GameViewModel
+import com.jkangangi.en_dictionary.game.mode.GameViewModel
 import com.jkangangi.en_dictionary.history.HistoryViewModel
 import com.jkangangi.en_dictionary.search.SearchViewModel
 

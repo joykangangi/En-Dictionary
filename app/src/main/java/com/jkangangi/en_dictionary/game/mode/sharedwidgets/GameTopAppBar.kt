@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game
+package com.jkangangi.en_dictionary.game.mode.sharedwidgets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
+import com.jkangangi.en_dictionary.game.util.GameConstants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,8 +30,12 @@ fun GameTopBar(
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 content = {
-                    Text(text = stringResource(id = R.string.word_count, currentWord,GameConstants.MAX_WORDS), modifier = Modifier.padding(6.dp))
-                    Text(text = stringResource(id = R.string.score_count, currentScore,GameConstants.MAX_SCORE), modifier = Modifier.padding(6.dp))
+                    Text(text = stringResource(id = R.string.word_count, currentWord,
+                        GameConstants.MAX_WORDS
+                    ), modifier = Modifier.padding(6.dp))
+                    Text(text = stringResource(id = R.string.score_count, currentScore,
+                        GameConstants.MAX_SCORE
+                    ), modifier = Modifier.padding(6.dp))
                 }
             )
         }

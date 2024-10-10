@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game
+package com.jkangangi.en_dictionary.game.mode.medium
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
@@ -34,6 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,13 +42,15 @@ import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.util.HtmlParser
-import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
+import com.jkangangi.en_dictionary.game.mode.GameInputState
+import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameTimer
+import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORDS
 
 // 5 </> 5 = false
 
 @Composable
 fun MediumGameLayout(
-    state: GameUIState,
+    state: GameInputState,
     guess: String,
     onGuessChanged: (String) -> Unit,
     onNextClicked: () -> Unit,
@@ -107,7 +110,8 @@ private fun GameCard(
 
                     Text(
                         text = stringResource(id = R.string.medium_game_instructions),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
                     )
 
                     GameTimer(

@@ -55,7 +55,8 @@ fun HistoryScreen(
                     modifier = Modifier.fillMaxSize(),
                     stringId = R.string.empty_history
                      )
-            } else {
+            }
+            else {
                 // List of search history items
 
                 LazyColumn(

@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game
+package com.jkangangi.en_dictionary.game.mode.sharedwidgets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,8 +17,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
-import com.jkangangi.en_dictionary.game.GameConstants.THREE_QUARTER
-import com.jkangangi.en_dictionary.game.GameConstants.TOTAL_GAME_TIME
+import com.jkangangi.en_dictionary.game.util.GameConstants.THREE_QUARTER
+import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_GAME_TIME
+import com.jkangangi.en_dictionary.game.util.formatTimeInMinAndSeconds
 
 
 @Composable

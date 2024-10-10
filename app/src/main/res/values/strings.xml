@@ -9,6 +9,8 @@
     <string name="clear_history">Clear History</string>
     <string name="empty_history">Empty History</string>
     <string name="empty_saves">Search at least 6 words to play</string>
+    <string name="med_words_not_found">Search words of length 6–8</string>
+    <string name="easy_words_not_found">Search words of length 2–5</string>
     <string name="sort_abc">A-Z</string>
     <string name="go_back">Go back</string>
 

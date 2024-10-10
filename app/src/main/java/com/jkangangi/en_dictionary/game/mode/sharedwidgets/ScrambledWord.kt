@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game.sharedwidgets
+package com.jkangangi.en_dictionary.game.mode.sharedwidgets
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.jkangangi.en_dictionary.game.GameConstants.SHOW_WORD_ANIM_MILLIS
+import com.jkangangi.en_dictionary.game.util.GameConstants.SHOW_WORD_ANIM_MILLIS
 
 @Composable
 fun ScrambledWord(
@@ -40,7 +40,7 @@ fun ScrambledWord(
 }
 
 @Composable
-private fun ScrambledWordBox(
+fun ScrambledWordBox(
     scrambledWord: String,
     modifier: Modifier = Modifier
 ) {

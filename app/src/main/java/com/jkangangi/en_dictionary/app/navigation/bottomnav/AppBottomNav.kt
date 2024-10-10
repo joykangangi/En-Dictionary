@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.app.navigation
+package com.jkangangi.en_dictionary.app.navigation.bottomnav
 
 import android.util.Log
 import androidx.compose.material3.BottomAppBar
@@ -18,14 +18,14 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
-import com.jkangangi.en_dictionary.game.navigateToPlay
+import com.jkangangi.en_dictionary.game.intro.navigateToGameIntro
 import com.jkangangi.en_dictionary.history.navigateToHistory
 import com.jkangangi.en_dictionary.search.navigateToMainSearch
 
-private val bottomNavScreens: List<MainAppRoutes> = listOf(
-    MainAppRoutes.SEARCH,
-    MainAppRoutes.PLAY,
-    MainAppRoutes.HISTORY,
+private val bottomNavScreens: List<BottomAppRoutes> = listOf(
+    BottomAppRoutes.SEARCH,
+    BottomAppRoutes.PLAY,
+    BottomAppRoutes.HISTORY,
 )
 
 @Composable
@@ -39,9 +39,9 @@ fun AppBottomNavigator(
     val showBottomBar by remember(key1 = navStackBackEntry?.destination?.route) {
         derivedStateOf {
             when(navStackBackEntry?.destination?.route) {
-                MainAppRoutes.SEARCH.route.qualifiedName,
-                MainAppRoutes.PLAY.route.qualifiedName,
-                MainAppRoutes.HISTORY.route.qualifiedName -> true
+                BottomAppRoutes.SEARCH.route.qualifiedName,
+                BottomAppRoutes.PLAY.route.qualifiedName,
+                BottomAppRoutes.HISTORY.route.qualifiedName -> true
                 else -> false
             }
         }
@@ -49,13 +49,13 @@ fun AppBottomNavigator(
 
     Log.i(
         "Navigation",
-        "show nav = $showBottomBar, ${navStackBackEntry?.destination?.route }, ${MainAppRoutes.HISTORY.route.qualifiedName}"
+        "show nav = $showBottomBar, ${navStackBackEntry?.destination?.route }, ${BottomAppRoutes.HISTORY.route.qualifiedName}"
     )
 
 
 
     val onItemClick = remember {
-        { screen: MainAppRoutes ->
+        { screen: BottomAppRoutes ->
             val mainAppNavOptions = navOptions {
                 popUpTo(navHostController.graph.findStartDestination().id) {
                     saveState = true
@@ -66,15 +66,15 @@ fun AppBottomNavigator(
                 restoreState = true
             }
             when (screen) {
-                MainAppRoutes.SEARCH -> navHostController.navigateToMainSearch(mainAppNavOptions)
-                MainAppRoutes.PLAY -> navHostController.navigateToPlay(mainAppNavOptions)
-                MainAppRoutes.HISTORY -> navHostController.navigateToHistory(mainAppNavOptions)
+                BottomAppRoutes.SEARCH -> navHostController.navigateToMainSearch(mainAppNavOptions)
+                BottomAppRoutes.PLAY -> navHostController.navigateToGameIntro(mainAppNavOptions)
+                BottomAppRoutes.HISTORY -> navHostController.navigateToHistory(mainAppNavOptions)
             }
         }
     }
 
     val selected = remember {
-        { screen: MainAppRoutes ->
+        { screen: BottomAppRoutes ->
             navStackBackEntry?.destination?.route == screen.route.qualifiedName
         }
     }

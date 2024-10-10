@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game.sharedwidgets
+package com.jkangangi.en_dictionary.game.mode.sharedwidgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.app.theme.dimens
 import com.jkangangi.en_dictionary.app.theme.largePadding
-import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORD_LENGTH
+import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORD_LENGTH
 
 @Composable
 fun BoxInput(

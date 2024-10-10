@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.game.easymode
+package com.jkangangi.en_dictionary.game.mode.easy
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,20 +15,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.mediumPadding
-import com.jkangangi.en_dictionary.app.theme.mediumSpacer
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
-import com.jkangangi.en_dictionary.game.ButtonSection
-import com.jkangangi.en_dictionary.game.GameConstants.MAX_WORDS
-import com.jkangangi.en_dictionary.game.GameTimer
-import com.jkangangi.en_dictionary.game.GameUIState
-import com.jkangangi.en_dictionary.game.GameViewModel
-import com.jkangangi.en_dictionary.game.HintSection
-import com.jkangangi.en_dictionary.game.sharedwidgets.GameInputWidget
-import com.jkangangi.en_dictionary.game.sharedwidgets.GeneralGameView
-import com.jkangangi.en_dictionary.game.sharedwidgets.ScrambledWord
+import com.jkangangi.en_dictionary.game.mode.GameInputState
+import com.jkangangi.en_dictionary.game.mode.GameUIState
+import com.jkangangi.en_dictionary.game.mode.GameViewModel
+import com.jkangangi.en_dictionary.game.mode.medium.ButtonSection
+import com.jkangangi.en_dictionary.game.mode.medium.HintSection
+import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameInputWidget
+import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameTimer
+import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GeneralGameView
+import com.jkangangi.en_dictionary.game.mode.sharedwidgets.ScrambledWordBox
+import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORDS
+import com.jkangangi.en_dictionary.game.util.GameMode
 
 
 @Composable
@@ -37,12 +39,16 @@ fun EasyGameView(
     viewModel: GameViewModel = viewModel(factory = DictionaryViewModelFactory)
 ) {
 
-    val gameState by viewModel.gameUIState.collectAsState()
+    val gameState by viewModel.gameInputState.collectAsState()
+    val gameUIState by viewModel.gameUIState().collectAsState()
+    val currentMode by viewModel.currentMode.collectAsState()
 
+    //only runs for the first word
     LaunchedEffect(
         key1 = gameState.wordItemsSize > MAX_WORDS - 1,
         block = {
             if (gameState.wordCount == 0 && gameState.wordItemsSize > MAX_WORDS - 1) {
+                viewModel.setGameMode(GameMode.Easy)
                 viewModel.getWordItem()
             }
         }
@@ -55,6 +61,8 @@ fun EasyGameView(
         onNextClicked = viewModel::onNextClicked,
         onSkipClicked = viewModel::onSkipClicked,
         onHintClicked = viewModel::onHintClicked,
+        gameUIState = gameUIState,
+        currentMode = currentMode
     )
 
 }
@@ -62,7 +70,9 @@ fun EasyGameView(
 @Composable
 fun EasyGameScreen(
     modifier: Modifier,
-    state: GameUIState,
+    state: GameInputState,
+    currentMode: GameMode?,
+    gameUIState: GameUIState,
     onGuessChanged: (String) -> Unit,
     onNextClicked: () -> Unit,
     onSkipClicked: () -> Unit,
@@ -77,7 +87,9 @@ fun EasyGameScreen(
 
     GeneralGameView(
         modifier = modifier,
-        state = state,
+        gameInputState = state,
+        currentMode = currentMode,
+        gameUIState = gameUIState,
         gameLayout = {
             EasyGameCard(
                 modifier = Modifier.padding(mediumPadding()),
@@ -123,13 +135,14 @@ private fun EasyGameCard(
         content = {
             Column(
                 modifier = modifier,
-                verticalArrangement = Arrangement.spacedBy(mediumSpacer()),
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
 
                     Text(
                         text = stringResource(id = R.string.easy_game_instruction),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
                     )
 
                     GameTimer(
@@ -137,9 +150,8 @@ private fun EasyGameCard(
                         timeLeft = timeLeft
                     )
 
-                    ScrambledWord(
+                    ScrambledWordBox(
                         scrambledWord = scrambledWord,
-                        isNewWord = isNewWord
                     )
 
                     Text(
