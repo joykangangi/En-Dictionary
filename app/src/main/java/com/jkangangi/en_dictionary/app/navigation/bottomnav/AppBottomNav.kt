@@ -18,7 +18,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
-import com.jkangangi.en_dictionary.game.intro.navigateToGameIntro
+import com.jkangangi.en_dictionary.game.navigateToGameIntro
 import com.jkangangi.en_dictionary.history.navigateToHistory
 import com.jkangangi.en_dictionary.search.navigateToMainSearch
 
@@ -56,7 +56,7 @@ fun AppBottomNavigator(
 
     val onItemClick = remember {
         { screen: BottomAppRoutes ->
-            val mainAppNavOptions = navOptions {
+            val bottomNavOptions = navOptions {
                 popUpTo(navHostController.graph.findStartDestination().id) {
                     saveState = true
                 }
@@ -66,9 +66,9 @@ fun AppBottomNavigator(
                 restoreState = true
             }
             when (screen) {
-                BottomAppRoutes.SEARCH -> navHostController.navigateToMainSearch(mainAppNavOptions)
-                BottomAppRoutes.PLAY -> navHostController.navigateToGameIntro(mainAppNavOptions)
-                BottomAppRoutes.HISTORY -> navHostController.navigateToHistory(mainAppNavOptions)
+                BottomAppRoutes.SEARCH -> navHostController.navigateToMainSearch(bottomNavOptions)
+                BottomAppRoutes.PLAY -> navHostController.navigateToGameIntro(bottomNavOptions)
+                BottomAppRoutes.HISTORY -> navHostController.navigateToHistory(bottomNavOptions)
             }
         }
     }

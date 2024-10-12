@@ -19,7 +19,7 @@ data object MainSearchRoute
 
 fun NavController.navigateToMainSearch(navOptions: NavOptions) = navigate(route = MainSearchRoute, navOptions = navOptions)
 
-fun NavGraphBuilder.mainSearchScreen(
+fun NavGraphBuilder.mainSearchGraph(
     toWordDetailClick: (String) -> Unit,
 ) {
     composable<MainSearchRoute> {

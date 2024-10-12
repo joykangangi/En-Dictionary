@@ -8,13 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.jkangangi.en_dictionary.app.navigation.bottomnav.AppBottomNavigator
 import com.jkangangi.en_dictionary.definitions.navigateToWordDetail
-import com.jkangangi.en_dictionary.definitions.wordDetailScreen
-import com.jkangangi.en_dictionary.game.intro.gameIntroScreen
-import com.jkangangi.en_dictionary.game.mode.gameModeScreen
-import com.jkangangi.en_dictionary.game.mode.navigateToGameMode
-import com.jkangangi.en_dictionary.history.historyScreen
+import com.jkangangi.en_dictionary.definitions.wordDetailGraph
+import com.jkangangi.en_dictionary.game.gameGraph
+import com.jkangangi.en_dictionary.game.navigateToGameMode
+import com.jkangangi.en_dictionary.history.historyGraph
 import com.jkangangi.en_dictionary.search.MainSearchRoute
-import com.jkangangi.en_dictionary.search.mainSearchScreen
+import com.jkangangi.en_dictionary.search.mainSearchGraph
 
 @Composable
 fun DictionaryNavigation(
@@ -30,11 +29,10 @@ fun DictionaryNavigation(
                 navController = navController,
                 startDestination = MainSearchRoute
             ) {
-                mainSearchScreen(toWordDetailClick = navController::navigateToWordDetail)
-                wordDetailScreen(onBack = navController::popBackStack)
-                gameIntroScreen(onGameModeClicked = navController::navigateToGameMode)
-                gameModeScreen()
-                historyScreen(toWordDfn = navController::navigateToWordDetail)
+                mainSearchGraph(toWordDetailClick = navController::navigateToWordDetail)
+                wordDetailGraph(onBack = navController::popBackStack)
+                gameGraph(navigateToMode = navController::navigateToGameMode)
+                historyGraph(toWordDfn = navController::navigateToWordDetail)
             }
         },
         bottomBar = { AppBottomNavigator(navHostController = navController) }

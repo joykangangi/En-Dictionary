@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Hardware
 import androidx.compose.material.icons.filled.TagFaces
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.jkangangi.en_dictionary.R
+import com.jkangangi.en_dictionary.game.GameRoute
 
 object GameConstants {
     const val SCORE_INCREASE = 5
@@ -24,22 +25,26 @@ enum class GameMode(
     val levelId: Int,
     val levelIcon: ImageVector,
     val wordLength: IntRange,
+    val route: GameRoute,
 ){
     Hard(
         levelId = R.string.hard,
         levelIcon = Icons.Default.Hardware,
-        wordLength = 2..Int.MAX_VALUE
+        wordLength = 2..Int.MAX_VALUE,
+        route = GameRoute.HardGameMode
     ),
 
     Medium(
         levelId = R.string.medium ,
         levelIcon = Icons.Default.TagFaces,
-        wordLength = 6..8
+        wordLength = 6..8,
+        route = GameRoute.MediumGameMode
     ),
 
     Easy(
         levelId = R.string.easy,
         levelIcon = Icons.Default.GppGood,
-        wordLength = 2..5
+        wordLength = 2..5,
+        route = GameRoute.EasyGameMode
     )
 }

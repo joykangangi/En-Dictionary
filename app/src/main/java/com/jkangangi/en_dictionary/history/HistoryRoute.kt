@@ -12,6 +12,10 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 import kotlinx.serialization.Serializable
+/**
+ * 1 NavController
+ * 1 NavGraph
+*/
 
 @Serializable
 data object HistoryRoute
@@ -20,7 +24,7 @@ fun NavController.navigateToHistory(
     navOptions: NavOptions? = null,
 ) = navigate(HistoryRoute, navOptions)
 
-fun NavGraphBuilder.historyScreen(
+fun NavGraphBuilder.historyGraph(
     toWordDfn: (String) -> Unit
 ) {
     composable<HistoryRoute> {

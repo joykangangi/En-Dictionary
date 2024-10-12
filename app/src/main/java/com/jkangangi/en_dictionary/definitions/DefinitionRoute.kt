@@ -24,7 +24,7 @@ fun NavController.navigateToWordDetail(
     navOptions: NavOptions? = null,
     ) = navigate(route = WordDetailRoute(sentence), navOptions)
 
-fun NavGraphBuilder.wordDetailScreen(
+fun NavGraphBuilder.wordDetailGraph(
     onBack: () -> Unit,
 ) {
     composable<WordDetailRoute> {
