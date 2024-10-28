@@ -126,6 +126,9 @@ dependencies {
     implementation(libs.kotlin.serialization.json)
     implementation(libs.kotlin.serialization.ktor)
 
+    //Lottie
+    implementation(libs.lottie.anim)
+
 
     // Room
     ksp(libs.room.compiler)

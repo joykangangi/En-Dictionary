@@ -14,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.jkangangi.en_dictionary.game.util.GameConstants.SHOW_WORD_ANIM_MILLIS
 
+private const val DRAG_LETTER = "DRAG_LETTER"
+
 @Composable
 fun ScrambledWord(
     scrambledWord: String,
@@ -27,7 +29,11 @@ fun ScrambledWord(
             ContentTransform(
                 targetContentEnter = fadeIn(animationSpec = tween(SHOW_WORD_ANIM_MILLIS)),
                 initialContentExit = fadeOut(animationSpec = tween(SHOW_WORD_ANIM_MILLIS)),
-                sizeTransform = SizeTransform(sizeAnimationSpec = { _, _ -> tween(SHOW_WORD_ANIM_MILLIS) })
+                sizeTransform = SizeTransform(sizeAnimationSpec = { _, _ ->
+                    tween(
+                        SHOW_WORD_ANIM_MILLIS
+                    )
+                })
             )
         },
         content = { show ->
@@ -42,7 +48,7 @@ fun ScrambledWord(
 @Composable
 fun ScrambledWordBox(
     scrambledWord: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
 
     Row(
@@ -50,8 +56,12 @@ fun ScrambledWordBox(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
         content = {
-            scrambledWord.forEach { letter ->
-                GameLetterBox(letter = "$letter")
+
+            scrambledWord.forEachIndexed { index, _ ->
+                    GameLetterBox(
+                        input = scrambledWord,
+                        letterIndex = index
+                    )
             }
         }
     )
