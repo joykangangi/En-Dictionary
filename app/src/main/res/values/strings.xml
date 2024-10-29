@@ -52,7 +52,10 @@
     <string name="show_hint">Show Hint</string>
     <string name="finish">Finish</string>
     <string name="next">Next</string>
-    <string name="easy_game_instruction">Drag and drop the scrambled letters into their correct positions to complete the word.</string>
+    <string name="submit">Submit</string>
+    <string name="play_again">Play Again</string>
+    <string name="easy_on_fail">The correct placement is</string>
+    <string name="easy_game_instruction">Place the scrambled letters into their correct positions to complete the word.</string>
     <string name="medium_game_instructions">Rearrange the scrambled letters to form the entire word in the correct order.</string>
     <string name="word_count">%d of %d words</string>
     <string name="score_count">Score: %d /%d</string>

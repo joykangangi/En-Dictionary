@@ -11,6 +11,7 @@ import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
 import com.jkangangi.en_dictionary.app.util.scramble
 import com.jkangangi.en_dictionary.game.util.GameConstants.HINT_DECREASE
+import com.jkangangi.en_dictionary.game.util.GameConstants.LETTER_INCREASE
 import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.util.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.util.GameConstants.SKIP_DECREASE
@@ -38,6 +39,9 @@ import kotlinx.coroutines.launch
 class GameViewModel(private val repository: DictionaryRepository) : ViewModel() {
     private val _guessedWord = mutableStateOf("")
     val guessedWord: State<String> = _guessedWord
+
+    var isCorrectGuess = mutableStateOf(false)
+        private set
 
     private var _hintClicked by mutableStateOf(false)
     private val _gameInputState = MutableStateFlow(GameInputState())
@@ -144,6 +148,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     private fun resetWord() {
         _guessedWord.value = ""
+        isCorrectGuess.value = false
         _gameInputState.update { it.copy(showHint = false, btnEnabled = false) }
         _hintClicked = false
         _gameInputState.update { it.copy(timeLeft = TOTAL_GAME_TIME) }
@@ -156,31 +161,53 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     }
 
-    fun onNextClicked() {
-        viewModelScope.launch {
-            val isCorrectGuess = _guessedWord.value.trim()
-                .equals(_gameInputState.value.wordItem?.sentence, ignoreCase = true)
-            val newScore =
-                if (isCorrectGuess) _gameInputState.value.score + SCORE_INCREASE else _gameInputState.value.score - SCORE_INCREASE
-
-            _gameInputState.update { it.copy(score = newScore) }
-
-            if (playedWords.size == MAX_WORDS) {
-                resetGame()
-            } else {
-                resetWord()
-            }
-
-        }
-    }
-
-    fun onSkipClicked() {
-        _gameInputState.update { it.copy(score = _gameInputState.value.score - SKIP_DECREASE) }
+    fun getNextWord() {
         if (playedWords.size == MAX_WORDS) {
             resetGame()
         } else {
             resetWord()
         }
+    }
+
+    /**
+     * Correct placement - Easy mode
+     * 2 points for correct letter placement
+     */
+    private fun getCorrectPlacements(guess: String): Int {
+        val correctWord = _gameInputState.value.wordItem?.sentence
+        var correctPlacement = 0
+
+        correctWord?.forEachIndexed { index, char ->
+             if (guess[index] == char) correctPlacement++
+        }
+        return correctPlacement
+    }
+
+
+    fun onNextClicked(mode: GameMode) {
+        var newScore: Int
+         isCorrectGuess.value = _guessedWord.value.trim()
+            .equals(_gameInputState.value.wordItem?.sentence, ignoreCase = true)
+
+        viewModelScope.launch {
+
+            newScore = when(mode) {
+                GameMode.Hard -> TODO()
+                GameMode.Medium -> {
+                    if (isCorrectGuess.value) _gameInputState.value.score + SCORE_INCREASE else _gameInputState.value.score - SCORE_INCREASE
+
+                }
+                GameMode.Easy -> {
+                    getCorrectPlacements(_guessedWord.value.trim()) * LETTER_INCREASE
+                }
+            }
+
+            _gameInputState.update { it.copy(score = newScore) }
+        }
+    }
+
+    fun onSkipClicked() {
+        _gameInputState.update { it.copy(score = _gameInputState.value.score - SKIP_DECREASE) }
     }
 
     fun onHintClicked() {

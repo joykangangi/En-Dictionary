@@ -9,6 +9,7 @@ import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.game.GameRoute
 
 object GameConstants {
+    const val LETTER_INCREASE = 2
     const val SCORE_INCREASE = 5
     const val SKIP_DECREASE = 4
     const val HINT_DECREASE = 3
@@ -16,7 +17,8 @@ object GameConstants {
     const val MAX_SCORE = 30
     const val TOTAL_GAME_TIME = 60 //60 seconds
     const val THREE_QUARTER = (TOTAL_GAME_TIME / 3) //20
-    const val SHOW_WORD_ANIM_MILLIS = 500
+    const val ANIM_WITH_INFO_MILLIS = 800
+    const val ANIM_WITH_NO_INFO_MILLIS = 500
     const val MAX_WORD_LENGTH = 8 //to calculate text size and box size
 
 }

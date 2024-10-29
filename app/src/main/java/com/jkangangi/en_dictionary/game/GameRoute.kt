@@ -16,6 +16,14 @@ sealed class GameRoute {
     data object EasyGameMode : GameRoute()
 
     @Serializable
+    data object WrongAnsDialog : GameRoute()
+
+    @Serializable
+    data object CorrectAnsDialog: GameRoute()
+
+    @Serializable data object GameOverDialog: GameRoute()
+
+    @Serializable
     data object MediumGameMode : GameRoute()
 
     @Serializable

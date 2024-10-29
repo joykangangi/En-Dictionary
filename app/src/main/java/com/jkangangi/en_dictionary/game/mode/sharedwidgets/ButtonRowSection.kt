@@ -31,7 +31,7 @@ fun ButtonRowSection(
                 onClick = onSkipClicked,
                 // modifier = Modifier.weight(0.4f),
                 content = {
-                    Text(text = stringResource(id = R.string.skip_btn))
+                    Text(text = stringResource(id = R.string.skip_btn).uppercase())
                 }
             )
             //Spacer(modifier = Modifier.width(4.dp))
@@ -42,8 +42,7 @@ fun ButtonRowSection(
                 enabled = btnEnabled,
                 content = {
                     Text(
-                        text = if (isFinalWord) stringResource(id = R.string.finish)
-                        else stringResource(id = R.string.next)
+                        text = stringResource(id = R.string.submit).uppercase()
                     )
                 }
             )

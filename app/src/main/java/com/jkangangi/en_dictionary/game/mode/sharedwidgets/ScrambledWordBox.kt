@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.jkangangi.en_dictionary.game.util.GameConstants.SHOW_WORD_ANIM_MILLIS
+import com.jkangangi.en_dictionary.game.util.GameConstants.ANIM_WITH_INFO_MILLIS
 
 private const val DRAG_LETTER = "DRAG_LETTER"
 
@@ -27,11 +27,11 @@ fun ScrambledWord(
         label = "",
         transitionSpec = {
             ContentTransform(
-                targetContentEnter = fadeIn(animationSpec = tween(SHOW_WORD_ANIM_MILLIS)),
-                initialContentExit = fadeOut(animationSpec = tween(SHOW_WORD_ANIM_MILLIS)),
+                targetContentEnter = fadeIn(animationSpec = tween(ANIM_WITH_INFO_MILLIS)),
+                initialContentExit = fadeOut(animationSpec = tween(ANIM_WITH_INFO_MILLIS)),
                 sizeTransform = SizeTransform(sizeAnimationSpec = { _, _ ->
                     tween(
-                        SHOW_WORD_ANIM_MILLIS
+                        ANIM_WITH_INFO_MILLIS
                     )
                 })
             )

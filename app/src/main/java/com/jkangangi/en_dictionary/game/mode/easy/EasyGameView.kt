@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.game.mode.easy
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,10 +35,13 @@ import com.jkangangi.en_dictionary.game.mode.sharedwidgets.HintSection
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.ScrambledWordBox
 import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.util.GameMode
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun EasyGameView(
+    showWrongAnsDialog: () -> Unit,
+    showCorrectAnsDialog: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GameViewModel = viewModel(factory = DictionaryViewModelFactory)
 ) {
@@ -46,6 +50,7 @@ fun EasyGameView(
     val gameUIState by viewModel.gameUIState().collectAsState()
     val currentMode by viewModel.currentMode.collectAsState()
     val guess by viewModel.guessedWord
+    val isCorrectGuess by viewModel.isCorrectGuess
 
     //only runs for the first word
     LaunchedEffect(
@@ -58,12 +63,34 @@ fun EasyGameView(
         }
     )
 
+    val coroutineScope = rememberCoroutineScope()
+
+    val showDialog = remember {
+        coroutineScope.launch {
+            if (isCorrectGuess) {
+                showCorrectAnsDialog()
+            } else showWrongAnsDialog()
+        }
+    }
+
+    val onNextClick = remember {
+        {
+            val mode = currentMode
+            if (mode != null) {
+                viewModel.onNextClicked(mode)
+                showDialog.start()
+            }
+        }
+    }
+
+
+
     EasyGameScreen(
         modifier = modifier,
         state = gameState,
         guess = guess,
         onGuessChanged = viewModel::updateInput,
-        onNextClicked = viewModel::onNextClicked,
+        onNextClicked = onNextClick,
         onSkipClicked = viewModel::onSkipClicked,
         onHintClicked = viewModel::onHintClicked,
         gameUIState = gameUIState,
@@ -113,7 +140,6 @@ fun EasyGameScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun EasyGameCard(
     modifier: Modifier,
