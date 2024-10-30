@@ -10,15 +10,19 @@ import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
 import com.jkangangi.en_dictionary.app.util.scramble
+import com.jkangangi.en_dictionary.game.mode.model.GameMode
+import com.jkangangi.en_dictionary.game.mode.model.GameSummaryStats
+import com.jkangangi.en_dictionary.game.util.GameConstants.EXCELLENT_SCORE
 import com.jkangangi.en_dictionary.game.util.GameConstants.HINT_DECREASE
 import com.jkangangi.en_dictionary.game.util.GameConstants.LETTER_INCREASE
 import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORDS
 import com.jkangangi.en_dictionary.game.util.GameConstants.SCORE_INCREASE
 import com.jkangangi.en_dictionary.game.util.GameConstants.SKIP_DECREASE
-import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_GAME_TIME
-import com.jkangangi.en_dictionary.game.util.GameMode
+import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_WORD_TIME
+import com.jkangangi.en_dictionary.game.util.formatTimeInMinAndSeconds
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +34,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * The app will use searched words (cached in db) to play.
@@ -40,13 +45,12 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     private val _guessedWord = mutableStateOf("")
     val guessedWord: State<String> = _guessedWord
 
-    var isCorrectGuess = mutableStateOf(false)
-        private set
-
     private var _hintClicked by mutableStateOf(false)
     private val _gameInputState = MutableStateFlow(GameInputState())
     private val allWordItems = mutableSetOf<DictionaryEntity>()
     private val playedWords = mutableSetOf<DictionaryEntity>()
+    private val _gameStatsState = mutableStateOf(GameSummaryStats())
+    val gameSummaryStats: State<GameSummaryStats> = _gameStatsState
 
     private fun getAllWordItems() = repository.getAllHistory().map { items ->
         items.filter { it.sentence.isWord() && it.sentence.length > 1 }
@@ -65,9 +69,38 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         _currentGameMode.value = gameMode
     }
 
+    fun calculateFinalResults() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val totalScore = _gameInputState.value.score
+                val totalGameTime = _gameStatsState.value.totalGameTime.toInt()
+                val scorePerMinute = totalScore / totalGameTime
+                val passMark = _currentGameMode.value?.passMark
+                var perc = (scorePerMinute / (passMark ?: 0) ) * 100
+                if (perc > 100) perc = 100
+                _gameStatsState.value = _gameStatsState.value.copy(
+                    percentageScore = perc
+                )
+                if (perc >= EXCELLENT_SCORE ) {
+                    _gameStatsState.value = _gameStatsState.value.copy(
+                        isExcellent = true
+                    )
+                } else {
+                    _gameStatsState.value = _gameStatsState.value.copy(
+                        isExcellent = false
+                    )
+                }
+
+                _gameStatsState.value = _gameStatsState.value.copy(
+                    totalGameTime = formatTimeInMinAndSeconds(totalGameTime),
+                    totalPoints = totalScore
+                )
+            }
+        }
+    }
 
     val gameInputState = combine(
-        flow = resolveGameModeItems( _currentGameMode.value ?: GameMode.Easy),
+        flow = resolveGameModeItems(_currentGameMode.value ?: GameMode.Easy),
         flow2 = _gameInputState,
         transform = { modeWordItems, state ->
 
@@ -84,7 +117,9 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
                 btnEnabled = state.btnEnabled,
                 score = state.score,
                 showHint = state.showHint,
-                timeLeft = state.timeLeft
+                timeLeft = state.timeLeft,
+                isGameOver = playedWords.size == MAX_WORDS,
+                isGuessCorrect = state.isGuessCorrect
             )
         }
     ).stateIn(
@@ -135,23 +170,36 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     private fun startTimer() {
         viewModelScope.launch {
+
             while (_gameInputState.value.timeLeft > 0) {
                 delay(1000)
                 _gameInputState.update { it.copy(timeLeft = _gameInputState.value.timeLeft - 1) }
             }
-            if (_guessedWord.value.isBlank()) {
-                onSkipClicked()
-            }
         }
     }
 
+    fun autoSkip() {
+        onSkipClicked()
+        _gameStatsState.value = _gameStatsState.value.copy(
+            totalGameTime = (_gameStatsState.value.totalGameTime.toInt() + TOTAL_WORD_TIME).toString()
+        )
+    }
 
-    private fun resetWord() {
+    fun resetWord() {
         _guessedWord.value = ""
-        isCorrectGuess.value = false
-        _gameInputState.update { it.copy(showHint = false, btnEnabled = false) }
+        val timeOnWord = TOTAL_WORD_TIME - _gameInputState.value.timeLeft
+        _gameStatsState.value = _gameStatsState.value.copy(
+            totalGameTime = (_gameStatsState.value.totalGameTime.toInt() + timeOnWord).toString()
+        )
+        _gameInputState.update {
+            it.copy(
+                showHint = false,
+                btnEnabled = false,
+                timeLeft = TOTAL_WORD_TIME,
+                isGuessCorrect = false
+            )
+        }
         _hintClicked = false
-        _gameInputState.update { it.copy(timeLeft = TOTAL_GAME_TIME) }
         getWordItem()
     }
 
@@ -161,13 +209,6 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     }
 
-    fun getNextWord() {
-        if (playedWords.size == MAX_WORDS) {
-            resetGame()
-        } else {
-            resetWord()
-        }
-    }
 
     /**
      * Correct placement - Easy mode
@@ -178,7 +219,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
         var correctPlacement = 0
 
         correctWord?.forEachIndexed { index, char ->
-             if (guess[index] == char) correctPlacement++
+            if (guess[index] == char) correctPlacement++
         }
         return correctPlacement
     }
@@ -186,17 +227,22 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     fun onNextClicked(mode: GameMode) {
         var newScore: Int
-         isCorrectGuess.value = _guessedWord.value.trim()
-            .equals(_gameInputState.value.wordItem?.sentence, ignoreCase = true)
+        _gameInputState.update {
+            it.copy(
+                isGuessCorrect = _guessedWord.value.trim()
+                    .equals(_gameInputState.value.wordItem?.sentence, ignoreCase = true)
+            )
+        }
 
         viewModelScope.launch {
 
-            newScore = when(mode) {
+            newScore = when (mode) {
                 GameMode.Hard -> TODO()
                 GameMode.Medium -> {
-                    if (isCorrectGuess.value) _gameInputState.value.score + SCORE_INCREASE else _gameInputState.value.score - SCORE_INCREASE
+                    if (_gameInputState.value.isGuessCorrect) _gameInputState.value.score + SCORE_INCREASE else _gameInputState.value.score - SCORE_INCREASE
 
                 }
+
                 GameMode.Easy -> {
                     getCorrectPlacements(_guessedWord.value.trim()) * LETTER_INCREASE
                 }
@@ -221,9 +267,10 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     }
 
-    private fun resetGame() {
+     fun resetGame() {
         playedWords.removeAll(playedWords)
         _gameInputState.update { GameInputState() }
+        _gameStatsState.value = GameSummaryStats()
     }
 
 }

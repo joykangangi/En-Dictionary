@@ -30,12 +30,13 @@ fun GameTopBar(
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 content = {
-                    Text(text = stringResource(id = R.string.word_count, currentWord,
-                        GameConstants.MAX_WORDS
-                    ), modifier = Modifier.padding(6.dp))
-                    Text(text = stringResource(id = R.string.score_count, currentScore,
-                        GameConstants.MAX_SCORE
-                    ), modifier = Modifier.padding(6.dp))
+                    Text(
+                        text = stringResource(id = R.string.word_count, currentWord, GameConstants.MAX_WORDS),
+                        modifier = Modifier.padding(6.dp))
+                    Text(
+                        text = stringResource(id = R.string.score_count, currentScore),
+                        modifier = Modifier.padding(6.dp)
+                    )
                 }
             )
         }

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -38,7 +37,8 @@ fun mediumSpacer() = dimensionResource(id = R.dimen.large_spacer) / 2
 fun smallSpacer() = dimensionResource(id = R.dimen.large_spacer) / 4
 
 data class Dimensions(
-    /**Images*/
+    /**Images / objects*/
+    val xlImages : Dp = 200.dp,
     val largeImage: Dp = 100.dp,
     val mediumImage: Dp = largeImage / 2,
     val smallImage: Dp = largeImage / 4,
@@ -59,9 +59,6 @@ fun AppDimenUtils(
     appDimensions: Dimensions = CompactDimens,
     content: @Composable () -> Unit,
 ) {
-    val dimens = remember {
-        appDimensions
-    }
 
     CompositionLocalProvider(value = LocalAppDimens provides appDimensions) {
         content()

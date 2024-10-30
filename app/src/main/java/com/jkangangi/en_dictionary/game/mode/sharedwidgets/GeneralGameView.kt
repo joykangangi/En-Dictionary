@@ -17,7 +17,7 @@ import com.jkangangi.en_dictionary.app.theme.mediumPadding
 import com.jkangangi.en_dictionary.app.widgets.EmptyListView
 import com.jkangangi.en_dictionary.game.mode.GameInputState
 import com.jkangangi.en_dictionary.game.mode.GameUIState
-import com.jkangangi.en_dictionary.game.util.GameMode
+import com.jkangangi.en_dictionary.game.mode.model.GameMode
 
 @Composable
 fun GeneralGameView(

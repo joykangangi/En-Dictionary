@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.game.mode.medium
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,21 +28,26 @@ import com.jkangangi.en_dictionary.app.theme.largeSpacer
 import com.jkangangi.en_dictionary.app.theme.mediumPadding
 import com.jkangangi.en_dictionary.app.theme.mediumSpacer
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
+import com.jkangangi.en_dictionary.app.util.HtmlParser
 import com.jkangangi.en_dictionary.game.mode.GameInputState
 import com.jkangangi.en_dictionary.game.mode.GameUIState
 import com.jkangangi.en_dictionary.game.mode.GameViewModel
+import com.jkangangi.en_dictionary.game.mode.model.GameMode
+import com.jkangangi.en_dictionary.game.mode.model.GameSummaryStats
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.ButtonRowSection
+import com.jkangangi.en_dictionary.game.mode.sharedwidgets.CorrectAnsDialog
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameBoxInput
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameTimer
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GeneralGameView
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.HintSection
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.ScrambledWordBox
+import com.jkangangi.en_dictionary.game.mode.sharedwidgets.WrongAnsDialog
 import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORDS
-import com.jkangangi.en_dictionary.game.util.GameMode
 
 // 5 </> 5 = false
 @Composable
 fun MediumGameView(
+    viewResultsDialog: (GameSummaryStats) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GameViewModel = viewModel(factory = DictionaryViewModelFactory)
 ) {
@@ -47,7 +55,7 @@ fun MediumGameView(
     val gameState by viewModel.gameInputState.collectAsState()
     val gameUIState by viewModel.gameUIState().collectAsState()
     val currentMode by viewModel.currentMode.collectAsState()
-
+    val gameSummaryStats by viewModel.gameSummaryStats
 
 
     LaunchedEffect(
@@ -60,13 +68,81 @@ fun MediumGameView(
         }
     )
 
+    val showDialog = remember {
+        mutableStateOf(false)
+    }
+
+    val showSummaryStats = remember {
+        {
+            viewResultsDialog(gameSummaryStats)
+        }
+    }
+
+    AnimatedVisibility(visible = showDialog.value) {
+        if (gameState.isGuessCorrect) {
+            CorrectAnsDialog(
+                isGameOver = gameState.isGameOver,
+                goToNextWord = {
+                    showDialog.value = false
+                    viewModel.resetWord()
+                },
+                viewGameResults = {
+                    showDialog.value = false
+                    viewModel.calculateFinalResults()
+                    showSummaryStats()
+                }
+            )
+        }
+        else {
+            WrongAnsDialog(
+                correctWord = gameState.wordItem?.sentence ?:"",
+                meaning = (HtmlParser.htmlToString(gameState.hint)).toString(),
+                isFinalWord = gameState.wordCount == MAX_WORDS,
+                isGameOver = gameState.isGameOver,
+                viewGameResults = {
+                    showDialog.value = false
+                    viewModel.calculateFinalResults()
+                    showSummaryStats()
+                },
+                goToNextWord = {
+                    showDialog.value = false
+                    viewModel.resetWord()
+                }
+            )
+        }
+    }
+
+
+    val onNextClick = remember {
+        {
+            val mode = currentMode
+            if (mode != null) {
+                viewModel.onNextClicked(mode)
+                showDialog.value = true
+            }
+        }
+    }
+
+    LaunchedEffect(
+        key1 = gameState.timeLeft,
+        block = {
+            if (gameState.timeLeft == 0 && viewModel.guessedWord.value.isBlank()) {
+                viewModel.autoSkip()
+                showDialog.value = false
+            }
+        }
+    )
+
     MediumGameScreen(
         modifier = modifier,
         state = gameState,
         guess = viewModel.guessedWord.value,
         onGuessChanged = viewModel::updateInput,
-        onNextClicked = viewModel::onNextClicked,
-        onSkipClicked = viewModel::onSkipClicked,
+        onNextClicked = onNextClick,
+        onSkipClicked = {
+            viewModel.onSkipClicked()
+            showDialog.value = true
+        },
         onHintClicked = viewModel::onHintClicked,
         gameUIState = gameUIState,
         currentMode = currentMode
@@ -107,7 +183,6 @@ fun MediumGameScreen(
                 onSkipClicked = onSkipClicked,
                 onNextClicked = onNextClicked,
                 btnEnabled = state.btnEnabled,
-                isFinalWord = state.wordCount == MAX_WORDS
             )
         }
     )

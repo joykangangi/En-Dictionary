@@ -5,5 +5,5 @@ fun formatTimeInMinAndSeconds(totalSeconds: Int): String {
     val seconds = totalSeconds % 60
     val formattedMin = minutes.toString().padStart(2,'0')
     val formattedSec = seconds.toString().padStart(2,'0')
-    return "$formattedMin:$formattedSec"
+    return "$formattedMin min:$formattedSec sec"
 }

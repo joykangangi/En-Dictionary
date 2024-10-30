@@ -53,16 +53,21 @@
     <string name="finish">Finish</string>
     <string name="next">Next</string>
     <string name="submit">Submit</string>
+    <string name="see_game_results">See Final Score</string>
     <string name="play_again">Play Again</string>
-    <string name="easy_on_fail">The correct placement is</string>
+    <string name="finish_game">Finish Game</string>
+    <string name="feedback_on_fail">The correct word is:</string>
     <string name="easy_game_instruction">Place the scrambled letters into their correct positions to complete the word.</string>
     <string name="medium_game_instructions">Rearrange the scrambled letters to form the entire word in the correct order.</string>
     <string name="word_count">%d of %d words</string>
-    <string name="score_count">Score: %d /%d</string>
+    <string name="score_count">Score: %d </string>
     <string name="letter_count">Letters: %d / %d</string>
     <string name="game_txt_label">Your Guess…</string>
     <string name="hard">Hard</string>
     <string name="medium">Medium</string>
     <string name="easy">Easy</string>
+    <string name="total_points">Total Score: %1$d</string>
+    <string name="time_taken">Time Taken: %1$s</string>
+    <string name="percentage">Percentage: %1$d %</string>
 
 </resources>

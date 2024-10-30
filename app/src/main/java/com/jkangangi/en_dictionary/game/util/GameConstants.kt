@@ -1,13 +1,5 @@
 package com.jkangangi.en_dictionary.game.util
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.GppGood
-import androidx.compose.material.icons.filled.Hardware
-import androidx.compose.material.icons.filled.TagFaces
-import androidx.compose.ui.graphics.vector.ImageVector
-import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.game.GameRoute
-
 object GameConstants {
     const val LETTER_INCREASE = 2
     const val SCORE_INCREASE = 5
@@ -15,38 +7,16 @@ object GameConstants {
     const val HINT_DECREASE = 3
     const val MAX_WORDS = 6
     const val MAX_SCORE = 30
-    const val TOTAL_GAME_TIME = 60 //60 seconds
-    const val THREE_QUARTER = (TOTAL_GAME_TIME / 3) //20
+    const val TOTAL_WORD_TIME = 60 //60 seconds per word
+    const val THREE_QUARTER_WORD_TIME = (TOTAL_WORD_TIME / 3) //20
     const val ANIM_WITH_INFO_MILLIS = 800
     const val ANIM_WITH_NO_INFO_MILLIS = 500
     const val MAX_WORD_LENGTH = 8 //to calculate text size and box size
-
-}
-
-enum class GameMode(
-    val levelId: Int,
-    val levelIcon: ImageVector,
-    val wordLength: IntRange,
-    val route: GameRoute,
-){
-    Hard(
-        levelId = R.string.hard,
-        levelIcon = Icons.Default.Hardware,
-        wordLength = 2..Int.MAX_VALUE,
-        route = GameRoute.HardGameMode
-    ),
-
-    Medium(
-        levelId = R.string.medium ,
-        levelIcon = Icons.Default.TagFaces,
-        wordLength = 6..8,
-        route = GameRoute.MediumGameMode
-    ),
-
-    Easy(
-        levelId = R.string.easy,
-        levelIcon = Icons.Default.GppGood,
-        wordLength = 2..5,
-        route = GameRoute.EasyGameMode
-    )
+    const val EXCELLENT_SCORE = 70
+    /**
+     * Pass mark -> Points per minute
+     */
+    const val EASY_MODE_PASSMARK = 30
+    const val MEDIUM_MODE_PASSMARK = 40
+    const val HARD_MODE_PASSMARK = 50
 }

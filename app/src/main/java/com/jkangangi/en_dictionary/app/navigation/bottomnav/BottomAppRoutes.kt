@@ -32,7 +32,7 @@ enum class BottomAppRoutes(
         selectedIcon = Icons.Default.Games,
         unselectedIcon = Icons.Outlined.Games,
         titleId = R.string.play,
-        route = GameRoute.GameIntro::class
+        route = GameRoute.GameIntroRoute::class
     ),
 
     HISTORY(

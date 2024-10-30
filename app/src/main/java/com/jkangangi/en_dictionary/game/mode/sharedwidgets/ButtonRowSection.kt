@@ -18,7 +18,6 @@ fun ButtonRowSection(
     onSkipClicked: () -> Unit,
     onNextClicked: () -> Unit,
     btnEnabled: Boolean,
-    isFinalWord: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Row(

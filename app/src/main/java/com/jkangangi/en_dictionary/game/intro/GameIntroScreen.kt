@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.game.util.GameMode
+import com.jkangangi.en_dictionary.game.mode.model.GameMode
 
 @Composable
 fun GameIntroScreen(

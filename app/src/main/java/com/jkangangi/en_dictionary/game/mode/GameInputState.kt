@@ -3,7 +3,7 @@ package com.jkangangi.en_dictionary.game.mode
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
-import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_GAME_TIME
+import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_WORD_TIME
 
 @Stable
 @Immutable
@@ -16,5 +16,7 @@ data class GameInputState(
     val score: Int = 0,
     val btnEnabled: Boolean = false,
     val showHint: Boolean = false,
-    val timeLeft: Int = TOTAL_GAME_TIME
+    val timeLeft: Int = TOTAL_WORD_TIME,
+    val isGameOver: Boolean = false,
+    val isGuessCorrect: Boolean = false,
 )

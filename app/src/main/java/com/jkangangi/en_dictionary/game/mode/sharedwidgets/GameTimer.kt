@@ -17,8 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
-import com.jkangangi.en_dictionary.game.util.GameConstants.THREE_QUARTER
-import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_GAME_TIME
+import com.jkangangi.en_dictionary.game.util.GameConstants.THREE_QUARTER_WORD_TIME
+import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_WORD_TIME
 import com.jkangangi.en_dictionary.game.util.formatTimeInMinAndSeconds
 
 
@@ -28,9 +28,9 @@ fun GameTimer(
     modifier: Modifier = Modifier
 ) {
 
-    val progress by rememberUpdatedState(newValue = timeLeft.toFloat() / TOTAL_GAME_TIME)
+    val progress by rememberUpdatedState(newValue = timeLeft.toFloat() / TOTAL_WORD_TIME)
 
-    val strokeColor = if (timeLeft > THREE_QUARTER) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+    val strokeColor = if (timeLeft > THREE_QUARTER_WORD_TIME) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
 
     val remainingTime by rememberUpdatedState(newValue = formatTimeInMinAndSeconds(timeLeft))
 

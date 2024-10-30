@@ -9,8 +9,10 @@ import androidx.navigation.compose.rememberNavController
 import com.jkangangi.en_dictionary.app.navigation.bottomnav.AppBottomNavigator
 import com.jkangangi.en_dictionary.definitions.navigateToWordDetail
 import com.jkangangi.en_dictionary.definitions.wordDetailGraph
+import com.jkangangi.en_dictionary.game.GameRoute
 import com.jkangangi.en_dictionary.game.gameGraph
 import com.jkangangi.en_dictionary.game.navigateToGameMode
+import com.jkangangi.en_dictionary.game.navigateToGameSummary
 import com.jkangangi.en_dictionary.history.historyGraph
 import com.jkangangi.en_dictionary.search.MainSearchRoute
 import com.jkangangi.en_dictionary.search.mainSearchGraph
@@ -31,7 +33,13 @@ fun DictionaryNavigation(
             ) {
                 mainSearchGraph(toWordDetailClick = navController::navigateToWordDetail)
                 wordDetailGraph(onBack = navController::popBackStack)
-                gameGraph(navigateToMode = navController::navigateToGameMode)
+                gameGraph(
+                    navigateToMode = navController::navigateToGameMode,
+                    navigateToIntro = {
+                        navController.popBackStack(GameRoute.GameIntroRoute,false)
+                    },
+                    navigateToGameSummary = navController::navigateToGameSummary
+                )
                 historyGraph(toWordDfn = navController::navigateToWordDetail)
             }
         },
