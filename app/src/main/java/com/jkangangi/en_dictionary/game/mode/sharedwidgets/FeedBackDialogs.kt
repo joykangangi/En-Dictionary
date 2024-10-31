@@ -2,6 +2,7 @@ package com.jkangangi.en_dictionary.game.mode.sharedwidgets
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,9 +20,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -63,10 +62,13 @@ private fun DialogWithImageUtil(
                         verticalArrangement = Arrangement.SpaceAround,
                         horizontalAlignment = Alignment.CenterHorizontally,
                         content = {
-                            Icon(
+
+                            Image(
                                 modifier = Modifier.size(150.dp),
-                                imageVector = ImageVector.vectorResource(id = imageResId),
-                                contentDescription = null
+                                painter = painterResource(id = imageResId),
+                                contentDescription = stringResource(
+                                    id = R.string.play
+                                )
                             )
 
                             dialogColumContent()
