@@ -38,10 +38,11 @@ fun smallSpacer() = dimensionResource(id = R.dimen.large_spacer) / 4
 
 data class Dimensions(
     /**Images / objects*/
-    val xlImages : Dp = 200.dp,
-    val largeImage: Dp = 100.dp,
-    val mediumImage: Dp = largeImage / 2,
-    val smallImage: Dp = largeImage / 4,
+    val xxLObjects: Dp = 200.dp,
+    val xLObjects : Dp = 150.dp,
+    val largeObject: Dp = 100.dp,
+    val mediumObject: Dp = largeObject / 2,
+    val smallObject: Dp = largeObject / 4,
 
     /**Game Dimensions*/
     val mediumGameBox: Dp = 55.dp,
