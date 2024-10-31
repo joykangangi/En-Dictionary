@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GameSummaryStats(
-    val percentageScore: Int = 0,
-    val totalGameTime: String = "0",
-    val totalPoints: Int = 0,
-    val isExcellent: Boolean = false,
+    val percentageScore: Int,
+    val totalGameTime: Int,
+    val totalPoints: Int,
+    val isExcellent: Boolean,
 )

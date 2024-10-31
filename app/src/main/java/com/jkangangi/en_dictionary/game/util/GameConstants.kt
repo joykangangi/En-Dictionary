@@ -12,7 +12,7 @@ object GameConstants {
     const val ANIM_WITH_INFO_MILLIS = 800
     const val ANIM_WITH_NO_INFO_MILLIS = 500
     const val MAX_WORD_LENGTH = 8 //to calculate text size and box size
-    const val EXCELLENT_SCORE = 70
+    const val EXCELLENT_SCORE = 60
     /**
      * Pass mark -> Points per minute
      */

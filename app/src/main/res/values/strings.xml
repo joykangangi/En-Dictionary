@@ -66,8 +66,8 @@
     <string name="hard">Hard</string>
     <string name="medium">Medium</string>
     <string name="easy">Easy</string>
-    <string name="total_points">Total Score: %1$d</string>
-    <string name="time_taken">Time Taken: %1$s</string>
-    <string name="percentage">Percentage: %1$d %</string>
+    <string name="total_points">Total Score: %d</string>
+    <string name="time_taken">Time Taken: %s</string>
+    <string name="percentage">Percentage: %d%%</string>
 
 </resources>

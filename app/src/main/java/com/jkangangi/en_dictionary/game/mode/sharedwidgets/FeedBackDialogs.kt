@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.game.mode.sharedwidgets
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,27 +20,72 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.theme.dimens
 import com.jkangangi.en_dictionary.app.theme.largePadding
 import com.jkangangi.en_dictionary.app.theme.mediumSpacer
 import com.jkangangi.en_dictionary.app.theme.smallSpacer
 import com.jkangangi.en_dictionary.game.util.GameConstants.ANIM_WITH_NO_INFO_MILLIS
+import com.jkangangi.en_dictionary.game.util.formatTimeInMinAndSeconds
 import kotlinx.coroutines.delay
+
+
+@Composable
+private fun DialogWithImageUtil(
+    @DrawableRes imageResId: Int,
+    onDismiss: () -> Unit,
+    dialogColumContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    Dialog(
+        onDismissRequest = { onDismiss() },
+        content = {
+
+            Card(
+                shape = RoundedCornerShape(largePadding()),
+                content = {
+
+                    Column(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(largePadding()),
+                        verticalArrangement = Arrangement.SpaceAround,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        content = {
+                            Icon(
+                                modifier = Modifier.size(150.dp),
+                                imageVector = ImageVector.vectorResource(id = imageResId),
+                                contentDescription = null
+                            )
+
+                            dialogColumContent()
+
+                        }
+                    )
+                }
+            )
+        }
+    )
+}
+
 
 /**
  * Dialogs with animation
  */
 
 @Composable
-private fun DialogWithAnimationUtil(
+fun DialogWithAnimationUtil(
     @RawRes animResId: Int,
     onDismiss: () -> Unit,
     dialogColumContent: @Composable () -> Unit,
@@ -66,7 +113,7 @@ private fun DialogWithAnimationUtil(
                         content = {
 
                             Box(
-                                modifier = Modifier.size(MaterialTheme.dimens.largeImage),
+                                modifier = Modifier.size(150.dp),
                                 contentAlignment = Alignment.Center,
                                 content = {
                                     LottieAnimation(
@@ -171,7 +218,7 @@ fun CorrectAnsDialog(
 
     DialogWithAnimationUtil(
         animResId = R.raw.correct_ans_animation,
-        onDismiss = {  if (isGameOver) viewGameResults() else goToNextWord() },
+        onDismiss = { if (isGameOver) viewGameResults() else goToNextWord() },
         dialogColumContent = {
 
             LaunchedEffect(key1 = true) {
@@ -189,22 +236,30 @@ fun CorrectAnsDialog(
 @Composable
 fun GameResultsDialog(
     percentageScore: Int,
-    totalTimeUsed: String,
+    totalTimeUsed: Int,
     totalPoints: Int,
     isExcellent: Boolean,
     playAgain: () -> Unit,
 ) {
 
-    DialogWithAnimationUtil(
-        animResId = if (isExcellent) R.raw.great_game_anim else R.raw.fair_game_anim,
+
+    DialogWithImageUtil(
+        imageResId = if (isExcellent) R.drawable.game_win else R.drawable.game_lost,
         onDismiss = playAgain,
         dialogColumContent = {
-            
+
             Text(text = stringResource(id = R.string.total_points, totalPoints))
-            Text(text = stringResource(id = R.string.time_taken, totalTimeUsed))
+            Text(
+                text = stringResource(
+                    id = R.string.time_taken,
+                    formatTimeInMinAndSeconds(totalTimeUsed)
+                )
+            )
             Text(
                 text = stringResource(id = R.string.percentage, percentageScore),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
             )
 
             Spacer(modifier = Modifier.size(mediumSpacer()))

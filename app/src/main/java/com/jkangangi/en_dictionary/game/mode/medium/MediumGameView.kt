@@ -1,6 +1,5 @@
 package com.jkangangi.en_dictionary.game.mode.medium
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +41,7 @@ import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GeneralGameView
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.HintSection
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.ScrambledWordBox
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.WrongAnsDialog
+import com.jkangangi.en_dictionary.game.util.GameConstants.EXCELLENT_SCORE
 import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORDS
 
 // 5 </> 5 = false
@@ -55,7 +55,6 @@ fun MediumGameView(
     val gameState by viewModel.gameInputState.collectAsState()
     val gameUIState by viewModel.gameUIState().collectAsState()
     val currentMode by viewModel.currentMode.collectAsState()
-    val gameSummaryStats by viewModel.gameSummaryStats
 
 
     LaunchedEffect(
@@ -72,44 +71,50 @@ fun MediumGameView(
         mutableStateOf(false)
     }
 
-    val showSummaryStats = remember {
+    val showSummaryStats =
         {
-            viewResultsDialog(gameSummaryStats)
+            val stats = GameSummaryStats(
+                totalGameTime = viewModel.gameTimeTotal.intValue,
+                totalPoints = gameState.score,
+                percentageScore = viewModel.percent.intValue,
+                isExcellent = viewModel.percent.intValue >= EXCELLENT_SCORE
+            )
+
+            viewResultsDialog(stats)
         }
+
+
+    if (gameState.isGuessCorrect && showDialog.value) {
+        CorrectAnsDialog(
+            isGameOver = gameState.isGameOver,
+            goToNextWord = {
+                showDialog.value = false
+                viewModel.resetWord()
+            },
+            viewGameResults = {
+                showDialog.value = false
+                viewModel.calculateFinalResults()
+                showSummaryStats()
+            }
+        )
     }
 
-    AnimatedVisibility(visible = showDialog.value) {
-        if (gameState.isGuessCorrect) {
-            CorrectAnsDialog(
-                isGameOver = gameState.isGameOver,
-                goToNextWord = {
-                    showDialog.value = false
-                    viewModel.resetWord()
-                },
-                viewGameResults = {
-                    showDialog.value = false
-                    viewModel.calculateFinalResults()
-                    showSummaryStats()
-                }
-            )
-        }
-        else {
-            WrongAnsDialog(
-                correctWord = gameState.wordItem?.sentence ?:"",
-                meaning = (HtmlParser.htmlToString(gameState.hint)).toString(),
-                isFinalWord = gameState.wordCount == MAX_WORDS,
-                isGameOver = gameState.isGameOver,
-                viewGameResults = {
-                    showDialog.value = false
-                    viewModel.calculateFinalResults()
-                    showSummaryStats()
-                },
-                goToNextWord = {
-                    showDialog.value = false
-                    viewModel.resetWord()
-                }
-            )
-        }
+    if (!gameState.isGuessCorrect && showDialog.value) {
+        WrongAnsDialog(
+            correctWord = gameState.wordItem?.sentence ?: "",
+            meaning = (HtmlParser.htmlToString(gameState.hint)).toString(),
+            isFinalWord = gameState.wordCount == MAX_WORDS -1,
+            isGameOver = gameState.isGameOver,
+            viewGameResults = {
+                showDialog.value = false
+                viewModel.calculateFinalResults()
+                showSummaryStats()
+            },
+            goToNextWord = {
+                showDialog.value = false
+                viewModel.resetWord()
+            }
+        )
     }
 
 
@@ -117,7 +122,7 @@ fun MediumGameView(
         {
             val mode = currentMode
             if (mode != null) {
-                viewModel.onNextClicked(mode)
+                viewModel.onSubmitClicked(mode)
                 showDialog.value = true
             }
         }
@@ -126,9 +131,9 @@ fun MediumGameView(
     LaunchedEffect(
         key1 = gameState.timeLeft,
         block = {
-            if (gameState.timeLeft == 0 && viewModel.guessedWord.value.isBlank()) {
+            if (gameState.timeLeft == 0) {
                 viewModel.autoSkip()
-                showDialog.value = false
+                showDialog.value = true
             }
         }
     )
