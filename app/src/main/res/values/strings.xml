@@ -69,5 +69,7 @@
     <string name="total_points">Total Score: %d</string>
     <string name="time_taken">Time Taken: %s</string>
     <string name="percentage">Percentage: %d%%</string>
+    <string name="ready_for_game">Ready to test your memory with the words you\'ve searched?</string>
+    <string name="select_level">Choose your challenge level</string>
 
 </resources>
