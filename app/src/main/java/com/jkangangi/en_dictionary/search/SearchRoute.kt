@@ -11,6 +11,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
+import com.jkangangi.en_dictionary.search.screens.SearchScreen
 import com.jkangangi.en_dictionary.settings.SettingsViewModel
 import kotlinx.serialization.Serializable
 

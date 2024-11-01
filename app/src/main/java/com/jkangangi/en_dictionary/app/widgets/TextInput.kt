@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
@@ -33,11 +32,11 @@ fun TextInput(
     isValid: Boolean = false,
 ) {
 
-    val optionalColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-    val optional = if (isRequired) "" else stringResource(id = R.string.optional)
+    val optionalColor = MaterialTheme.colorScheme.error
+    val optional = if (isRequired) "*" else ""
     val transformedLabel = buildAnnotatedString {
         append(txtLabel)
-        withStyle(style = SpanStyle(color = optionalColor, fontStyle = FontStyle.Italic)) {
+        withStyle(style = SpanStyle(color = optionalColor)) {
             append(optional)
         }
     }

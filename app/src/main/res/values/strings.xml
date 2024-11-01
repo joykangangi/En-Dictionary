@@ -30,8 +30,8 @@
 
     <!--> Search Screen </-->
     <string name="search_btn">Search</string>
-    <string name="adv_search_btn">Advanced Search</string>
-    <string name="simple_search_btn">Simple Search</string>
+    <string name="adv_search_btn">Contextual Search</string>
+    <string name="simple_search_btn">Basic Search</string>
     <string name="single_search_detail">Search a word or idiom</string>
     <string name="adv_search_detail">Search a word or idiom within a sentence</string>
     <string name="optional"> (optional)</string>

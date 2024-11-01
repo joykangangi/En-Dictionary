@@ -26,7 +26,7 @@ fun CustomFilledButton(
         },
         content = {
             Text(
-                text = stringResource(id = buttonTextId),
+                text = stringResource(id = buttonTextId).uppercase(),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
@@ -44,7 +44,7 @@ fun CustomOutlinedButton(
         modifier = modifier,
         onClick = onBtnClicked,
         content = {
-            Text(text = stringResource(id = buttonTextId))
+            Text(text = stringResource(id = buttonTextId).uppercase())
         }
     )
 
