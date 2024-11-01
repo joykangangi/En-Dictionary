@@ -49,6 +49,7 @@ data class Dimensions(
     val smallGameBox: Dp = 25.dp,
     val smallGameText: TextUnit = 12.sp,
     val mediumGameText: TextUnit = 24.sp,
+    val midMediumGameTextUnit: TextUnit = 18.sp
 )
 
 val CompactDimens = Dimensions()

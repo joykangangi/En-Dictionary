@@ -1,7 +1,12 @@
 package com.jkangangi.en_dictionary.game.intro
 
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,11 +21,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,15 +41,12 @@ import com.jkangangi.en_dictionary.app.theme.smallSpacer
 import com.jkangangi.en_dictionary.game.mode.model.GameMode
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameRoundButton
 
+private const val BUTTON_ANIM = "BUTTON_ANIM"
 @Composable
 fun GameIntroScreen(
     onGameModeClick: (GameMode) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bgColors = listOf(
-        MaterialTheme.colorScheme.background,
-        MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-    )
 
     val onClick: (GameMode) -> Unit = remember {
         {
@@ -53,18 +54,32 @@ fun GameIntroScreen(
         }
     }
 
+    val infiniteTransition = rememberInfiniteTransition(label = BUTTON_ANIM)
+    val animationSpec: InfiniteRepeatableSpec<Float> = infiniteRepeatable(
+        animation = tween(1000),
+        repeatMode = RepeatMode.Reverse
+    )
+
+    val pulsingBoxSize by infiniteTransition.animateFloat(
+        initialValue = MaterialTheme.dimens.largeObject.value,
+        targetValue = MaterialTheme.dimens.xLObjects.value,
+        animationSpec = animationSpec,
+        label = BUTTON_ANIM
+    )
+
+    val pulsingTextSize by infiniteTransition.animateFloat(
+        initialValue = MaterialTheme.dimens.midMediumGameTextUnit.value,
+        targetValue = MaterialTheme.dimens.mediumGameText.value,
+        animationSpec = animationSpec,
+        label = BUTTON_ANIM
+    )
+
+
     Scaffold(
         content = { scaffoldPadding ->
             Column(
                 modifier = modifier
                     .fillMaxSize()
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = bgColors,
-                            start = Offset(0f, 0f),
-                            end = Offset.Infinite
-                        )
-                    )
                     .padding(scaffoldPadding)
                     .padding(largePadding())
                     .verticalScroll(rememberScrollState()),
@@ -101,6 +116,8 @@ fun GameIntroScreen(
                             text = stringResource(id = mode.levelId),
                             shape = CircleShape,
                             borderStrokeWidth = 2.dp,
+                            fontSize = pulsingTextSize.sp,
+                            outerBoxSize = pulsingBoxSize.dp,
                             onButtonClick = {
                                 onClick(mode)
                             }
