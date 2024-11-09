@@ -7,10 +7,14 @@ import com.jkangangi.en_dictionary.app.data.model.Dictionary
 import com.jkangangi.en_dictionary.app.data.remote.dto.Item
 import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
 import com.jkangangi.en_dictionary.app.data.remote.dto.WordFrequency
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import kotlinx.serialization.Serializable
 
 @Stable
-@Serializable
+@Serializable //since using ToJson for the room converters
 @Entity
 data class DictionaryEntity(
     @PrimaryKey(autoGenerate = true)
@@ -19,7 +23,8 @@ data class DictionaryEntity(
     val pronunciations: List<Pronunciation> = emptyList(),
     val sentence: String = "",
     val target: String = "",
-    val wordFrequencies: List<WordFrequency> = emptyList()
+    val wordFrequencies: List<WordFrequency> = emptyList(),
+    val dateInserted: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
 )
 
 //the first run loading from local, the entity is empty;hence handle null

@@ -18,7 +18,7 @@ interface DictionaryDao {
     suspend fun getDictionaryItem(sentence: String): DictionaryEntity?
 
     //all History
-    @Query("SELECT * FROM dictionaryentity")
+    @Query("SELECT * FROM dictionaryentity ORDER BY dateInserted DESC")
     fun getAllDefinitions(): Flow<List<DictionaryEntity>>
 
 }

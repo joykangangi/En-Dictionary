@@ -6,8 +6,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,15 +19,23 @@ import kotlinx.coroutines.launch
 
 class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel() {
 
-    private val allHistoryItems = repository.getAllHistory().map { it.toPersistentList() }
+    private val allHistoryItems = repository.getAllHistory().map { historyList ->
+        val groupedHistory = historyList.groupBy { entity ->
+            "${entity.dateInserted.month.name.lowercase().replaceFirstChar { it.uppercase() }} - ${entity.dateInserted.year}"
+        }
+
+        groupedHistory.toPersistentMap()
+    }
 
     fun clearDictionaryItems() {
         viewModelScope.launch {
-            allHistoryItems.collect { list ->
-                val deletedSentence = list.map { it.sentence }
+            allHistoryItems.collect { dictMap ->
+                val deletedSentences = dictMap.flatMap { (_, valueList) ->
+                    valueList.map { it.sentence }
+                }
 
                 repository.deleteDictionaryItems(
-                    deletedSentence
+                    deletedSentences
                 )
             }
         }
@@ -49,17 +57,21 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
             if (sentence.isBlank()) {
                 allHistoryItems
             } else {
-               allHistoryItems.map { list ->
-                   list.filter {
-                       it.sentence.contains(sentence, ignoreCase = true)
-                   }.toPersistentList()
-               }
+//                allHistoryItems.map { key ->
+//                    key.values.map { it.filter { it.sentence.contains(sentence, ignoreCase = true) } }
+//                }
+
+                allHistoryItems.map { dictMap ->
+                    dictMap.mapValues { (_, valueList) ->
+                        valueList.filter { it.sentence.contains(sentence, ignoreCase = true) }
+                    }
+                }
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = persistentListOf()
+            initialValue = persistentMapOf()
         )
 
     fun onQueryTyped(query: String) {

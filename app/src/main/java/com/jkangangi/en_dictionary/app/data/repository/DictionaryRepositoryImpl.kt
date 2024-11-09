@@ -33,6 +33,7 @@ class DictionaryRepositoryImpl(
              * API -> Database
              */
             try {
+                Log.i("repo iml","${dictionaryService.postSearchRequest(request.trimRequest())}")
                 val newEntity = dictionaryService.postSearchRequest(search = request.trimRequest()).toDictionaryEntity()
                 sentence = newEntity.sentence
                 if (newEntity.items.isNotEmpty()) {
@@ -42,7 +43,7 @@ class DictionaryRepositoryImpl(
                 }
 
             } catch (e: Throwable) {
-
+                Log.i("REPO IMPL","${e.printStackTrace()}")
                 return@withContext NetworkResult.Failure(throwable = e)
 
 

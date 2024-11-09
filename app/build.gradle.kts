@@ -46,8 +46,8 @@ android {
             )
         }
         release {
-            isMinifyEnabled = false
-            //signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -122,6 +122,7 @@ dependencies {
     implementation(libs.ktor.client.contentnegotiation)
 
     // Kotlinx
+    implementation(libs.kotlinx.date.time)
     implementation(libs.kotlin.immutable)
     implementation(libs.kotlin.serialization.json)
     implementation(libs.kotlin.serialization.ktor)

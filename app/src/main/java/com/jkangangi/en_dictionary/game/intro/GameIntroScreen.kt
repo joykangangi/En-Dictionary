@@ -56,7 +56,7 @@ fun GameIntroScreen(
 
     val infiniteTransition = rememberInfiniteTransition(label = BUTTON_ANIM)
     val animationSpec: InfiniteRepeatableSpec<Float> = infiniteRepeatable(
-        animation = tween(1000),
+        animation = tween(1000),//todo use gloss animation
         repeatMode = RepeatMode.Reverse
     )
 

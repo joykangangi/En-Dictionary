@@ -1,13 +1,15 @@
 package com.jkangangi.en_dictionary.history
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -18,15 +20,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
+import com.jkangangi.en_dictionary.app.theme.mediumSpacer
 import com.jkangangi.en_dictionary.app.widgets.EmptyListView
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
-    dictionaryItems: ImmutableList<DictionaryEntity>,
+    dictionaryItems: Map<String, List<DictionaryEntity>>,
     onClearHistory: () -> Unit,
     deleteWord: (List<String>) -> Unit,
     onWordClick: (String) -> Unit,
@@ -71,17 +74,31 @@ fun HistoryScreen(
                             )
                         }
 
-                        items(dictionaryItems) { dictionary ->
-                            HistoryItemCard(
-                                dictionary = dictionary,
-                                onDeleteWord = deleteWord,
-                                onWordClick = onWordClick,
-                                modifier = Modifier.animateItemPlacement(
-                                    animationSpec = tween(durationMillis = 1000)
+                        dictionaryItems.forEach { (date, dictionaryEntities) ->
+                            item {
+                                Spacer(modifier = Modifier.height(mediumSpacer()))
+                            }
+
+                            item {
+                                Text(
+                                    text = date,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
-                            )
+                            }
+
+                            items(dictionaryEntities) { dictionary ->
+                                HistoryItemCard(
+                                    dictionary = dictionary,
+                                    onDeleteWord = deleteWord,
+                                    onWordClick = onWordClick,
+                                    modifier = Modifier.animateItem(
+                                        fadeInSpec = null, fadeOutSpec = null, placementSpec = tween(durationMillis = 1000)
+                                    )
+                                )
+                            }
                         }
-                    })
+                    }
+                )
             }
         }
     )
@@ -92,9 +109,11 @@ fun HistoryScreen(
 @Composable
 fun PreviewHistory() {
     HistoryScreen(
-        dictionaryItems = persistentListOf(
+        dictionaryItems = persistentMapOf(
+            "June - 2024" to persistentListOf(
             DictionaryEntity(sentence = "Magic"),
             DictionaryEntity(sentence = "Invalidate")
+            )
         ),
         deleteWord = { },
         onClearHistory = { },

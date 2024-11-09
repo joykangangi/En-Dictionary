@@ -4,42 +4,11 @@ import androidx.room.TypeConverter
 import com.jkangangi.en_dictionary.app.data.remote.dto.Item
 import com.jkangangi.en_dictionary.app.data.remote.dto.Pronunciation
 import com.jkangangi.en_dictionary.app.data.remote.dto.WordFrequency
-import kotlinx.serialization.decodeFromString
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class RoomConverters {
-/*
-    @TypeConverter
-    fun meaningsToJson(meanings: List<Meaning>): String {
-        return Json.encodeToString(meanings)
-    }
-
-    @TypeConverter
-    fun jsonToMeaning(json: String): List<Meaning> {
-       return Json.decodeFromString(json)
-    }
-
-    @TypeConverter
-    fun phoneticsToJson(phonetics: List<Phonetic>): String {
-        return Json.encodeToString(phonetics)
-    }
-
-    @TypeConverter
-    fun jsonToPhonetics( json: String): List<Phonetic> {
-        return Json.decodeFromString(json)
-    }
-
-    @TypeConverter
-    fun urlsToJson(sourceUrls: List<String>): String {
-        return Json.encodeToString(sourceUrls)
-    }
-
-    @TypeConverter
-    fun jsonToUrls(json: String): List<String> {
-        return Json.decodeFromString(json)
-    }*/
-
 
     //Item Converter
     @TypeConverter
@@ -72,6 +41,18 @@ class RoomConverters {
 
     @TypeConverter
     fun jsonToWordFrequency(json: String): List<WordFrequency> {
+        return Json.decodeFromString(json)
+    }
+
+    //LocalDate
+
+    @TypeConverter
+    fun dateToJson(date: LocalDate): String {
+        return Json.encodeToString(date)
+    }
+
+    @TypeConverter
+    fun jsonToDate(json: String): LocalDate {
         return Json.decodeFromString(json)
     }
 }

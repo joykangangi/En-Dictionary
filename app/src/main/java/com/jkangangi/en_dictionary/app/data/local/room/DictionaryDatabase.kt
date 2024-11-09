@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 
 
 
-@Database(entities = [DictionaryEntity::class], version = 3, exportSchema = false)
+@Database(entities = [DictionaryEntity::class], version = 4, exportSchema = false)
 @TypeConverters(RoomConverters::class)
 abstract class DictionaryDatabase: RoomDatabase() {
     abstract fun dictionaryDao(): DictionaryDao

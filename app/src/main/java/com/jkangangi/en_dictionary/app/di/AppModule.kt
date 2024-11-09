@@ -10,6 +10,7 @@ import com.jkangangi.en_dictionary.app.data.local.datastore.DictionaryDataStore
 import com.jkangangi.en_dictionary.app.data.local.datastore.DictionaryDataStoreImpl
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryDao
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryDatabase
+import com.jkangangi.en_dictionary.app.data.local.room.MIGRATION_3_4
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepositoryImpl
 import com.jkangangi.en_dictionary.app.data.service.DictionaryService
@@ -36,7 +37,7 @@ class AppModuleImpl(
             klass = DictionaryDatabase::class.java,
             name = DictionaryDatabase::class.simpleName
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(MIGRATION_3_4)
             .build()
     }
 
