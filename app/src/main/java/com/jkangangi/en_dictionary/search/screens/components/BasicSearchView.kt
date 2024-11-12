@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.search.screens
+package com.jkangangi.en_dictionary.search.screens.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,8 @@ import com.jkangangi.en_dictionary.search.SearchInputErrorState
 import com.jkangangi.en_dictionary.search.SearchInputEvents
 import com.jkangangi.en_dictionary.search.SearchResultUiState
 import com.jkangangi.en_dictionary.search.SearchScreenEvent
-import com.jkangangi.en_dictionary.search.screens.widgets.SearchInstructionsText
+import com.jkangangi.en_dictionary.search.screens.SearchResult
+import com.jkangangi.en_dictionary.search.screens.components.widgets.SearchInstructionsText
 
 
 //Simple Search View

@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.search
+package com.jkangangi.en_dictionary.search.screens.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.material.icons.Icons

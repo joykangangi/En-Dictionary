@@ -36,7 +36,9 @@ import com.jkangangi.en_dictionary.app.widgets.DynamicTabSelector
 import com.jkangangi.en_dictionary.search.SearchResultUiState
 import com.jkangangi.en_dictionary.search.SearchScreenEvent
 import com.jkangangi.en_dictionary.search.SearchScreenState
-import com.jkangangi.en_dictionary.search.SearchTopBar
+import com.jkangangi.en_dictionary.search.screens.components.BasicSearchView
+import com.jkangangi.en_dictionary.search.screens.components.ContextualSearchView
+import com.jkangangi.en_dictionary.search.screens.components.SearchTopBar
 import com.jkangangi.en_dictionary.settings.SettingsEvent
 import com.jkangangi.en_dictionary.settings.SettingsState
 import com.jkangangi.en_dictionary.settings.fonts.FontBottomSheet
@@ -87,7 +89,7 @@ fun SearchScreen(
                     updateQuery = {
                         performEvent(SearchScreenEvent.UpdateQueries(it))
                     },
-                    onSearchClick = { SearchScreenEvent.DoSearch },
+                    onSearchClick = { performEvent(SearchScreenEvent.DoSearch) },
                     toWordClick = toWordClick
                 )
             }

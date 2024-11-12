@@ -16,9 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
+
+private const val MAX_WORD_LENGTH = 20
 
 @Composable
 fun TextInput(
@@ -32,7 +36,7 @@ fun TextInput(
     isValid: Boolean = false,
 ) {
 
-    val optionalColor = MaterialTheme.colorScheme.error
+    val optionalColor = MaterialTheme.colorScheme.primary
     val optional = if (isRequired) "*" else ""
     val transformedLabel = buildAnnotatedString {
         append(txtLabel)
@@ -47,14 +51,23 @@ fun TextInput(
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = input,
-                onValueChange = onInputChange,
+                onValueChange = {
+                    if (it.length < MAX_WORD_LENGTH) onInputChange(it)
+                },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium,
                 placeholder = {
-                    Text(text = txtPlaceholder)
+                    Text(
+                        text = txtPlaceholder,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Light,
+                        color = MaterialTheme.colorScheme.onBackground.copy(0.5f)
+                    )
                 },
                 label = {
                     Text(
+                        fontWeight = FontWeight.Light,
+                        fontSize = 12.sp,
                         text = transformedLabel,
                         style = MaterialTheme.typography.bodySmall
                     )

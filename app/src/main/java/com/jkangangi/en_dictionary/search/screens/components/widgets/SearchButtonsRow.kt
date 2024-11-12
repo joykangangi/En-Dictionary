@@ -1,4 +1,4 @@
-package com.jkangangi.en_dictionary.search.screens.widgets
+package com.jkangangi.en_dictionary.search.screens.components.widgets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
