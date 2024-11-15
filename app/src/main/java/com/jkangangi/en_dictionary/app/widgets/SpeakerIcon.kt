@@ -8,6 +8,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 fun SpeakerIcon(
     onSpeakerClick: () -> Unit,
     modifier: Modifier = Modifier,
+    speakerSize: Dp = 70.dp
 ) {
 
 
@@ -23,7 +25,7 @@ fun SpeakerIcon(
         onClick = onSpeakerClick,
         content = {
             Icon(
-                modifier = Modifier.size(70.dp),
+                modifier = Modifier.size(speakerSize),
                 imageVector = Icons.Default.PlayCircle,
                 tint = MaterialTheme.colorScheme.primary,
                 contentDescription = null

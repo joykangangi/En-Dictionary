@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 
 
-private const val AUDIO_BASE_URL = "https://download.xfd.plus/xfed/audio/"
+const val AUDIO_BASE_URL = "https://download.xfd.plus/xfed/audio/"
 
 
 class DefinitionsViewModel (repository: DictionaryRepository) : ViewModel() {

@@ -1,5 +1,9 @@
 package com.jkangangi.en_dictionary.game.mode
 
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -12,6 +16,7 @@ import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.isWord
 import com.jkangangi.en_dictionary.app.util.scramble
+import com.jkangangi.en_dictionary.definitions.AUDIO_BASE_URL
 import com.jkangangi.en_dictionary.game.mode.model.GameMode
 import com.jkangangi.en_dictionary.game.mode.model.GameSummaryStats
 import com.jkangangi.en_dictionary.game.util.GameConstants.EXCELLENT_SCORE
@@ -23,6 +28,7 @@ import com.jkangangi.en_dictionary.game.util.GameConstants.SKIP_DECREASE
 import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_WORD_TIME
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +40,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import kotlin.math.roundToInt
 
 /**
@@ -68,8 +76,32 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     }
 
     private fun resolveGameModeItems(gameMode: GameMode): Flow<PersistentList<DictionaryEntity>> {
-        return getAllWordItems().map { wordItems ->
-            wordItems.filter { it.sentence.length in gameMode.wordLength }.toPersistentList()
+
+        return when (gameMode) {
+            GameMode.Easy -> {
+                getAllWordItems().map { wordItems ->
+                    wordItems.filter { it.sentence.length in GameMode.Easy.wordLength }
+                        .toPersistentList()
+                }
+            }
+
+            GameMode.Medium -> {
+                getAllWordItems().map { wordItems ->
+                    wordItems.filter { it.sentence.length in GameMode.Medium.wordLength }
+                        .toPersistentList()
+                }
+            }
+
+            GameMode.Hard -> {
+                getAllWordItems().map { wordItems ->
+                    wordItems.filter { dictionary ->
+                        val entries = dictionary.pronunciations.getOrNull(0)?.entries
+                        val hasAudio = entries?.any { entry -> entry.audioFiles.isNotEmpty() }
+                        dictionary.sentence.length in GameMode.Hard.wordLength
+                                && hasAudio == true
+                    }.toPersistentList()
+                }
+            }
         }
     }
 
@@ -117,6 +149,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
             if (allWordItems.isEmpty()) {
                 allWordItems.addAll(modeWordItems)
+                Log.i("Game vm","items=$modeWordItems")
             }
 
             GameInputState(
@@ -181,6 +214,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     private fun startTimer() {
         viewModelScope.launch {
+            Log.i("Game VM", "TIME")
 
             while (_gameInputState.value.timeLeft > 0) {
                 delay(1000)
@@ -236,7 +270,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     }
 
 
-    fun onSubmitClicked(mode: GameMode) {
+    fun onSubmitAnsClicked(mode: GameMode) {
         _gameInputState.update {
             it.copy(
                 isGuessCorrect = _guessedWord.value.trim()
@@ -250,7 +284,11 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
                 it.copy(
                     score =
                     when (mode) {
-                        GameMode.Hard -> TODO()
+                        GameMode.Hard -> {
+                            if (_gameInputState.value.isGuessCorrect) _gameInputState.value.score + SCORE_INCREASE else _gameInputState.value.score - SCORE_INCREASE
+
+                        }
+
                         GameMode.Medium -> {
                             if (_gameInputState.value.isGuessCorrect) _gameInputState.value.score + SCORE_INCREASE else _gameInputState.value.score - SCORE_INCREASE
 
@@ -280,10 +318,54 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
 
     }
 
-    fun resetGame() {
-        playedWords.removeAll(playedWords)
-        _gameInputState.update { GameInputState() }
+    private var mediaPlayer: MediaPlayer? = null
 
+    /**
+     * Handle sound clicks for a word
+     */
+    fun onSpeakerClick(context: Context, dictionary: DictionaryEntity?) {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer()
+        }
+        mediaPlayer?.let { player ->
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    val audioURL = dictionary?.let { getAudioLink(word = it) }
+
+                    player.reset() //Reset MediaPlayer to idle state
+
+                    player.setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+
+                    try {
+                        player.setDataSource(context, Uri.parse(audioURL))
+                        player.prepareAsync()
+                        player.setOnPreparedListener { mPlayer ->
+                            mPlayer.start()
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun getAudioLink(word: DictionaryEntity): String {
+        val entries = word.pronunciations[0].entries
+        val audioFile = entries[0].audioFiles[0].link
+        return AUDIO_BASE_URL + audioFile
+    }
+
+    fun clearSoundResources() {
+        Log.i("DefinitionVM", "ClearedSoundResources")
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
 }

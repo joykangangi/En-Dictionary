@@ -81,7 +81,7 @@ fun NavGraphBuilder.gameGraph(
         }
 
         composable<GameRoute.HardGameModeRoute> {
-            HardGameView()
+            HardGameView(viewResultsDialog = navigateToGameSummary)
         }
     }
 }

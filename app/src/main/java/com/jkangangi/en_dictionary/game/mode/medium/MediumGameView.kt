@@ -124,7 +124,7 @@ fun MediumGameView(
         {
             val mode = currentMode
             if (mode != null) {
-                viewModel.onSubmitClicked(mode)
+                viewModel.onSubmitAnsClicked(mode)
                 showDialog.value = true
             }
         }
