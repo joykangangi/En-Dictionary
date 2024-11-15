@@ -4,6 +4,7 @@ package com.jkangangi.en_dictionary.search.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -208,7 +210,10 @@ fun SearchResult(
 @Preview(showBackground = true)
 @Composable
 private fun SearchScreenPreview() {
-    En_DictionaryTheme {
+    En_DictionaryTheme(
+        darkTheme = isSystemInDarkTheme(),
+        fontFamily = FontFamily.SansSerif,
+    ) {
         SearchScreen(
             performEvent = { },
             settingsState = SettingsState(),

@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -22,10 +21,10 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun En_DictionaryTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    fontFamily: FontFamily = FontFamily.SansSerif,
+    darkTheme: Boolean,
+    fontFamily: FontFamily,
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
+    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -51,7 +50,7 @@ fun En_DictionaryTheme(
     AppDimenUtils(
         content = {
             MaterialTheme(
-                colorScheme = colorScheme,
+                colorScheme = colorScheme.animateColorScheme(),
                 typography = typography,
                 content = content
             )

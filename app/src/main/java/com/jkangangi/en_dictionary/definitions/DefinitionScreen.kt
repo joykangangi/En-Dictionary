@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.definitions
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
@@ -60,7 +62,10 @@ fun DefinitionScreen(
 @Preview(apiLevel = 33)
 @Composable
 fun WordScreenPreview() {
-    En_DictionaryTheme {
+    En_DictionaryTheme(
+        darkTheme = isSystemInDarkTheme(),
+        fontFamily = FontFamily.SansSerif,
+    ) {
         Scaffold {
             val word = DictionaryEntity(
                 items = listOf(

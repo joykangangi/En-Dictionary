@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.definitions
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,6 +11,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
@@ -38,7 +40,10 @@ fun DefinitionTopBar(onBack:() -> Unit, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewDefTopBar() {
-    En_DictionaryTheme {
+    En_DictionaryTheme(
+        darkTheme = isSystemInDarkTheme(),
+        fontFamily = FontFamily.SansSerif,
+    ) {
         DefinitionTopBar(onBack = {  })
     }
 }

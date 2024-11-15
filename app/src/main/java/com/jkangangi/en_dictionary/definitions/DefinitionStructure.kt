@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.definitions
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
@@ -106,7 +108,10 @@ fun DefinitionDetail(
 @Preview
 @Composable
 fun PreviewDefHeader() {
-    En_DictionaryTheme {
+    En_DictionaryTheme(
+        darkTheme = isSystemInDarkTheme(),
+        fontFamily = FontFamily.SansSerif,
+    ) {
         Column {
             DefinitionHeader(headerTxt = "Adjective")
             DefinitionHeader(headerTxt = "noun")
@@ -119,7 +124,10 @@ fun PreviewDefHeader() {
 @Preview
 @Composable
 fun PreviewDefDetail() {
-    En_DictionaryTheme {
+    En_DictionaryTheme(
+        darkTheme = isSystemInDarkTheme(),
+        fontFamily = FontFamily.SansSerif,
+    ) {
         Column {
             DefinitionHeader(modifier = Modifier, headerTxt = "noun")
             DefinitionDetail(

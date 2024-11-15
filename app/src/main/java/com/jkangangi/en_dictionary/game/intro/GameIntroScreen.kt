@@ -1,11 +1,5 @@
 package com.jkangangi.en_dictionary.game.intro
 
-import androidx.compose.animation.core.InfiniteRepeatableSpec
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,17 +8,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,10 +33,10 @@ import com.jkangangi.en_dictionary.app.theme.largePadding
 import com.jkangangi.en_dictionary.app.theme.mediumSpacer
 import com.jkangangi.en_dictionary.app.theme.smallPadding
 import com.jkangangi.en_dictionary.app.theme.smallSpacer
+import com.jkangangi.en_dictionary.app.widgets.buttonShimmer
 import com.jkangangi.en_dictionary.game.mode.model.GameMode
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameRoundButton
 
-private const val BUTTON_ANIM = "BUTTON_ANIM"
 @Composable
 fun GameIntroScreen(
     onGameModeClick: (GameMode) -> Unit,
@@ -54,35 +49,13 @@ fun GameIntroScreen(
         }
     }
 
-    val infiniteTransition = rememberInfiniteTransition(label = BUTTON_ANIM)
-    val animationSpec: InfiniteRepeatableSpec<Float> = infiniteRepeatable(
-        animation = tween(1000),//todo use gloss animation
-        repeatMode = RepeatMode.Reverse
-    )
-
-    val pulsingBoxSize by infiniteTransition.animateFloat(
-        initialValue = MaterialTheme.dimens.largeObject.value,
-        targetValue = MaterialTheme.dimens.xLObjects.value,
-        animationSpec = animationSpec,
-        label = BUTTON_ANIM
-    )
-
-    val pulsingTextSize by infiniteTransition.animateFloat(
-        initialValue = MaterialTheme.dimens.midMediumGameTextUnit.value,
-        targetValue = MaterialTheme.dimens.mediumGameText.value,
-        animationSpec = animationSpec,
-        label = BUTTON_ANIM
-    )
-
-
     Scaffold(
         content = { scaffoldPadding ->
             Column(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(scaffoldPadding)
-                    .padding(largePadding())
-                    .verticalScroll(rememberScrollState()),
+                    .padding(largePadding()),
                 verticalArrangement = Arrangement.spacedBy(mediumSpacer()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
@@ -110,19 +83,27 @@ fun GameIntroScreen(
 
                     Spacer(modifier = Modifier.height(mediumSpacer()))
 
-                    GameMode.entries.forEach { mode ->
-                        GameRoundButton(
-                            modifier = Modifier.padding(smallPadding()),
-                            text = stringResource(id = mode.levelId),
-                            shape = CircleShape,
-                            borderStrokeWidth = 2.dp,
-                            fontSize = pulsingTextSize.sp,
-                            outerBoxSize = pulsingBoxSize.dp,
-                            onButtonClick = {
-                                onClick(mode)
-                            }
-                        )
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        items(GameMode.entries) { mode ->
+                            GameRoundButton(
+                                modifier = Modifier
+                                    .padding(smallPadding())
+                                    .clip(RoundedCornerShape(50f))
+                                    .buttonShimmer(),
+                                text = stringResource(id = mode.levelId),
+                                shape = RoundedCornerShape(50f),
+                                borderStrokeWidth = 2.dp,
+                                fontSize = MaterialTheme.dimens.mediumGameText,
+                                outerBoxSize = MaterialTheme.dimens.xLObjects,
+                                onButtonClick = {
+                                    onClick(mode)
+                                }
+                            )
 
+                        }
                     }
                 }
             )
