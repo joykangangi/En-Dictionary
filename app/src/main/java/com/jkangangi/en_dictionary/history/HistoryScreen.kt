@@ -1,8 +1,11 @@
 package com.jkangangi.en_dictionary.history
 
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,13 +46,13 @@ fun HistoryScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { },
+                title = {
+                    SearchBar(
+                        query = searchQuery,
+                        onQueryChanged = onTypeQuery
+                    )
+                },
                 modifier = Modifier.padding(10.dp),
-                actions = {
-                    Button(onClick = onClearHistory, enabled = !isEmpty) {
-                        Text(stringResource(id = R.string.clear_history))
-                    }
-                }
             )
         },
         content = { contentPadding ->
@@ -68,9 +71,16 @@ fun HistoryScreen(
                     content = {
 
                         item {
-                            SearchBar(
-                                query = searchQuery,
-                                onQueryChanged = onTypeQuery
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End,
+                                content = {
+                                    Button(
+                                        onClick = onClearHistory
+                                    ) {
+                                        Text(stringResource(id = R.string.clear_history))
+                                    }
+                                }
                             )
                         }
 

@@ -3,10 +3,11 @@
     <string name="home_text">Dictionary</string>
     <string name="home_body">Find synonyms, antonyms and related words</string>
     <string name="search_text">Search here…</string>
+    <string name="search_your_history">Search your history</string>
     <string name="noun">noun</string>
     <string name="verb">verb</string>
     <string name="delete">delete</string>
-    <string name="clear_history">Clear History</string>
+    <string name="clear_history">Clear All History</string>
     <string name="empty_history">Empty History</string>
     <string name="empty_saves">Search at least 6 words to play</string>
     <string name="med_words_not_found">Search words of length 6–8</string>

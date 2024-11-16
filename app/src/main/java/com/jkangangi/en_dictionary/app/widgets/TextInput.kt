@@ -34,6 +34,7 @@ fun TextInput(
     modifier: Modifier = Modifier,
     isRequired: Boolean = false,
     isValid: Boolean = false,
+    showWarningDescription: Boolean = true,
 ) {
 
     val optionalColor = MaterialTheme.colorScheme.primary
@@ -83,12 +84,15 @@ fun TextInput(
                 },
             )
 
-            if (!isValid) Text(
-                text = stringResource(id = R.string.inputError),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
+            if (showWarningDescription) {
+
+                if (!isValid) Text(
+                    text = stringResource(id = R.string.inputError),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+            }
         }
     )
 }
