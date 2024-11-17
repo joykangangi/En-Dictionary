@@ -13,28 +13,28 @@ import com.jkangangi.en_dictionary.R
 
 @ReadOnlyComposable
 @Composable
-fun largePadding() = dimensionResource(id = R.dimen.large_padding)
+fun padding16() = dimensionResource(id = R.dimen.large_padding)
 
 @ReadOnlyComposable
 @Composable
-fun mediumPadding() = dimensionResource(id = R.dimen.large_padding) / 2
+fun padding8() = dimensionResource(id = R.dimen.large_padding) / 2
 
 @ReadOnlyComposable
 @Composable
-fun smallPadding() = dimensionResource(id = R.dimen.large_padding) / 4
+fun padding4() = dimensionResource(id = R.dimen.large_padding) / 4
 
 /**Spacers*/
 @ReadOnlyComposable
 @Composable
-fun largeSpacer() = dimensionResource(id = R.dimen.large_spacer)
+fun padding20() = dimensionResource(id = R.dimen.large_spacer)
 
 @ReadOnlyComposable
 @Composable
-fun mediumSpacer() = dimensionResource(id = R.dimen.large_spacer) / 2
+fun padding10() = dimensionResource(id = R.dimen.large_spacer) / 2
 
 @ReadOnlyComposable
 @Composable
-fun smallSpacer() = dimensionResource(id = R.dimen.large_spacer) / 4
+fun padding5() = dimensionResource(id = R.dimen.large_spacer) / 4
 
 data class Dimensions(
     /**Images / objects*/

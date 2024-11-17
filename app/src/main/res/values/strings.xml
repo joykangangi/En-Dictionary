@@ -6,9 +6,6 @@
     <string name="search_your_history">Search your history</string>
     <string name="noun">noun</string>
     <string name="verb">verb</string>
-    <string name="delete">delete</string>
-    <string name="clear_history">Clear All History</string>
-    <string name="empty_history">Empty History</string>
     <string name="empty_saves">Search at least 6 words to play</string>
     <string name="med_words_not_found">Search words of length 6–8</string>
     <string name="easy_words_not_found">Search words of length 2–5</string>
@@ -75,4 +72,11 @@
     <string name="ready_for_game">Ready to test your memory with the words you\'ve searched?</string>
     <string name="select_level">Choose your challenge level</string>
 
+    <!--> history Screen </-->
+    <string name="error_fetching_histo">Error Fetching History</string>
+    <string name="retry">Retry</string>
+    <string name="history_list_end_text">End of history</string>
+    <string name="delete">delete</string>
+    <string name="clear_history">Clear All History</string>
+    <string name="empty_history">Empty History</string>
 </resources>

@@ -31,9 +31,9 @@ import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.model.DictionaryTabOptions
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
-import com.jkangangi.en_dictionary.app.theme.largePadding
-import com.jkangangi.en_dictionary.app.theme.largeSpacer
-import com.jkangangi.en_dictionary.app.theme.smallSpacer
+import com.jkangangi.en_dictionary.app.theme.padding16
+import com.jkangangi.en_dictionary.app.theme.padding20
+import com.jkangangi.en_dictionary.app.theme.padding5
 import com.jkangangi.en_dictionary.app.widgets.DynamicTabSelector
 import com.jkangangi.en_dictionary.search.SearchResultUiState
 import com.jkangangi.en_dictionary.search.SearchScreenEvent
@@ -114,11 +114,11 @@ fun SearchScreen(
             Column(
                 modifier = Modifier
                     .padding(contentPadding)
-                    .padding(start = largePadding(), end = largePadding()),
+                    .padding(start = padding16(), end = padding16()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceAround,
                 content = {
-                    largeSpacer()
+                    padding20()
 
                     DynamicTabSelector(
                         tabs = searchTabOptions,
@@ -128,7 +128,7 @@ fun SearchScreen(
                         }
                     )
 
-                    smallSpacer()
+                    padding5()
 
                     Box(modifier = Modifier.fillMaxSize()) {
                         searchTabOptions[selectedTab.intValue].searchOptionView()

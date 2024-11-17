@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.app.theme.En_DictionaryTheme
 import com.jkangangi.en_dictionary.app.theme.dimens
-import com.jkangangi.en_dictionary.app.theme.mediumPadding
+import com.jkangangi.en_dictionary.app.theme.padding8
 import com.jkangangi.en_dictionary.app.widgets.noRippleClickable
 
 @Composable
@@ -68,7 +68,7 @@ private fun PreviewGameRoundButton() = En_DictionaryTheme(
     fontFamily = FontFamily.SansSerif,
 ) {
 
-    Box(modifier = Modifier.padding(mediumPadding())) {
+    Box(modifier = Modifier.padding(padding8())) {
         GameRoundButton(
             onButtonClick = {},
             text = "Easy",

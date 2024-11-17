@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.theme.largePadding
-import com.jkangangi.en_dictionary.app.theme.mediumPadding
+import com.jkangangi.en_dictionary.app.theme.padding16
+import com.jkangangi.en_dictionary.app.theme.padding8
 import com.jkangangi.en_dictionary.app.widgets.EmptyListView
 import com.jkangangi.en_dictionary.game.mode.GameInputState
 import com.jkangangi.en_dictionary.game.mode.GameUIState
@@ -83,9 +83,9 @@ fun GeneralGameView(
                     Column(
                         modifier = Modifier
                             .padding(scaffoldPadding)
-                            .padding(start = largePadding(), end = largePadding()),
+                            .padding(start = padding16(), end = padding16()),
                         content = {
-                            gameLayout(Modifier.padding(mediumPadding()))
+                            gameLayout(Modifier.padding(padding8()))
                         }
                     )
                 }

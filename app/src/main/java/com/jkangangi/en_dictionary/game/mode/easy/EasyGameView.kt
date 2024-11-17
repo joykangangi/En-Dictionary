@@ -20,9 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.theme.largeSpacer
-import com.jkangangi.en_dictionary.app.theme.mediumPadding
-import com.jkangangi.en_dictionary.app.theme.mediumSpacer
+import com.jkangangi.en_dictionary.app.theme.padding20
+import com.jkangangi.en_dictionary.app.theme.padding8
+import com.jkangangi.en_dictionary.app.theme.padding10
 import com.jkangangi.en_dictionary.app.util.DictionaryViewModelFactory
 import com.jkangangi.en_dictionary.app.util.HtmlParser
 import com.jkangangi.en_dictionary.game.mode.GameInputState
@@ -174,7 +174,7 @@ fun EasyGameScreen(
         gameUIState = gameUIState,
         gameLayout = {
             EasyGameCard(
-                modifier = Modifier.padding(mediumPadding()),
+                modifier = Modifier.padding(padding8()),
                 scrambledWord = state.scrambledWord,
                 hint = state.hint,
                 guess = guess,
@@ -228,14 +228,14 @@ private fun EasyGameCard(
                         scrambledWord = scrambledWord,
                     )
 
-                    Spacer(Modifier.size(mediumSpacer()))
+                    Spacer(Modifier.size(padding10()))
 
                     Text(
                         text = stringResource(id = R.string.game_txt_label),
                         style = MaterialTheme.typography.bodyLarge
                     )
 
-                    Spacer(Modifier.size(mediumSpacer()))
+                    Spacer(Modifier.size(padding10()))
 
 
                     GameBoxInput(
@@ -245,7 +245,7 @@ private fun EasyGameCard(
                     )
 
 
-                    Spacer(modifier = Modifier.size(largeSpacer()))
+                    Spacer(modifier = Modifier.size(padding20()))
 
                     HintSection(hint = hint, onHintClicked = onHintClicked, showHint = showHint)
                 },

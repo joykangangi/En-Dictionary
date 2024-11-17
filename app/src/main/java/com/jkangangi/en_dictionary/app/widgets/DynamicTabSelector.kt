@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.data.model.DictionaryTabOptions
-import com.jkangangi.en_dictionary.app.theme.largePadding
-import com.jkangangi.en_dictionary.app.theme.smallPadding
+import com.jkangangi.en_dictionary.app.theme.padding16
+import com.jkangangi.en_dictionary.app.theme.padding4
 
 
 @Composable
@@ -48,11 +48,11 @@ fun DynamicTabSelector(
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     tabColor: Color = MaterialTheme.colorScheme.surface,
     selectedTabColor: Color = MaterialTheme.colorScheme.primary,
-    containerCornerRadius: Dp = largePadding(),
+    containerCornerRadius: Dp = padding16(),
     tabCornerRadius: Dp = 12.dp,
     selectorHeight: Dp = 48.dp,
     tabHeight: Dp = 40.dp,
-    spacing: Dp = smallPadding(),
+    spacing: Dp = padding4(),
     textStyle: TextStyle = TextStyle(
         color = MaterialTheme.colorScheme.onBackground.copy(0.5f),
         textAlign = TextAlign.Center,

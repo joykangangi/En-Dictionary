@@ -31,9 +31,9 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.theme.largePadding
-import com.jkangangi.en_dictionary.app.theme.mediumSpacer
-import com.jkangangi.en_dictionary.app.theme.smallSpacer
+import com.jkangangi.en_dictionary.app.theme.padding16
+import com.jkangangi.en_dictionary.app.theme.padding10
+import com.jkangangi.en_dictionary.app.theme.padding5
 import com.jkangangi.en_dictionary.game.util.GameConstants.ANIM_WITH_NO_INFO_MILLIS
 import com.jkangangi.en_dictionary.game.util.formatTimeInMinAndSeconds
 import kotlinx.coroutines.delay
@@ -52,13 +52,13 @@ private fun DialogWithImageUtil(
         content = {
 
             Card(
-                shape = RoundedCornerShape(largePadding()),
+                shape = RoundedCornerShape(padding16()),
                 content = {
 
                     Column(
                         modifier = modifier
                             .fillMaxWidth()
-                            .padding(largePadding()),
+                            .padding(padding16()),
                         verticalArrangement = Arrangement.SpaceAround,
                         horizontalAlignment = Alignment.CenterHorizontally,
                         content = {
@@ -103,13 +103,13 @@ fun DialogWithAnimationUtil(
         content = {
 
             Card(
-                shape = RoundedCornerShape(largePadding()),
+                shape = RoundedCornerShape(padding16()),
                 content = {
 
                     Column(
                         modifier = modifier
                             .fillMaxWidth()
-                            .padding(largePadding()),
+                            .padding(padding16()),
                         verticalArrangement = Arrangement.SpaceAround,
                         horizontalAlignment = Alignment.CenterHorizontally,
                         content = {
@@ -159,25 +159,25 @@ fun WrongAnsDialog(
                 style = MaterialTheme.typography.bodyMedium
             )
 
-            Spacer(modifier = Modifier.size(mediumSpacer()))
+            Spacer(modifier = Modifier.size(padding10()))
 
             ScrambledWordBox(scrambledWord = correctWord)
 
-            Spacer(modifier = Modifier.size(mediumSpacer()))
+            Spacer(modifier = Modifier.size(padding10()))
 
             Text(
                 text = stringResource(id = R.string.meaning),
                 textDecoration = TextDecoration.Underline
             )
 
-            Spacer(modifier = Modifier.size(smallSpacer()))
+            Spacer(modifier = Modifier.size(padding5()))
 
             Text(
                 text = meaning,
                 style = MaterialTheme.typography.bodyMedium
             )
 
-            Spacer(modifier = Modifier.size(mediumSpacer()))
+            Spacer(modifier = Modifier.size(padding10()))
 
             if (isGameOver) {
                 Button(
@@ -264,7 +264,7 @@ fun GameResultsDialog(
                 color = MaterialTheme.colorScheme.primary
             )
 
-            Spacer(modifier = Modifier.size(mediumSpacer()))
+            Spacer(modifier = Modifier.size(padding10()))
 
             Button(
                 modifier = Modifier.fillMaxWidth(),

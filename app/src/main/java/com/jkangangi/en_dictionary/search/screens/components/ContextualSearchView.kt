@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
-import com.jkangangi.en_dictionary.app.theme.largeSpacer
+import com.jkangangi.en_dictionary.app.theme.padding20
 import com.jkangangi.en_dictionary.app.widgets.CustomFilledButton
 import com.jkangangi.en_dictionary.app.widgets.TextInput
 import com.jkangangi.en_dictionary.search.SearchInputErrorState
@@ -93,7 +93,7 @@ fun ContextualSearchView(
                 isEnabled = errorState.targetError && errorState.beforeError && errorState.afterError
             )
 
-            Spacer(modifier = Modifier.height(largeSpacer()))
+            Spacer(modifier = Modifier.height(padding20()))
 
             AnimatedVisibility(
                 visible = errorState.targetError && errorState.beforeError && errorState.afterError

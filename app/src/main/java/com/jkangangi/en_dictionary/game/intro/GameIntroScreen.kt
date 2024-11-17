@@ -29,10 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.dimens
-import com.jkangangi.en_dictionary.app.theme.largePadding
-import com.jkangangi.en_dictionary.app.theme.mediumSpacer
-import com.jkangangi.en_dictionary.app.theme.smallPadding
-import com.jkangangi.en_dictionary.app.theme.smallSpacer
+import com.jkangangi.en_dictionary.app.theme.padding16
+import com.jkangangi.en_dictionary.app.theme.padding10
+import com.jkangangi.en_dictionary.app.theme.padding4
+import com.jkangangi.en_dictionary.app.theme.padding5
 import com.jkangangi.en_dictionary.app.widgets.buttonShimmer
 import com.jkangangi.en_dictionary.game.mode.model.GameMode
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameRoundButton
@@ -55,8 +55,8 @@ fun GameIntroScreen(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(scaffoldPadding)
-                    .padding(largePadding()),
-                verticalArrangement = Arrangement.spacedBy(mediumSpacer()),
+                    .padding(padding16()),
+                verticalArrangement = Arrangement.spacedBy(padding10()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
 
@@ -75,13 +75,13 @@ fun GameIntroScreen(
                         )
                     )
 
-                    Spacer(modifier = Modifier.height(smallSpacer()))
+                    Spacer(modifier = Modifier.height(padding5()))
                     Text(
                         text = stringResource(id = R.string.select_level),
                         fontSize = 18.sp,
                     )
 
-                    Spacer(modifier = Modifier.height(mediumSpacer()))
+                    Spacer(modifier = Modifier.height(padding10()))
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
@@ -90,7 +90,7 @@ fun GameIntroScreen(
                         items(GameMode.entries) { mode ->
                             GameRoundButton(
                                 modifier = Modifier
-                                    .padding(smallPadding())
+                                    .padding(padding4())
                                     .clip(RoundedCornerShape(50f))
                                     .buttonShimmer(),
                                 text = stringResource(id = mode.levelId),

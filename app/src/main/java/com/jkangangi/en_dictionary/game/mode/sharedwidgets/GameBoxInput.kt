@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.app.theme.dimens
-import com.jkangangi.en_dictionary.app.theme.largePadding
+import com.jkangangi.en_dictionary.app.theme.padding16
 import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORD_LENGTH
 
 /**
@@ -98,7 +98,7 @@ fun GameLetterBox(
             .border(
                 width = if (isFocused) 2.dp else 1.dp,
                 color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(largePadding())
+                shape = RoundedCornerShape(padding16())
             )
     ) {
         Text(

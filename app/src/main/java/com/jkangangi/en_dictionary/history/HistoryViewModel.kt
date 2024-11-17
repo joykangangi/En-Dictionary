@@ -4,7 +4,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
@@ -13,36 +12,40 @@ import com.jkangangi.en_dictionary.app.util.PaginationState
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel() {
 
-    private val allHistoryItems = repository.getAllHistory().map { historyList ->
-        val groupedHistory = historyList.groupBy { entity ->
-            "${
-                entity.dateInserted.month.name.lowercase().replaceFirstChar { it.uppercase() }
-            } - ${entity.dateInserted.year}"
-        }
+//    private val allHistoryItems = repository.getAllHistory().map { historyList ->
+//        val groupedHistory = historyList.groupBy { entity ->
+//            "${
+//                entity.dateInserted.month.name.lowercase().replaceFirstChar { it.uppercase() }
+//            } - ${entity.dateInserted.year}"
+//        }
+//
+//        groupedHistory.toPersistentMap()
+//    }
 
-        groupedHistory.toPersistentMap()
-    }
+    private val _historyItems = MutableStateFlow<Map<String, List<DictionaryEntity>>>(mapOf())
+    val historyItems = _historyItems.asStateFlow()
+
+    private var _userQuery = mutableStateOf("")
+    val userQuery: State<String> = _userQuery
 
     private val _pagingState = MutableStateFlow(PaginationState.LOADING)
     val pagingState = _pagingState.asStateFlow()
 
     private var page = INITIAL_PAGE
     var canPaginate by mutableStateOf(false)
-    private var groupedHistory : Map<String, List<DictionaryEntity>> = persistentMapOf()
+        private set
+    private var groupedHistory: Map<String, List<DictionaryEntity>> = persistentMapOf()
 
 
     fun getPagingHistory() {
@@ -58,46 +61,49 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
                     offset = page * ITEMS_PER_PAGE
                 )
 
-                canPaginate = historyEntities.size == 5
+                canPaginate = historyEntities.size == ITEMS_PER_PAGE
 
-                if (page == 0) {
-                    if (historyEntities.isEmpty()) {
-                        _pagingState.update { PaginationState.EMPTY }
-                        return@launch
-                    }
-                    allHistoryItems.collect { it.clear() }
-                    groupedHistory = historyEntities.groupBy { entity ->
-                        "${
-                            entity.dateInserted.month.name.lowercase()
-                                .replaceFirstChar { it.uppercase() }
-                        } - ${entity.dateInserted.year}"
-                    }
-
-                    groupedHistory.toPersistentMap()
-                    allHistoryItems.collect { it.putAll(groupedHistory) }
-                } else {
-                    allHistoryItems.collect { it.putAll(groupedHistory) }
+                if (historyEntities.isEmpty() && page == 0) {
+                    _pagingState.update { PaginationState.EMPTY }
+                    return@launch
                 }
 
-                _pagingState.update { PaginationState.REQUEST_INACTIVE }
-
-                if (canPaginate){
-                    page++
-                } else {
-                    _pagingState.update { PaginationState.PAGINATION_EXHAUST }
+                // Group and update history items
+                val newGroupedHistory = historyEntities.groupBy { entity ->
+                    "${
+                        entity.dateInserted.month.name.lowercase()
+                            .replaceFirstChar { it.uppercase() }
+                    } - ${entity.dateInserted.year}"
                 }
 
+                groupedHistory = if (page == 0) {
+                    newGroupedHistory
+                } else {
+                    groupedHistory + newGroupedHistory
+                }
+
+                _historyItems.update { it.toPersistentMap().clear().putAll(groupedHistory) }
+
+                _pagingState.update {
+                    if (canPaginate) {
+                        page++
+                        PaginationState.REQUEST_INACTIVE
+                    } else {
+                        PaginationState.PAGINATION_EXHAUST
+                    }
+                }
             } catch (e: Exception) {
-                _pagingState.update { if (page == 0) PaginationState.ERROR else PaginationState.PAGINATION_EXHAUST }
+                _pagingState.update {
+                    if (page == 0) PaginationState.ERROR else PaginationState.PAGINATION_EXHAUST
+                }
             }
-
         }
     }
 
 
     fun clearDictionaryItems() {
         viewModelScope.launch {
-            allHistoryItems.collect { dictMap ->
+            _historyItems.collect { dictMap ->
                 val deletedSentences = dictMap.flatMap { (_, valueList) ->
                     valueList.map { it.sentence }
                 }
@@ -115,31 +121,22 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
         }
     }
 
-    private var _userQuery = mutableStateOf("")
-    val userQuery: State<String> = _userQuery
+    @OptIn(FlowPreview::class)
+    fun onQueryTyped(newQuery: String) {
+        _userQuery.value = newQuery
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val filteredItems = snapshotFlow { _userQuery.value }
-        .debounce(500)
-        .flatMapLatest { query ->
-            if (query.isBlank()) {
-                allHistoryItems
-            } else {
-                allHistoryItems.map { dictMap ->
-                    dictMap.mapValues { (_, valueList) ->
-                        valueList.filter { it.sentence.contains(query, ignoreCase = true) }
-                    }
+        viewModelScope.launch {
+            flowOf(newQuery)
+                .debounce(500)
+                .distinctUntilChanged()
+                .collect { _ ->
+                    page = 0
+                    canPaginate = false
+                    groupedHistory = persistentMapOf()
+                    _historyItems.update { it.toPersistentMap().clear() }
+                    getPagingHistory()
                 }
-            }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = persistentMapOf()
-        )
-
-    fun onQueryTyped(query: String) {
-        _userQuery.value = query
     }
 
     fun clearPaging() {
