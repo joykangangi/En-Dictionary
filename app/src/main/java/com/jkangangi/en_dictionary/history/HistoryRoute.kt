@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.history
 
+import android.util.Log
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -52,11 +53,6 @@ internal fun HistoryScreen(
     val pagingState by viewModel.pagingState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.clearPaging()
-        viewModel.getPagingHistory()
-    }
-
     val onHistoryCleared = remember {
         {
             viewModel.clearDictionaryItems()
@@ -71,6 +67,13 @@ internal fun HistoryScreen(
 
     val searchQuery by remember { viewModel.userQuery }
 
+
+    /**
+     * lazyColumnState.layoutInfo.totalItemsCount - 3 =>
+     *    Ensures that new data is loaded before
+     *    the user reaches the very end of the list,
+     *    avoiding delays or a blank UI.
+     */
     val shouldPaginate = remember {
         derivedStateOf {
             viewModel.canPaginate &&
@@ -78,7 +81,9 @@ internal fun HistoryScreen(
                         ?: -5) >= (lazyColumnState.layoutInfo.totalItemsCount - 3)
         }
     }
-    
+
+    Log.i("History route","history size = ${historyList.values.sumOf { it.size }}")
+
     LaunchedEffect(key1 = shouldPaginate.value) {
         if (shouldPaginate.value && pagingState == PaginationState.REQUEST_INACTIVE) {
             delay(500)

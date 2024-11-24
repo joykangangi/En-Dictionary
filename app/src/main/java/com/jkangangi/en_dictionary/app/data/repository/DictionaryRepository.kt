@@ -10,7 +10,7 @@ interface DictionaryRepository {
 
     fun getAllHistory(): Flow<List<DictionaryEntity>>
 
-    suspend fun getPagingHistory(query: String?, limit: Int, offset: Int): List<DictionaryEntity>
+    suspend fun getPagingHistory(query: String?, pageSize: Int, offset: Int): List<DictionaryEntity>
 
     suspend fun deleteDictionaryItems(sentences: List<String>)
 

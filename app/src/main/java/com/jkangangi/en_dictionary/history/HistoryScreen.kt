@@ -125,7 +125,7 @@ fun HistoryScreen(
                                 modifier = Modifier.animateItem(
                                     fadeInSpec = null,
                                     fadeOutSpec = null,
-                                    placementSpec = tween(durationMillis = 1000)
+                                    placementSpec = tween(durationMillis = 500)
                                 )
                             )
                         }

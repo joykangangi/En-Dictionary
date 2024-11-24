@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.history
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,17 +23,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel() {
-
-//    private val allHistoryItems = repository.getAllHistory().map { historyList ->
-//        val groupedHistory = historyList.groupBy { entity ->
-//            "${
-//                entity.dateInserted.month.name.lowercase().replaceFirstChar { it.uppercase() }
-//            } - ${entity.dateInserted.year}"
-//        }
-//
-//        groupedHistory.toPersistentMap()
-//    }
-
     private val _historyItems = MutableStateFlow<Map<String, List<DictionaryEntity>>>(mapOf())
     val historyItems = _historyItems.asStateFlow()
 
@@ -42,12 +32,18 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
     private val _pagingState = MutableStateFlow(PaginationState.LOADING)
     val pagingState = _pagingState.asStateFlow()
 
-    private var page = INITIAL_PAGE
+    private var page = PAGE
     var canPaginate by mutableStateOf(false)
         private set
     private var groupedHistory: Map<String, List<DictionaryEntity>> = persistentMapOf()
 
+    init {
+        getPagingHistory()
+    }
 
+    /**
+     * Pagination is designed to fetch more data only when the user is near the end of the list
+     */
     fun getPagingHistory() {
         if (page == 0 || (canPaginate && _pagingState.value == PaginationState.REQUEST_INACTIVE)) {
             _pagingState.update { if (page == 0) PaginationState.LOADING else PaginationState.PAGINATING }
@@ -57,7 +53,7 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
             try {
                 val historyEntities = repository.getPagingHistory(
                     query = _userQuery.value,
-                    limit = ITEMS_PER_PAGE,
+                    pageSize = ITEMS_PER_PAGE,
                     offset = page * ITEMS_PER_PAGE
                 )
 
@@ -79,10 +75,21 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
                 groupedHistory = if (page == 0) {
                     newGroupedHistory
                 } else {
-                    groupedHistory + newGroupedHistory
+                    // Merge newGroupedHistory with the existing groupedHistory
+                    groupedHistory.toMutableMap().apply {
+                        newGroupedHistory.forEach { (key, newItems) ->
+                            // Merge items into the group if it already exists
+                            val existingItems = this[key] ?: emptyList()
+                            this[key] = existingItems + newItems
+                        }
+                    }
                 }
-
                 _historyItems.update { it.toPersistentMap().clear().putAll(groupedHistory) }
+
+                Log.i("History route","history size vm = ${groupedHistory.values.sumOf { it.size }}")
+                Log.i("History route","history size vm2 = ${historyEntities.size}")
+                Log.i("History route","page = $page")
+
 
                 _pagingState.update {
                     if (canPaginate) {
@@ -147,8 +154,8 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
 
 
     companion object {
-        const val ITEMS_PER_PAGE = 5
-        const val INITIAL_PAGE = 0
+        const val ITEMS_PER_PAGE = 10
+        const val PAGE = 0
     }
 
 }

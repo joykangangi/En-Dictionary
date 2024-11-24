@@ -22,21 +22,23 @@ interface DictionaryDao {
     fun getAllDefinitions(): Flow<List<DictionaryEntity>>
 
     /**
-     * getPagingHistory(limit = 10, offset = 0)-first 10
-     * getPagingHistory(limit = 10, offset = 10)- second 10
-     * getPagingHistory(limit = 10, offset = 20)-3rd 10
+     * getPagingHistory(pageSize = 10, offset = 0)-first 10
+     * getPagingHistory(pageSize = 10, offset = 10)- second 10
+     * getPagingHistory(pageSize = 10, offset = 20)-3rd 10
      * ||-string concatenation
      */
-    @Query("""
+    @Query(
+        """
         SELECT * FROM dictionaryentity 
         WHERE (:searchQuery IS NULL OR :searchQuery = '' OR sentence LIKE '%' || :searchQuery || '%' COLLATE NOCASE)
         ORDER BY dateInserted DESC
-        LIMIT :limit 
+        LIMIT :pageSize 
         OFFSET :offset
-    """)
+    """
+    )
     suspend fun getPagingHistory(
         searchQuery: String?,
-        limit: Int,
+        pageSize: Int,
         offset: Int
     ): List<DictionaryEntity>
 }
