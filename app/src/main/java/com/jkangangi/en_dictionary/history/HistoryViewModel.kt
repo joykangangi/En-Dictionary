@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.jkangangi.en_dictionary.app.data.local.room.DictionaryEntity
 import com.jkangangi.en_dictionary.app.data.repository.DictionaryRepository
 import com.jkangangi.en_dictionary.app.util.PaginationState
-import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -18,7 +17,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -35,7 +36,6 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
     private var page = PAGE
     var canPaginate by mutableStateOf(false)
         private set
-    private var groupedHistory: Map<String, List<DictionaryEntity>> = persistentMapOf()
 
     init {
         getPagingHistory()
@@ -57,38 +57,44 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
                     offset = page * ITEMS_PER_PAGE
                 )
 
-                canPaginate = historyEntities.size == ITEMS_PER_PAGE
+                canPaginate = historyEntities.first().size == ITEMS_PER_PAGE
 
-                if (historyEntities.isEmpty() && page == 0) {
+                if (historyEntities.first().isEmpty() && page == 0) {
                     _pagingState.update { PaginationState.EMPTY }
                     return@launch
                 }
 
-                // Group and update history items
-                val newGroupedHistory = historyEntities.groupBy { entity ->
-                    "${
-                        entity.dateInserted.month.name.lowercase()
-                            .replaceFirstChar { it.uppercase() }
-                    } - ${entity.dateInserted.year}"
+
+                val newGroupedHistory = historyEntities.map { entities ->
+                    entities.groupBy { entity ->
+                        "${
+                            entity.dateInserted.month.name.lowercase()
+                                .replaceFirstChar { it.uppercase() }
+                        } - ${entity.dateInserted.year}"
+                    }
                 }
 
-                groupedHistory = if (page == 0) {
-                    newGroupedHistory
-                } else {
-                    // Merge newGroupedHistory with the existing groupedHistory
-                    groupedHistory.toMutableMap().apply {
-                        newGroupedHistory.forEach { (key, newItems) ->
-                            // Merge items into the group if it already exists
-                            val existingItems = this[key] ?: emptyList()
-                            this[key] = existingItems + newItems
+                _historyItems.update { items ->
+                    if (page == 0) {
+                        newGroupedHistory.first()
+                    } else {
+                        items.toPersistentMap().clear()
+                        // Merge newGroupedHistory with the existing groupedHistory
+                        items.toMutableMap().apply {
+                            newGroupedHistory.first().forEach { (key, newItems) ->
+                                val existingItems = this[key] ?: emptyList()
+                                this[key] = existingItems + newItems
+                            }
                         }
                     }
                 }
-                _historyItems.update { it.toPersistentMap().clear().putAll(groupedHistory) }
 
-                Log.i("History route","history size vm = ${groupedHistory.values.sumOf { it.size }}")
-                Log.i("History route","history size vm2 = ${historyEntities.size}")
-                Log.i("History route","page = $page")
+                Log.i(
+                    "History route",
+                    "history size vm = ${_historyItems.first().values.sumOf { it.size }}"
+                )
+                Log.i("History route", "history size vm2 = ${historyEntities.first().size}")
+                Log.i("History route", "page = $page")
 
 
                 _pagingState.update {
@@ -110,21 +116,33 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
 
     fun clearDictionaryItems() {
         viewModelScope.launch {
-            _historyItems.collect { dictMap ->
-                val deletedSentences = dictMap.flatMap { (_, valueList) ->
-                    valueList.map { it.sentence }
-                }
-
-                repository.deleteDictionaryItems(
-                    deletedSentences
-                )
+            val currentItems = _historyItems.value
+            val deletedSentences = currentItems.flatMap { (_, valueList) ->
+                valueList.map { it.sentence }
             }
+
+            repository.deleteDictionaryItems(deletedSentences)
+
+            _historyItems.update { emptyMap() }
         }
     }
 
     fun deleteDictionaryItem(sentences: List<String>) {
         viewModelScope.launch {
             repository.deleteDictionaryItems(sentences)
+        }
+
+        _historyItems.update { currentItems ->
+            currentItems.toMutableMap().apply {
+                forEach { (key, items) ->
+                    val updatedItems = items.filterNot { it.sentence in sentences }
+                    if (updatedItems.isEmpty()) {
+                        remove(key) // Remove the group if it's empty
+                    } else {
+                        this[key] = updatedItems
+                    }
+                }
+            }
         }
     }
 
@@ -139,7 +157,6 @@ class HistoryViewModel(private val repository: DictionaryRepository) : ViewModel
                 .collect { _ ->
                     page = 0
                     canPaginate = false
-                    groupedHistory = persistentMapOf()
                     _historyItems.update { it.toPersistentMap().clear() }
                     getPagingHistory()
                 }

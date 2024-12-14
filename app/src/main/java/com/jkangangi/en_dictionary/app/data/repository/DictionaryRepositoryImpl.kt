@@ -68,8 +68,7 @@ class DictionaryRepositoryImpl(
         return dao.getAllDefinitions()
     }
 
-    override suspend fun getPagingHistory(query: String?, pageSize: Int, offset: Int): List<DictionaryEntity> {
-        //delay(500)
+    override fun getPagingHistory(query: String?, pageSize: Int, offset: Int): Flow<List<DictionaryEntity>> {
         return dao.getPagingHistory(query,pageSize,offset)
     }
 

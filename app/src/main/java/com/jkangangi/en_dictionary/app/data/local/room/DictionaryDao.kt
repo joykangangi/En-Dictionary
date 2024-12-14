@@ -36,9 +36,9 @@ interface DictionaryDao {
         OFFSET :offset
     """
     )
-    suspend fun getPagingHistory(
+    fun getPagingHistory(
         searchQuery: String?,
         pageSize: Int,
         offset: Int
-    ): List<DictionaryEntity>
+    ): Flow<List<DictionaryEntity>>
 }

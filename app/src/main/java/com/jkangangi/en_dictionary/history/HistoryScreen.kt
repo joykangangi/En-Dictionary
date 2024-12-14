@@ -2,6 +2,7 @@ package com.jkangangi.en_dictionary.history
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -88,6 +90,8 @@ fun HistoryScreen(
             LazyColumn(
                 state = lazyListState,
                 contentPadding = contentPadding,
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(16.dp),
                 content = {
 
@@ -139,11 +143,25 @@ fun HistoryScreen(
                         PaginationState.REQUEST_INACTIVE -> {}
 
                         PaginationState.LOADING -> {
-                            item { CircularProgressIndicator() }
+                            item {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    content = {
+                                        CircularProgressIndicator()
+                                    }
+                                )
+                            }
                         }
 
                         PaginationState.PAGINATING -> {
-                            item { CircularProgressIndicator() }
+                            item {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    content = {
+                                    CircularProgressIndicator()
+                                    }
+                                )
+                            }
                         }
 
                         PaginationState.ERROR -> {
