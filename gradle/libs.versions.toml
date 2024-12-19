@@ -20,7 +20,7 @@ compose-compiler = "1.5.5"
 gradle-plugin = "8.5.2"
 junit = "5.9.2"
 kotlin-version = "1.9.20"
-ktor = "2.3.2"
+ktor = "3.0.3"
 lifecycle = "2.8.4"
 room = "2.6.1"
 
