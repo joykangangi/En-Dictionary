@@ -11,6 +11,8 @@ import com.jkangangi.en_dictionary.game.intro.GameIntroScreen
 import com.jkangangi.en_dictionary.game.mode.easy.EasyGameView
 import com.jkangangi.en_dictionary.game.mode.hard.HardGameView
 import com.jkangangi.en_dictionary.game.mode.medium.MediumGameView
+import com.jkangangi.en_dictionary.game.mode.model.GameMode
+import com.jkangangi.en_dictionary.game.mode.model.GameModeParam
 import com.jkangangi.en_dictionary.game.mode.model.GameSummaryStats
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameResultsDialog
 import com.jkangangi.en_dictionary.game.util.CustomNavType
@@ -48,8 +50,24 @@ fun NavGraphBuilder.gameGraph(
 
             GameIntroScreen(
                 onGameModeClick = {
-                    navigateToMode(it.route)
+                    navigateToMode(GameRoute.GameModeRoute(
+                        gameMode = when(it) {
+                            GameMode.Easy -> GameModeParam.Easy
+                            GameMode.Medium -> GameModeParam.Medium
+                            GameMode.Hard -> GameModeParam.Hard
+                        }
+                    )
+                    )
                 }
+            )
+        }
+
+        composable<GameRoute.GameModeRoute> {
+            val args = it.toRoute<GameRoute.GameModeRoute>()
+
+            GameView(
+                viewResultsDialog = navigateToGameSummary,
+                gameMode = args.gameMode
             )
         }
 

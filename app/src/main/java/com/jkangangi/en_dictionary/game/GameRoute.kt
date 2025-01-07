@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.game
 
+import com.jkangangi.en_dictionary.game.mode.model.GameModeParam
 import com.jkangangi.en_dictionary.game.mode.model.GameSummaryStats
 import kotlinx.serialization.Serializable
 
@@ -12,6 +13,9 @@ sealed class GameRoute {
 
     @Serializable
     data object GameIntroRoute : GameRoute()
+
+    @Serializable
+    data class GameModeRoute(val gameMode: GameModeParam) : GameRoute()
 
     @Serializable
     data object EasyGameModeRoute : GameRoute()
