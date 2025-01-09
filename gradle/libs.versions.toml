@@ -17,7 +17,7 @@ kotlinx-date = "0.6.1"
 
 compose = "2024.06.00"
 compose-compiler = "1.5.5"
-gradle-plugin = "8.5.2"
+gradle-plugin = "8.8.0"
 junit = "5.9.2"
 kotlin-version = "1.9.20"
 ktor = "2.3.2"
