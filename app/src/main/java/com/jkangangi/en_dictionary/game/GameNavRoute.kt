@@ -8,11 +8,8 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.jkangangi.en_dictionary.game.intro.GameIntroScreen
-import com.jkangangi.en_dictionary.game.mode.easy.EasyGameView
 import com.jkangangi.en_dictionary.game.mode.hard.HardGameView
-import com.jkangangi.en_dictionary.game.mode.medium.MediumGameView
 import com.jkangangi.en_dictionary.game.mode.model.GameMode
-import com.jkangangi.en_dictionary.game.mode.model.GameModeParam
 import com.jkangangi.en_dictionary.game.mode.model.GameSummaryStats
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.GameResultsDialog
 import com.jkangangi.en_dictionary.game.util.CustomNavType
@@ -50,14 +47,7 @@ fun NavGraphBuilder.gameGraph(
 
             GameIntroScreen(
                 onGameModeClick = {
-                    navigateToMode(GameRoute.GameModeRoute(
-                        gameMode = when(it) {
-                            GameMode.Easy -> GameModeParam.Easy
-                            GameMode.Medium -> GameModeParam.Medium
-                            GameMode.Hard -> GameModeParam.Hard
-                        }
-                    )
-                    )
+                    navigateToMode(GameRoute.GameModeRoute(it))
                 }
             )
         }
@@ -65,10 +55,15 @@ fun NavGraphBuilder.gameGraph(
         composable<GameRoute.GameModeRoute> {
             val args = it.toRoute<GameRoute.GameModeRoute>()
 
-            GameView(
-                viewResultsDialog = navigateToGameSummary,
-                gameMode = args.gameMode
-            )
+            if (args.gameMode == GameMode.Easy || args.gameMode == GameMode.Medium) {
+                GameView(
+                    viewResultsDialog = navigateToGameSummary,
+                    gameMode = args.gameMode
+                )
+            } else {
+                HardGameView(viewResultsDialog = navigateToGameSummary)
+            }
+
         }
 
         dialog<GameRoute.GameSummaryDialogRoute>(
@@ -88,19 +83,6 @@ fun NavGraphBuilder.gameGraph(
             )
         }
 
-        composable<GameRoute.EasyGameModeRoute> {
-            EasyGameView(
-                viewResultsDialog = navigateToGameSummary
-            )
-        }
-
-        composable<GameRoute.MediumGameModeRoute> {
-            MediumGameView(viewResultsDialog = navigateToGameSummary)
-        }
-
-        composable<GameRoute.HardGameModeRoute> {
-            HardGameView(viewResultsDialog = navigateToGameSummary)
-        }
     }
 }
 
