@@ -29,7 +29,6 @@ import com.jkangangi.en_dictionary.game.mode.GameInputState
 import com.jkangangi.en_dictionary.game.mode.GameUIState
 import com.jkangangi.en_dictionary.game.mode.GameViewModel
 import com.jkangangi.en_dictionary.game.mode.model.GameMode
-import com.jkangangi.en_dictionary.game.mode.model.GameModeParam
 import com.jkangangi.en_dictionary.game.mode.model.GameSummaryStats
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.ButtonRowSection
 import com.jkangangi.en_dictionary.game.mode.sharedwidgets.CorrectAnsDialog
@@ -46,14 +45,17 @@ import com.jkangangi.en_dictionary.game.util.GameConstants.MAX_WORDS
 @Composable
 fun GameView(
     viewResultsDialog: (GameSummaryStats) -> Unit,
-    gameMode: GameModeParam,
+    gameMode: GameMode,
     modifier: Modifier = Modifier,
     viewModel: GameViewModel = viewModel(factory = DictionaryViewModelFactory)
 ) {
 
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getGameMode(gameMode)
+    }
+
     val gameState by viewModel.gameInputState.collectAsState()
     val gameUIState by viewModel.gameUIState().collectAsState()
-    val currentMode by viewModel.currentMode.collectAsState()
     val guess by viewModel.guessedWord
     //val gameSummaryStats by viewModel.gameSummaryStats.collectAsState() //update issue
 
@@ -79,7 +81,6 @@ fun GameView(
         key1 = gameState.wordItemsSize > MAX_WORDS - 1,
         block = {
             if (gameState.wordCount == 0 && gameState.wordItemsSize > MAX_WORDS - 1) {
-                viewModel.setGameMode(GameMode.Easy)
                 viewModel.getWordItem()
             }
         }
@@ -130,16 +131,13 @@ fun GameView(
 
     val onSubmitClick = remember {
         {
-            val mode = currentMode
-            if (mode != null) {
-                viewModel.onSubmitAnsClicked(mode)
-                showDialog.value = true
-            }
+            viewModel.onSubmitAnsClicked()
+            showDialog.value = true
         }
     }
 
 
-    EasyGameScreen(
+    GameScreen(
         modifier = modifier,
         state = gameState,
         guess = guess,
@@ -151,16 +149,16 @@ fun GameView(
         },
         onHintClicked = viewModel::onHintClicked,
         gameUIState = gameUIState,
-        currentMode = currentMode
+        gameMode = gameMode
     )
 
 }
 
 @Composable
-fun EasyGameScreen(
+fun GameScreen(
     modifier: Modifier,
     state: GameInputState,
-    currentMode: GameMode?,
+    gameMode: GameMode,
     guess: String,
     gameUIState: GameUIState,
     onGuessChanged: (String) -> Unit,
@@ -172,10 +170,10 @@ fun EasyGameScreen(
     GeneralGameView(
         modifier = modifier,
         gameInputState = state,
-        currentMode = currentMode,
+        currentMode = gameMode,
         gameUIState = gameUIState,
         gameLayout = {
-            EasyGameCard(
+            GameCard(
                 modifier = Modifier.padding(padding8()),
                 scrambledWord = state.scrambledWord,
                 hint = state.hint,
@@ -184,6 +182,7 @@ fun EasyGameScreen(
                 onHintClicked = onHintClicked,
                 showHint = state.showHint,
                 timeLeft = state.timeLeft,
+                gameMode = gameMode
             )
 
             ButtonRowSection(
@@ -197,22 +196,19 @@ fun EasyGameScreen(
 }
 
 @Composable
-private fun EasyGameCard(
+private fun GameCard(
     modifier: Modifier,
     scrambledWord: String,
     hint: String,
     guess: String,
-    gameMode: GameModeParam,
+    gameMode: GameMode,
     onGuessChanged: (String) -> Unit,
     onHintClicked: () -> Unit,
     showHint: Boolean,
     timeLeft: Int,
 ) {
-//    when(gameMode) {
-//        GameModeParam.Easy -> TODO()
-//        GameModeParam.Medium -> TODO()
-//        GameModeParam.Hard -> TODO()
-//    }
+
+    val gameInstructionsId = if (gameMode == GameMode.Easy) R.string.easy_game_instruction else R.string.medium_game_instructions
 
     ElevatedCard(
         content = {
@@ -222,10 +218,8 @@ private fun EasyGameCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
 
-
-
                     Text(
-                        text = stringResource(id = R.string.easy_game_instruction),
+                        text = stringResource(id = gameInstructionsId),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center
                     )
