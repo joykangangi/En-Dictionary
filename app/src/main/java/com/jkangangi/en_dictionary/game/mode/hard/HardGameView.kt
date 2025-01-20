@@ -74,11 +74,14 @@ fun HardGameView(
 
 
     //only runs for the first word
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getGameMode(GameMode.Hard)
+    }
+
     LaunchedEffect(
         key1 = gameState.wordItemsSize > MAX_WORDS - 1,
         block = {
             if (gameState.wordCount == 0 && gameState.wordItemsSize > MAX_WORDS - 1) {
-                viewModel.setGameMode(GameMode.Hard)
                 viewModel.getWordItem()
             }
         }
@@ -135,7 +138,7 @@ fun HardGameView(
 
     val onSubmitClick = remember {
         {
-            viewModel.onSubmitAnsClicked(GameMode.Hard)
+            viewModel.onSubmitAnsClicked()
             showDialog.value = true
         }
     }

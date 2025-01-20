@@ -18,6 +18,7 @@ import com.jkangangi.en_dictionary.app.util.isWord
 import com.jkangangi.en_dictionary.app.util.scramble
 import com.jkangangi.en_dictionary.definitions.AUDIO_BASE_URL
 import com.jkangangi.en_dictionary.game.mode.model.GameMode
+import com.jkangangi.en_dictionary.game.mode.model.GameModeDetails
 import com.jkangangi.en_dictionary.game.mode.model.GameSummaryStats
 import com.jkangangi.en_dictionary.game.util.GameConstants.EXCELLENT_SCORE
 import com.jkangangi.en_dictionary.game.util.GameConstants.HINT_DECREASE
@@ -29,6 +30,7 @@ import com.jkangangi.en_dictionary.game.util.GameConstants.TOTAL_WORD_TIME
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +38,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -70,55 +74,58 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     val gameTimeTotal = mutableIntStateOf(0)
     var percent = mutableIntStateOf(0)
 
+    private val _currentGameMode: MutableStateFlow<GameMode> = MutableStateFlow(GameMode.Easy)
+
+    private val _gameModeDetails = _currentGameMode.map { mode ->
+        when (mode) {
+            GameMode.Easy -> GameModeDetails.Easy
+            GameMode.Medium -> GameModeDetails.Medium
+            GameMode.Hard -> GameModeDetails.Hard
+        }
+    }
+
+    fun getGameMode(mode: GameMode) {
+        _currentGameMode.update { mode }
+    }
+
 
     private fun getAllWordItems() = repository.getAllHistory().map { items ->
         items.filter { it.sentence.isWord() && it.sentence.length > 1 }
     }
 
-    private fun resolveGameModeItems(gameMode: GameMode): Flow<PersistentList<DictionaryEntity>> {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun resolveGameModeItems(): Flow<PersistentList<DictionaryEntity>> {
 
-        return when (gameMode) {
-            GameMode.Easy -> {
-                getAllWordItems().map { wordItems ->
-                    wordItems.filter { it.sentence.length in GameMode.Easy.wordLength }
-                        .toPersistentList()
-                }
-            }
+        return _gameModeDetails.flatMapLatest { modeDetails ->
+            getAllWordItems().map { wordItems ->
+                when (modeDetails) {
+                    GameModeDetails.Easy -> {
+                        wordItems.filter { it.sentence.length in GameModeDetails.Easy.wordLength }
+                    }
 
-            GameMode.Medium -> {
-                getAllWordItems().map { wordItems ->
-                    wordItems.filter { it.sentence.length in GameMode.Medium.wordLength }
-                        .toPersistentList()
-                }
-            }
+                    GameModeDetails.Medium -> {
+                        wordItems.filter { it.sentence.length in GameModeDetails.Medium.wordLength }
+                    }
 
-            GameMode.Hard -> {
-                getAllWordItems().map { wordItems ->
-                    wordItems.filter { dictionary ->
-                        val entries = dictionary.pronunciations.getOrNull(0)?.entries
-                        val hasAudio = entries?.any { entry -> entry.audioFiles.isNotEmpty() }
-                        dictionary.sentence.length in GameMode.Hard.wordLength
-                                && hasAudio == true
-                    }.toPersistentList()
-                }
+                    GameModeDetails.Hard -> {
+                        wordItems.filter { dictionary ->
+                            val entries = dictionary.pronunciations.getOrNull(0)?.entries
+                            val hasAudio = entries?.any { entry -> entry.audioFiles.isNotEmpty() }
+                            dictionary.sentence.length in GameModeDetails.Hard.wordLength && hasAudio == true
+                        }
+                    }
+                }.toPersistentList()
             }
         }
-    }
-
-    private val _currentGameMode = MutableStateFlow<GameMode?>(null)
-    val currentMode = _currentGameMode.asStateFlow()
-
-    fun setGameMode(gameMode: GameMode) {
-        _currentGameMode.value = gameMode
     }
 
     fun calculateFinalResults() {
         viewModelScope.launch {
             val totalScore = _gameInputState.value.score
             val totalGameTime = _gameStatsState.value.totalGameTime
-            val passMark = _currentGameMode.value?.passMark
+            val passMark = _gameModeDetails.first().passMark
 
-            val numerator = totalScore + (passMark ?: 0)
+            val numerator = totalScore + passMark
             var perc = ((numerator.toDouble() / totalGameTime) * 100).roundToInt()
 
             Log.i(
@@ -143,13 +150,13 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     }
 
     val gameInputState = combine(
-        flow = resolveGameModeItems(_currentGameMode.value ?: GameMode.Easy),
+        flow = resolveGameModeItems(),
         flow2 = _gameInputState,
         transform = { modeWordItems, state ->
 
             if (allWordItems.isEmpty()) {
                 allWordItems.addAll(modeWordItems)
-                Log.i("Game vm","items=$modeWordItems")
+                Log.i("Game vm", "items=$modeWordItems")
             }
 
             GameInputState(
@@ -270,7 +277,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
     }
 
 
-    fun onSubmitAnsClicked(mode: GameMode) {
+    fun onSubmitAnsClicked() {
         _gameInputState.update {
             it.copy(
                 isGuessCorrect = _guessedWord.value.trim()
@@ -283,7 +290,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
             _gameInputState.update {
                 it.copy(
                     score =
-                    when (mode) {
+                    when (_currentGameMode.value) {
                         GameMode.Hard -> {
                             if (_gameInputState.value.isGuessCorrect) _gameInputState.value.score + SCORE_INCREASE else _gameInputState.value.score - SCORE_INCREASE
 
