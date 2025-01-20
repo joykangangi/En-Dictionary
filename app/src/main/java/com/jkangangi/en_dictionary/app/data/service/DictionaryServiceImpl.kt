@@ -48,9 +48,9 @@ class DictionaryServiceImpl : DictionaryService {
 
             install(DefaultRequest) {
                 headers {
-                    append(name = "content-type", value = ContentType.Application.Json)
-                    append(name = "X-RapidAPI-Key", value = API_KEY)
-                    append(name = "X-RapidAPI-Host", value = BASE_URL)
+                    append(name = "Content-Type", value = ContentType.Application.Json)
+                    append(name = "x-rapidapi-key", value = API_KEY)
+                    append(name = "x-rapidapi-host", value = BASE_URL)
                 }
             }
 

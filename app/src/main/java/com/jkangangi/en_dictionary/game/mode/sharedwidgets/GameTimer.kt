@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +32,8 @@ fun GameTimer(
 
     val progress by rememberUpdatedState(newValue = timeLeft.toFloat() / TOTAL_WORD_TIME)
 
-    val strokeColor = if (timeLeft > THREE_QUARTER_WORD_TIME) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+    val strokeColor =
+        if (timeLeft > THREE_QUARTER_WORD_TIME) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
 
     val remainingTime by rememberUpdatedState(newValue = formatTimeInMinAndSeconds(timeLeft))
 
@@ -50,11 +51,10 @@ fun GameTimer(
                 color = MaterialTheme.colorScheme.primary
             )
 
-            CircularProgressIndicator(
-                progress = { progress },
+            LinearProgressIndicator(
                 modifier = Modifier.size(70.dp),
+                progress = { progress },
                 color = strokeColor,
-                strokeWidth = 6.dp
             )
         }
     )

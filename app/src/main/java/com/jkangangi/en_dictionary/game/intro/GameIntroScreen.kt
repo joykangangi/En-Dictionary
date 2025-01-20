@@ -91,9 +91,8 @@ fun GameIntroScreen(
                             GameRoundButton(
                                 modifier = Modifier
                                     .padding(padding4())
-                                    .clip(RoundedCornerShape(50f))
-                                    .buttonShimmer(),
-                                text = stringResource(id = mode.levelId),
+                                    .clip(RoundedCornerShape(50f)),
+                                text = mode.name,
                                 shape = RoundedCornerShape(50f),
                                 borderStrokeWidth = 2.dp,
                                 fontSize = MaterialTheme.dimens.mediumGameText,
