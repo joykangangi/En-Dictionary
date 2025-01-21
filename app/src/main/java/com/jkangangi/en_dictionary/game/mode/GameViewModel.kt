@@ -304,6 +304,7 @@ class GameViewModel(private val repository: DictionaryRepository) : ViewModel() 
                         GameMode.Easy -> {
                             _gameInputState.value.score + getCorrectPlacements(_guessedWord.value.trim()) * LETTER_INCREASE
                         }
+
                     }
                 )
             }

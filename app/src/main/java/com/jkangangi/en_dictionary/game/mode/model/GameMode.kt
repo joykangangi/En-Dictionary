@@ -1,7 +1,6 @@
 package com.jkangangi.en_dictionary.game.mode.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Retrieve complex data when navigating
@@ -17,8 +16,8 @@ import kotlinx.parcelize.Parcelize
  * To retrieve the arguments in your ViewModel that's responsible for accessing the data layer,
  */
 
-@Parcelize
-enum class GameMode: Parcelable {
+@Serializable
+enum class GameMode {
     Easy,
     Medium,
     Hard
