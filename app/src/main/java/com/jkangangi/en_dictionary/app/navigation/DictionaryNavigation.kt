@@ -1,5 +1,6 @@
 package com.jkangangi.en_dictionary.app.navigation
 
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable

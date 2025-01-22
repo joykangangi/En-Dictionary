@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -21,6 +22,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jkangangi.en_dictionary.R
+import com.jkangangi.en_dictionary.app.theme.padding10
+import com.jkangangi.en_dictionary.app.theme.padding5
 
 private const val MAX_WORD_LENGTH = 20
 
@@ -50,7 +53,7 @@ fun TextInput(
         modifier = modifier,
         content = {
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.width(250.dp),
                 value = input,
                 onValueChange = {
                     if (it.length < MAX_WORD_LENGTH) onInputChange(it)
@@ -85,14 +88,16 @@ fun TextInput(
             )
 
             if (showWarningDescription) {
+                Spacer(modifier = Modifier.height(padding5()))
 
                 if (!isValid) Text(
                     text = stringResource(id = R.string.inputError),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(padding5()))
             }
+            Spacer(modifier = Modifier.height(padding10()))
         }
     )
 }

@@ -4,8 +4,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.jkangangi.en_dictionary.R
 import com.jkangangi.en_dictionary.app.theme.padding20
+import com.jkangangi.en_dictionary.app.theme.padding5
 import com.jkangangi.en_dictionary.app.widgets.CustomFilledButton
 import com.jkangangi.en_dictionary.app.widgets.TextInput
 import com.jkangangi.en_dictionary.search.SearchInputErrorState
@@ -36,8 +41,8 @@ fun BasicSearchView(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.SpaceAround,
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(padding5()),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             SearchInstructionsText(detailsTextId = R.string.single_search_detail)

@@ -8,6 +8,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -24,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,10 +62,25 @@ fun SearchScreen(
 ) {
 
     val selectedTab = remember {
-        mutableIntStateOf(0)
+        mutableIntStateOf(1)
     }
 
     val searchTabOptions = listOf(
+        DictionaryTabOptions(
+            nameId = R.string.adv_search_btn,
+            searchOptionView = {
+                ContextualSearchView(
+                    inputState = searchScreenState.inputState,
+                    errorState = searchScreenState.errorState,
+                    searchResultUiState = searchScreenState.networkState,
+                    updateQuery = {
+                        performEvent(SearchScreenEvent.UpdateQueries(it))
+                    },
+                    onSearchClick = { performEvent(SearchScreenEvent.DoSearch) },
+                    toWordClick = toWordClick
+                )
+            }
+        ),
         DictionaryTabOptions(
             nameId = R.string.simple_search_btn,
             searchOptionView = {
@@ -81,28 +99,12 @@ fun SearchScreen(
                 )
             }
         ),
-        DictionaryTabOptions(
-            nameId = R.string.adv_search_btn,
-            searchOptionView = {
-                ContextualSearchView(
-                    inputState = searchScreenState.inputState,
-                    errorState = searchScreenState.errorState,
-                    searchResultUiState = searchScreenState.networkState,
-                    updateQuery = {
-                        performEvent(SearchScreenEvent.UpdateQueries(it))
-                    },
-                    onSearchClick = { performEvent(SearchScreenEvent.DoSearch) },
-                    toWordClick = toWordClick
-                )
-            }
-        ),
     )
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        modifier = modifier,
         topBar = {
             SearchTopBar(
                 isDarkTheme = settingsState.darkTheme,
@@ -118,21 +120,37 @@ fun SearchScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceAround,
                 content = {
-                    padding20()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        content = {
+                            val contextual = searchTabOptions[0].nameId
 
-                    DynamicTabSelector(
-                        tabs = searchTabOptions,
-                        selectedTab = selectedTab.intValue,
-                        onTabSelected = {
-                            selectedTab.intValue = it
+                            Text(text = stringResource(contextual))
+                            Switch(
+                                checked = selectedTab.intValue == 0,
+                                onCheckedChange = {
+                                    val on = if(it) 0 else 1
+                                    selectedTab.intValue = on
+                                }
+                            )
                         }
                     )
 
+//                    DynamicTabSelector(
+//                        tabs = searchTabOptions,
+//                        selectedTab = selectedTab.intValue,
+//                        onTabSelected = {
+//                            selectedTab.intValue = it
+//                        }
+//                    )
+
                     padding5()
 
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        searchTabOptions[selectedTab.intValue].searchOptionView()
-                    }
+                    searchTabOptions[selectedTab.intValue].searchOptionView()
+
+
 
                     AnimatedVisibility(
                         visible = sheetState.isVisible,

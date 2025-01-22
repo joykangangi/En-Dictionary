@@ -28,7 +28,7 @@ fun SearchInstructionsText(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(top = 8.dp),
+        //modifier = modifier.padding(top = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         content = {
